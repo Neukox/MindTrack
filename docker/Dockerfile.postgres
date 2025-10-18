@@ -1,0 +1,15 @@
+FROM postgres:15-alpine
+
+# Cria diretório para scripts de inicialização
+RUN mkdir -p /docker-entrypoint-initdb.d
+
+# Copia scripts (a serem adicionados pelo compose) - mantemos como diretório montado no compose
+# Define variáveis padrão (podem ser sobrescritas pelo docker-compose)
+ENV POSTGRES_USER=mindtrack
+ENV POSTGRES_PASSWORD=change_me
+ENV POSTGRES_DB=mindtrack_db
+
+EXPOSE 5432
+
+# A imagem oficial já possui entrypoint que executa scripts em /docker-entrypoint-initdb.d
+CMD ["postgres"]

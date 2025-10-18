@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: ./docker/
+      dockerfile: Dockerfile.postgres
+    image: mindtrack-postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "mindtrack"
+      POSTGRES_PASSWORD: "change_me"
+      POSTGRES_DB: "mindtrack_db"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+    name: mindtrack_postgres_data
