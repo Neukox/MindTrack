@@ -1,0 +1,4 @@
+# imagem do postgresql
+FROM postgres:15
+
+# variaveis de ambiente

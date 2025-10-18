@@ -1,0 +1,2 @@
+# imagem do postgresql
+FROM postgres:15

@@ -1,0 +1,12 @@
+# imagem do postgresql
+FROM postgres:15
+
+# variaveis de ambiente
+ENV POSTGRES_DB=myndtrack
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
+
+EXPOSE 5432
+
+# copia o script de inicializacao
+COPY ./init-db.sh /docker-entrypoint-initdb.d/init-db.sh

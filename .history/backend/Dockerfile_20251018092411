@@ -1,0 +1,7 @@
+# imagem do postgresql
+FROM postgres:15
+
+# variaveis de ambiente
+ENV POSTGRES_DB=app_db
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres

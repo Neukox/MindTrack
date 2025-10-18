@@ -4,6 +4,6 @@ import { RegisterController } from './register.controller';
 
 @Module({
   providers: [RegisterService],
-  controllers: [RegisterController]
+  controllers: [RegisterController],
 })
 export class RegisterModule {}

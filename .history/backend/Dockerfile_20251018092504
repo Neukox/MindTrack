@@ -1,0 +1,13 @@
+# Usa a imagem oficial do PostgreSQL
+FROM postgres:15
+
+# Define variáveis de ambiente para configuração do banco
+ENV POSTGRES_DB=mindtrack
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
+
+# Expõe a porta padrão do PostgreSQL
+EXPOSE 5432
+
+# Copia o script de inicialização para a pasta correta do container
+COPY ./init-db.sh /docker-entrypoint-initdb.d/
