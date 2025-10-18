@@ -21,7 +21,6 @@ export class BuscaReflexaoService {
       });
 
       console.log('Reflexões encontradas:', reflexoes);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       console.log('Quantidade de reflexões:', reflexoes?.length || 0);
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return

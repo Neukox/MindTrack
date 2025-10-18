@@ -5,6 +5,21 @@ import prisma from '../lib/prisma.client';
 export class BuscaReflexaoService {
   private prisma = prisma;
 
+  // Método de debug para verificar todas as reflexões no banco
+  async getAllReflexoesDebug(): Promise<any[]> {
+    try {
+      console.log('=== DEBUG: Buscando todas as reflexões ===');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      const todasReflexoes = await this.prisma.reflection.findMany();
+      console.log('Total de reflexões no banco:', todasReflexoes);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return todasReflexoes;
+    } catch (error) {
+      console.error('Erro no debug:', error);
+      throw error;
+    }
+  }
+
   async getReflexoesByUser(userId: string): Promise<any[]> {
     try {
       if (!userId) {

@@ -11,18 +11,12 @@ export class BuscaReflexaoService {
         throw new BadRequestException('ID do usuário é obrigatório.');
       }
 
-      console.log('Buscando reflexões para userId:', userId);
-
       // Busca todas as reflexões do usuário ordenadas por data de criação
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const reflexoes = await this.prisma.reflection.findMany({
         where: { userId },
         orderBy: { createdAt: 'desc' },
       });
-
-      console.log('Reflexões encontradas:', reflexoes);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      console.log('Quantidade de reflexões:', reflexoes?.length || 0);
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return reflexoes;
@@ -35,6 +29,9 @@ export class BuscaReflexaoService {
       throw new BadRequestException(
         'Erro interno. Tente novamente mais tarde.',
       );
+    } finally {
+      // Fecha a conexão do Prisma para evitar vazamentos de memória
+      await this.prisma.$disconnect();
     }
   }
 
@@ -72,6 +69,9 @@ export class BuscaReflexaoService {
       throw new BadRequestException(
         'Erro interno. Tente novamente mais tarde.',
       );
+    } finally {
+      // Fecha a conexão do Prisma para evitar vazamentos de memória
+      await this.prisma.$disconnect();
     }
   }
 
