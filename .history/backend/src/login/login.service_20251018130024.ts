@@ -37,14 +37,16 @@ export class LoginService {
       );
 
       if (!senhaCorreta) {
-        throw new HttpException('Senha incorreta.', HttpStatus.UNAUTHORIZED);
+        throw new HttpException(
+          'Senha incorreta.',
+          HttpStatus.UNAUTHORIZED,
+        );
       }
 
       //Login bem sucedido
       console.log('Login bem sucedido para o usuário:', userEncontrado.email);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao realizar login:', error);
-      throw error;
     }
   }
 }

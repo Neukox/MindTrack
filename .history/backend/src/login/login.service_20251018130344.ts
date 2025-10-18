@@ -41,10 +41,9 @@ export class LoginService {
       }
 
       //Login bem sucedido
-      console.log('Login bem sucedido para o usuário:', userEncontrado.email);
-    } catch (error) {
+      console.error('Login bem sucedido para o usuário:', userEncontrado.email);
+    } catch (error: any) {
       console.error('Erro ao realizar login:', error);
-      throw error;
     }
   }
 }

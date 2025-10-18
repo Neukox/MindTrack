@@ -42,9 +42,12 @@ export class LoginService {
 
       //Login bem sucedido
       console.log('Login bem sucedido para o usuário:', userEncontrado.email);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao realizar login:', error);
-      throw error;
+      throw new HttpException(
+        'Erro ao realizar login. Tente novamente mais tarde.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
