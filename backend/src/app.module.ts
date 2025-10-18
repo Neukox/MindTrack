@@ -6,6 +6,10 @@ import { RegisterModule } from './register/register.module';
 import { ResetPasswordModule } from './reset-password/reset-password.module';
 import { ReflexaoModule } from './reflexao/reflexao.module';
 import { BuscaReflexaoModule } from './reflexao/busca-reflexao.module';
+import { AuthModule } from './auth/auth.module';
+import { PrismaService } from './prisma/prisma.service';
+import { UserModule } from './user/user.module';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 @Module({
   imports: [
@@ -14,8 +18,17 @@ import { BuscaReflexaoModule } from './reflexao/busca-reflexao.module';
     ResetPasswordModule,
     ReflexaoModule,
     BuscaReflexaoModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    PrismaService,
+    {
+      provide: 'APP_PIPE',
+      useClass: ZodValidationPipe,
+    },
+  ],
 })
 export class AppModule {}

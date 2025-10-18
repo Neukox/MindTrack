@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ResetPasswordService } from './reset-password.service';
-import { ResetPasswordController } from './reset-password.controller';
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Module({
-  providers: [ResetPasswordService],
-  controllers: [ResetPasswordController],
+  providers: [ResetPasswordService, PrismaService],
+  exports: [ResetPasswordService],
 })
 export class ResetPasswordModule {}

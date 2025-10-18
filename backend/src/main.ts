@@ -1,8 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ZodExceptionFilter } from './common/filters/zod-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // Registra filtro global para transformar erros do Zod em respostas HTTP amigáveis
+  app.useGlobalFilters(new ZodExceptionFilter());
   const port = process.env.PORT ?? 3000;
 
   await app.listen(port);
