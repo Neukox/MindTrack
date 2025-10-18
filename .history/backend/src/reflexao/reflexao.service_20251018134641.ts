@@ -25,6 +25,7 @@ export class ReflexaoService {
       }
 
       // Valida se o usuário existe
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const userExists = await this.prisma.user.findUnique({
         where: { id: userId },
       });

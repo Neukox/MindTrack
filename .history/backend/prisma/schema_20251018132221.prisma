@@ -15,21 +15,7 @@ datasource db {
 }
 
 
-enum Category {
-  ESTUDO
-  PESSOAL
-  ESTAGIO
-  PESQUISA
-}
 
-enum Emotion {
-  ALEGRIA
-  CALMA
-  ANSIEDADE
-  REFLEXAO
-  MOTIVACAO
-  TRISTEZA
-}
 
 model User {
   id               String                @id @default(cuid())

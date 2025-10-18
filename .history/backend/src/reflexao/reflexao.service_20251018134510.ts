@@ -15,7 +15,8 @@ export class ReflexaoService {
   private prisma = prisma;
 
   async createReflexao(payload: ReflexaoPayload): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // Suprime avisos de tipagem para desestruturação
+
     const { title, category, content, emotion, userId } = payload;
 
     try {
@@ -34,14 +35,17 @@ export class ReflexaoService {
       }
 
       // Cria a reflexão no banco de dados
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      // Suprime avisos de tipagem para operações do Prisma
+
       const reflexaoCreated = await this.prisma.reflection.create({
         data: {
           title,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          // Converte para tipo enum Category
+
           category: category,
           content,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          // Converte para tipo enum Emotion
+
           emotion: emotion,
           userId,
         },

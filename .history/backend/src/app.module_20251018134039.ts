@@ -9,11 +9,11 @@ import { BuscaReflexaoModule } from './reflexao/busca-reflexao.module';
 
 @Module({
   imports: [
-    LoginModule,
-    RegisterModule,
-    ResetPasswordModule,
-    ReflexaoModule,
-    BuscaReflexaoModule,
+    LoginModule, 
+    RegisterModule, 
+    ResetPasswordModule, 
+    ReflexaoModule, 
+    BuscaReflexaoModule
   ],
   controllers: [AppController],
   providers: [AppService],

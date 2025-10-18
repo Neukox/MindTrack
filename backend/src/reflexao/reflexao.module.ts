@@ -4,6 +4,6 @@ import { ReflexaoController } from './reflexao.controller';
 
 @Module({
   providers: [ReflexaoService],
-  controllers: [ReflexaoController]
+  controllers: [ReflexaoController],
 })
 export class ReflexaoModule {}

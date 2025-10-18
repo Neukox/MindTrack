@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import prisma from '../lib/prisma.client';
+import { PrismaClient } from '../../generated/prisma';
 import { Category, Emotion } from '../../generated/prisma';
 
 type ReflexaoPayload = {
@@ -12,9 +12,10 @@ type ReflexaoPayload = {
 
 @Injectable()
 export class ReflexaoService {
-  private prisma = prisma;
+  private prisma = new PrismaClient();
 
   async createReflexao(payload: ReflexaoPayload): Promise<void> {
+    // Suprime avisos de tipagem para desestruturação
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { title, category, content, emotion, userId } = payload;
 
@@ -34,15 +35,18 @@ export class ReflexaoService {
       }
 
       // Cria a reflexão no banco de dados
+      // Suprime avisos de tipagem para operações do Prisma
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const reflexaoCreated = await this.prisma.reflection.create({
         data: {
           title,
+          // Converte para tipo enum Category
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          category: category,
+          category: category as Category,
           content,
+          // Converte para tipo enum Emotion
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          emotion: emotion,
+          emotion: emotion as Emotion,
           userId,
         },
       });
@@ -56,6 +60,38 @@ export class ReflexaoService {
 
       // Para outros erros, registra no log e lança uma exceção genérica
       console.error('Erro ao criar reflexão:', error);
+      throw new BadRequestException(
+        'Erro interno. Tente novamente mais tarde.',
+      );
+    } finally {
+      // Fecha a conexão do Prisma para evitar vazamentos de memória
+      await this.prisma.$disconnect();
+    }
+  }
+
+  async getReflexoesByUser(userId: string): Promise<any[]> {
+    try {
+      if (!userId) {
+        throw new BadRequestException('ID do usuário é obrigatório.');
+      }
+
+      // Busca todas as reflexões do usuário ordenadas por data de criação
+      // Suprime avisos de tipagem para operações do Prisma
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      const reflexoes = await this.prisma.reflection.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      // Retorna as reflexões encontradas
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return reflexoes;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      console.error('Erro ao buscar reflexões:', error);
       throw new BadRequestException(
         'Erro interno. Tente novamente mais tarde.',
       );

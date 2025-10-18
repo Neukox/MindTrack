@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import prisma from '../lib/prisma.client';
+import { PrismaClient } from '../../generated/prisma';
 import { Category, Emotion } from '../../generated/prisma';
 
 type ReflexaoPayload = {
@@ -12,10 +12,9 @@ type ReflexaoPayload = {
 
 @Injectable()
 export class ReflexaoService {
-  private prisma = prisma;
+  private prisma = new PrismaClient();
 
   async createReflexao(payload: ReflexaoPayload): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { title, category, content, emotion, userId } = payload;
 
     try {
@@ -25,6 +24,7 @@ export class ReflexaoService {
       }
 
       // Valida se o usuário existe
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const userExists = await this.prisma.user.findUnique({
         where: { id: userId },
       });
@@ -33,34 +33,59 @@ export class ReflexaoService {
         throw new BadRequestException('Usuário não encontrado.');
       }
 
-      // Cria a reflexão no banco de dados
+      // Cria a reflexão
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       const reflexaoCreated = await this.prisma.reflection.create({
         data: {
           title,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          category: category,
+          category,
           content,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          emotion: emotion,
+          emotion,
           userId,
         },
       });
 
       console.log('Reflexão criada:', reflexaoCreated);
     } catch (error) {
-      // Se for uma BadRequestException, relança para o NestJS tratar
+      // Se for uma BadRequestException, re-lança para o NestJS tratar
       if (error instanceof BadRequestException) {
         throw error;
       }
 
-      // Para outros erros, registra no log e lança uma exceção genérica
+      // Para outros erros, loga e lança uma exceção genérica
       console.error('Erro ao criar reflexão:', error);
       throw new BadRequestException(
         'Erro interno. Tente novamente mais tarde.',
       );
     } finally {
       // Fecha a conexão do Prisma para evitar vazamentos de memória
+      await this.prisma.$disconnect();
+    }
+  }
+
+  async getReflexoesByUser(userId: string): Promise<any[]> {
+    try {
+      if (!userId) {
+        throw new BadRequestException('ID do usuário é obrigatório.');
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      const reflexoes = await this.prisma.reflection.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return reflexoes;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      console.error('Erro ao buscar reflexões:', error);
+      throw new BadRequestException(
+        'Erro interno. Tente novamente mais tarde.',
+      );
+    } finally {
       await this.prisma.$disconnect();
     }
   }
