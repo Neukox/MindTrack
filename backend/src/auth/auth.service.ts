@@ -4,7 +4,8 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import HashingService from './hashing/hashing.service';
 import TokenHashingService from './hashing/token-hashing.service';
 import resetPasswordConfig from './config/resetPassword.config';
-import type { ConfigType } from '@nestjs/config';
+import { ConfigService, type ConfigType } from '@nestjs/config';
+import RecoverPasswordEmailService from '@/email/services/recover-password-email.service';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,8 @@ export class AuthService {
     private readonly resetPasswordService: ResetPasswordService,
     @Inject(resetPasswordConfig.KEY)
     private readonly passRecoveryConfig: ConfigType<typeof resetPasswordConfig>,
+    private readonly appConfig: ConfigService,
+    private readonly emailService: RecoverPasswordEmailService,
   ) {}
 
   async requestPasswordReset(email: string) {
@@ -35,6 +38,15 @@ export class AuthService {
       user.id,
       hashedToken,
       expiresAt,
+    );
+
+    const resetUrl = `${this.appConfig.get<string>('clientUrl')}/reset-password?token=${token}`;
+
+    await this.emailService.sendRecoverPasswordEmail(
+      user.email,
+      user.username,
+      resetUrl,
+      token,
     );
 
     // Here you would typically send the token to the user's email

@@ -10,9 +10,12 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma/prisma.service';
 import { UserModule } from './user/user.module';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { EmailModule } from './email/email.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     LoginModule,
     RegisterModule,
     ResetPasswordModule,
@@ -20,6 +23,7 @@ import { ZodValidationPipe } from 'nestjs-zod';
     BuscaReflexaoModule,
     AuthModule,
     UserModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [

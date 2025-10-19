@@ -8,6 +8,7 @@ import { ResetPasswordModule } from '@/reset-password/reset-password.module';
 import { ConfigModule } from '@nestjs/config';
 import resetPasswordConfig from './config/resetPassword.config';
 import { UserModule } from '@/user/user.module';
+import { EmailModule } from '@/email/email.module';
 
 @Global()
 @Module({
@@ -15,6 +16,7 @@ import { UserModule } from '@/user/user.module';
     ResetPasswordModule,
     ConfigModule.forFeature(resetPasswordConfig),
     UserModule,
+    EmailModule,
   ],
   controllers: [AuthController],
   providers: [
