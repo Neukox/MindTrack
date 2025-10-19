@@ -6,14 +6,6 @@ export class ResetPasswordService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async setTokenRecovery(userId: string, token: string, expiresAt: Date) {
-    // Remove tokens existentes do usuário antes de criar um novo
-    await this.prismaService.passwordResetToken.deleteMany({
-      where: {
-        userId,
-      },
-    });
-
-    // Cria um novo token
     await this.prismaService.passwordResetToken.create({
       data: {
         userId,

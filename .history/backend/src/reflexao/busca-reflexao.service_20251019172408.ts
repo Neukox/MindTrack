@@ -111,7 +111,10 @@ export class BuscaReflexaoService {
     }
   }
 
-  async getReflexoesByEmotion(userId: string, emotion: string): Promise<any[]> {
+  async getReflexoesByEmotion(
+    userId: string,
+    emotion: string,
+  ): Promise<any[]> {
     try {
       if (!userId || !emotion) {
         throw new BadRequestException(
@@ -119,12 +122,7 @@ export class BuscaReflexaoService {
         );
       }
 
-      console.log(
-        'Buscando reflexões por emoção:',
-        emotion,
-        'para usuário:',
-        userId,
-      );
+      console.log('Buscando reflexões por emoção:', emotion, 'para usuário:', userId);
 
       // Busca reflexões por emoção específica do usuário
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
@@ -166,7 +164,7 @@ export class BuscaReflexaoService {
 
       const start = new Date(startDate);
       const end = new Date(endDate);
-
+      
       // Ajusta a data final para incluir todo o dia
       end.setHours(23, 59, 59, 999);
 
@@ -179,7 +177,7 @@ export class BuscaReflexaoService {
           userId,
           createdAt: {
             gte: start, // Greater than or equal (maior ou igual)
-            lte: end, // Less than or equal (menor ou igual)
+            lte: end,   // Less than or equal (menor ou igual)
           },
         },
         orderBy: { createdAt: 'desc' },

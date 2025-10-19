@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-  HttpStatus,
-  HttpCode,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query, HttpStatus, HttpCode } from '@nestjs/common';
 import { BuscaReflexaoService } from './busca-reflexao.service';
 
 @Controller('busca-reflexao')

@@ -20,7 +20,7 @@ export class AuthController {
     // TODO -> Configurar serviço de envio de e-mail
     // Por enquanto, retorna o token para testes
     console.log('Token de reset:', payload.resetUrl);
-
+    
     try {
       await this.recoverEmailService.sendRecoverPasswordEmail(
         payload.to,
@@ -31,9 +31,9 @@ export class AuthController {
     } catch (error) {
       console.error('Erro ao enviar email:', error);
       // Retorna o token para teste quando email falha
-      return {
-        message: 'Erro no envio de email. Token para teste:',
-        token: payload.resetUrl.split('token=')[1],
+      return { 
+        message: 'Erro no envio de email. Token para teste:', 
+        token: payload.resetUrl.split('token=')[1] 
       };
     }
   }
