@@ -9,7 +9,7 @@ import Handlebars from 'handlebars';
 @Injectable()
 export default class EmailService implements OnModuleDestroy {
   protected transporter: Transporter;
-  protected templatesDir = path.join(__dirname, '..', 'templates');
+  protected templatesDir = path.join(__dirname, '..', '..', '..', 'templates');
 
   constructor(
     @Inject(emailConfig.KEY)
@@ -29,7 +29,7 @@ export default class EmailService implements OnModuleDestroy {
     templateName: string,
     context: Record<string, any>,
   ): Promise<string> {
-    const filePath = path.join(this.templatesDir, templateName);
+    const filePath = path.join(this.templatesDir, `${templateName}.hbs`);
     const content = await fs.readFile(filePath, 'utf-8');
     const compiled = Handlebars.compile(content);
     return compiled(context);

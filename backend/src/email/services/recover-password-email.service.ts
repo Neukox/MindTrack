@@ -9,25 +9,19 @@ export default class RecoverPasswordEmailService extends EmailService {
     super(config);
   }
 
-  async sendRecoverPasswordEmail(
-    to: string,
-    name: string,
-    resetUrl: string,
-    token: string,
-  ) {
+  async sendRecoverPasswordEmail(to: string, name: string, resetUrl: string) {
     const subject = 'Redefinição de senha';
-    const text = `Olá ${name},\n\nRecebemos uma solicitação para redefinir sua senha. Use o link abaixo:\n\n${resetUrl}\n\nSe não solicitou, ignore este e-mail.\n\nMindTrack - ${new Date().getFullYear()}`;
+
     const context = {
       name,
       resetUrl,
-      token,
     };
+
     return this.sendEmail({
-        to,
-        subject,
-        context,
-        html: text,
-        text,
+      to,
+      subject,
+      template: 'recover-password',
+      context,
     });
-}
+  }
 }

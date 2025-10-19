@@ -12,7 +12,7 @@ O objetivo do MindTrack é promover o autoconhecimento e o desenvolvimento acad�
 
 - `RF01` – O sistema deve permitir o cadastro de novos usuários. — ✅ Desenvolvido
 - `RF02` – O sistema deve permitir o login de usuários existentes. — 🛠️ Em desenvolvimento
-- `RF03` – O sistema deve oferecer recuperação de senha via e-mail.— 🛠️ Em desenvolvimento 
+- `RF03` – O sistema deve oferecer recuperação de senha via e-mail.— ✅ Desenvolvido
 - `RF04` – O usuário deve poder criar registros de reflexão contendo título, categoria, emoção e texto. 
 - `RF05` – O sistema deve exibir um dashboard com estatísticas de uso e progresso do usuário.
 - `RF06` – O sistema deve permitir a filtragem e busca de registros por categoria, emoção e data.

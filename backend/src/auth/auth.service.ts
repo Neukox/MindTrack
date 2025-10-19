@@ -40,17 +40,13 @@ export class AuthService {
       expiresAt,
     );
 
-    const resetUrl = `${this.appConfig.get<string>('clientUrl')}/reset-password?token=${token}`;
+    const resetUrl = `${this.appConfig.get<string>('CLIENT_URL')}/reset-password?token=${token}`;
 
-    await this.emailService.sendRecoverPasswordEmail(
-      user.email,
-      user.username,
+    return {
+      to: user.email,
+      name: user.username,
       resetUrl,
-      token,
-    );
-
-    // Here you would typically send the token to the user's email
-    return token;
+    };
   }
 
   async resetPassword(token: string, newPassword: string) {
