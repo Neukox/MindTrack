@@ -1,14 +1,18 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import ReactDOM from 'react-dom/client'
+import App from './App'
 import './index.css'
-import TelaLogin from './componentes/TelaLogin.tsx'
-import TelaCadastro from './componentes/TelaCadastro.tsx'
-import Recuperar from './componentes/Recuperar.tsx'
+import { Toaster } from 'sonner'
+import { HelmetProvider } from "react-helmet-async";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <TelaLogin /> 
-    <TelaCadastro />
-    <Recuperar />
-  </StrictMode>,
+const root = document.getElementById('root') as HTMLElement
+
+ReactDOM.createRoot(root).render(
+  <BrowserRouter>
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+    <Toaster />
+  </BrowserRouter>
 )

@@ -1,18 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import { Routes, Route } from 'react-router-dom'
+{/* Rotas de autênticação*/ }
+import Login from './pages/auth/Login'
+import Cadastro from './pages/auth/Cadastro'
+import Recuperar from './Components/auth/Recuperar'
+
+{/* Rotas do Dashboard*/ }
+import DashboardPage from './pages/dashboard'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      
-      
-      
+      <Routes>
+        <Route path='/' element={<Login />} />
+        <Route path='/cadastro' element={<Cadastro />} />
+        <Route path='/recuperar' element={<Recuperar />} />
+        <Route path='/dashboard' element={<DashboardPage />} />
+      </Routes>
+
       
     </>
+  
   )
 }
 

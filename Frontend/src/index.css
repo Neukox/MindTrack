@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+/* Hide native browser password reveal buttons where possible and leave space for custom button */
+/* Chrome/Edge */
+input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none; }
+input[type="password"]::-webkit-textfield-decoration-container { display:none; }
+input[type="password"]::-webkit-textfield-decoration { display:none; }
+/* Fallback: prevent pointer events on native controls (may not work on all browsers) */
+input[type="password"]::-webkit-textfield-decoration-container, input[type="password"]::-webkit-contacts-auto-fill-button { pointer-events: none; }
+
+/* Ensure there is padding on the right to avoid overlap with custom button */
+input[type="password"], input[type="text"] { padding-right: 2.5rem; }
