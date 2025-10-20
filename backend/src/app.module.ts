@@ -13,6 +13,7 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { TemplatesModule } from './templates/templates.module';
+import { PdfModule } from './pdf/pdf.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TemplatesModule } from './templates/templates.module';
     UserModule,
     EmailModule,
     TemplatesModule,
+    PdfModule,
   ],
   controllers: [AppController],
   providers: [
