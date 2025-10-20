@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from 'react-hook-form'
 import { toast } from "sonner";
-import MindLog from "../../../src/assets/MindTrack.png";
+import MindLog from "../../../assets/MindTrack.png";
 import { Helmet } from "react-helmet-async";
 
 export default function Recuperar() {

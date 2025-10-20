@@ -1,4 +1,4 @@
-import TelaLogin from "../../Components/auth/TelaLogin";
+import TelaLogin from "../components/LoginForm";
 
 // Este componente é responsável por renderizar a página de login.
 export default function Login() {

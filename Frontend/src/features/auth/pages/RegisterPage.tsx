@@ -1,4 +1,4 @@
-import TelaCadastro from "../../Components/auth/TelaCadastro";
+import TelaCadastro from "../components/RegisterForm";
 
 // Este componente é responsável por renderizar a página de cadastro.
 export default function Cadastro() {

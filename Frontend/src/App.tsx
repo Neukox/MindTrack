@@ -1,24 +1,30 @@
 
-import { Routes, Route } from 'react-router-dom'
-{/* Rotas de autênticação*/ }
-import Login from './pages/auth/Login'
-import Cadastro from './pages/auth/Cadastro'
-import Recuperar from './Components/auth/Recuperar'
+import {  Routes, Route } from 'react-router-dom';
+/* Rotas de autênticação*/ 
+import Login from './features/auth/pages/LoginPage'
+import Cadastro from './features/auth/pages/RegisterPage'
+import Recuperar from './features/auth/pages/RecoverPage'
 
-{/* Rotas do Dashboard*/ }
-import DashboardPage from './pages/dashboard'
-
+/* Rotas do Dashboard*/ 
+import DashboardLayout from './features/dashboard/layouts/DashbboardLayout'
+import { DashboardPage } from './features/dashboard/pages/DashboardPage';
 function App() {
 
   return (
     <>
+      
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/cadastro' element={<Cadastro />} />
         <Route path='/recuperar' element={<Recuperar />} />
-        <Route path='/dashboard' element={<DashboardPage />} />
+     
+     
+        <Route element={<DashboardLayout />}>
+          <Route path='/dashboard' element={<DashboardPage />} />
+        </Route>
       </Routes>
-
+      
+    
       
     </>
   

@@ -3,7 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Link,useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useForm } from 'react-hook-form'
-import MindLog from "../../../src/assets/MindTrack.png";
+import MindLog from "../../../assets/MindTrack.png";
 import { Helmet } from "react-helmet-async";
 
 export default function TelaCadastro() {
