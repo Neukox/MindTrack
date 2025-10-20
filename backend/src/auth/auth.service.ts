@@ -5,7 +5,6 @@ import HashingService from './hashing/hashing.service';
 import TokenHashingService from './hashing/token-hashing.service';
 import resetPasswordConfig from './config/resetPassword.config';
 import { ConfigService, type ConfigType } from '@nestjs/config';
-import RecoverPasswordEmailService from '@/email/services/recover-password-email.service';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +16,6 @@ export class AuthService {
     @Inject(resetPasswordConfig.KEY)
     private readonly passRecoveryConfig: ConfigType<typeof resetPasswordConfig>,
     private readonly appConfig: ConfigService,
-    private readonly emailService: RecoverPasswordEmailService,
   ) {}
 
   async requestPasswordReset(email: string) {
