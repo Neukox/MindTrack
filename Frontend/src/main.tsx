@@ -1,10 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+import TelaLogin from './Componentes/TelaLogin.tsx'
+import TelaCadastro from './Componentes/TelaCadastro.tsx'
+import Recuperar from './Componentes/Recuperar.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <TelaLogin /> 
+    <TelaCadastro />
+    <Recuperar />
   </StrictMode>,
 )
