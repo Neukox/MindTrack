@@ -12,6 +12,7 @@ import { UserModule } from './user/user.module';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
+import { EdicaoRegistrosModule } from './edicao-registros/edicao-registros.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     UserModule,
     EmailModule,
+    EdicaoRegistrosModule,
   ],
   controllers: [AppController],
   providers: [
