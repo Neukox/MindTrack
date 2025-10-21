@@ -1,4 +1,4 @@
-import api from "../../../lib/api/api";
+import api from "./api";
 
 // Tipos para o registro
 export interface RegisterData {
