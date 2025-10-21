@@ -57,4 +57,12 @@ export class ReflexaoService {
 
     return reflections;
   }
+
+  async findOne(id: string) {
+    const reflection = await this.prismaService.reflection.findUnique({
+      where: { id },
+    });
+
+    return reflection;
+  }
 }
