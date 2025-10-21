@@ -1,3 +1,4 @@
+import { DateStringSchema } from '@/common/schemas/date.schema';
 import { Category, Emotion } from '@generated/prisma';
 import z from 'zod';
 
@@ -16,3 +17,22 @@ export const ReflectionSchema = z.object({
   emotion: EmotionEnum,
   userId: z.cuid('ID de usuário inválido.'),
 });
+
+export const ReflectionFilterSchema = z
+  .object({
+    category: CategoryEnum.optional(),
+    emotion: EmotionEnum.optional(),
+    startDate: DateStringSchema.optional(),
+    endDate: DateStringSchema.optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.startDate && data.endDate) {
+        return new Date(data.startDate) <= new Date(data.endDate);
+      }
+      return true;
+    },
+    {
+      message: 'A data de início deve ser anterior ou igual à data de término.',
+    },
+  );
