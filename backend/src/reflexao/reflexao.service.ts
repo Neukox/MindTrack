@@ -2,6 +2,7 @@ import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import CreateReflectionDto from './dtos/create-reflection.dto';
 import { UserService } from '@/user/user.service';
+import ReflectionFiltersDto from './dtos/reflection-flilters.dto';
 
 @Injectable()
 export class ReflexaoService {
@@ -36,5 +37,24 @@ export class ReflexaoService {
       `Reflexão criada com ID: ${reflexaoCreated.id}`,
       reflexaoCreated,
     );
+  }
+
+  async findAllByUser(userId: string, filters: ReflectionFiltersDto) {
+    const reflections = await this.prismaService.reflection.findMany({
+      where: {
+        userId,
+        category: filters.category,
+        emotion: filters.emotion,
+        createdAt: {
+          gte: filters.startDate,
+          lte: filters.endDate,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return reflections;
   }
 }
