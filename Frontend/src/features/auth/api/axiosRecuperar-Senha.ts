@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "../../../lib/api/api";
 
 // Tipos para recuperação de senha
 export interface RecoverPasswordData {

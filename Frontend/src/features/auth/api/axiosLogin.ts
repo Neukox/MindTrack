@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "../../../lib/api/api";
 
 // Tipos para o login
 export interface LoginData {

@@ -6,17 +6,17 @@ export {
   logoutUser,
   isUserLoggedIn,
   getLoggedUser,
-} from "./axios/axiosLogin";
-export { registerUser, validateRegisterData } from "./axios/axiosRegister";
+} from "./api/axiosLogin";
+export { registerUser, validateRegisterData } from "./api/axiosRegister";
 export {
   requestPasswordRecovery,
   resetPassword,
   validateEmail,
   validateResetToken,
-} from "./axios/axiosRecuperar-Senha";
+} from "./api/axiosRecuperar-Senha";
 
 // API base
-export { default as api } from "./axios/api";
+export { default as api } from "../../lib/api/api";
 
 // Tipos
-export * from "./types/auth.types";
+export * from "../../lib/types/auth.types";

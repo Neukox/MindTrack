@@ -5,8 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import MindLog from "../../../assets/MindTrack.png";
 import { Helmet } from "react-helmet-async";
-import { loginUser } from "../../../../auth/axios/axiosLogin";
-import type { LoginData } from "../../../../auth/axios/axiosLogin";
+import { loginUser } from "../api/axiosLogin";
+import type { LoginData } from "../api/axiosLogin";
 
 export default function TelaLogin() {
   const [showPassword, setShowPassword] = useState(false);

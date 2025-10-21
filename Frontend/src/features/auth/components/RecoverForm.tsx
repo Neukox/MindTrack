@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet-async";
 import {
   requestPasswordRecovery,
   validateEmail,
-} from "../../../../auth/axios/axiosRecuperar-Senha";
+} from "../api/axiosRecuperar-Senha";
 
 export default function Recuperar() {
   const [isLoading, setIsLoading] = useState(false);

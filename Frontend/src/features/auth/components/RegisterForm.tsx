@@ -8,7 +8,7 @@ import { Helmet } from "react-helmet-async";
 import {
   registerUser,
   validateRegisterData,
-} from "../../../../auth/axios/axiosRegister";
+} from "../api/axiosRegister";
 
 type FormData = {
   nome: string;
