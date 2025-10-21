@@ -7,7 +7,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   // Configuração de CORS para permitir requisições do frontend
-  app.enableCors(corsConfig);
+  app.enableCors({
+    origin: [
+      'http://localhost:5173', // Vite dev server
+      'http://localhost:3000', // Caso o frontend rode na 3000
+      'http://127.0.0.1:5173', // Alternativa localhost
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  });
 
   // Registra filtro global para transformar erros do Zod em respostas HTTP amigáveis
   app.useGlobalFilters(new ZodExceptionFilter());

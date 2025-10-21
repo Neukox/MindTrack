@@ -22,7 +22,6 @@ export default function TelaLogin() {
 
   async function onSubmit(data: LoginData) {
     setIsLoading(true);
-    
     try {
       const response = await loginUser(data);
       toast.success(response.message || "Login realizado com sucesso!");
@@ -33,7 +32,6 @@ export default function TelaLogin() {
           ? error.message
           : "Erro interno. Tente novamente.";
       toast.error(errorMessage);
-      console.error('Erro no login:', error);
     } finally {
       setIsLoading(false);
     }

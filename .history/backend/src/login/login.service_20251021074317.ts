@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import prisma from '../lib/prisma.client';
+import prisma from '@/lib/prisma.client';
 import bcrypt from 'bcrypt';
 
 type LoginPayload = {
@@ -51,15 +51,6 @@ export class LoginService {
 
       //Login bem sucedido
       console.log('Login bem sucedido para o usuário:', userEncontrado.email);
-      
-      return {
-        message: 'Login realizado com sucesso.',
-        user: {
-          id: userEncontrado.id,
-          username: userEncontrado.username,
-          email: userEncontrado.email,
-        },
-      };
     } catch (error) {
       console.error('Erro ao realizar login:', error);
       throw error;

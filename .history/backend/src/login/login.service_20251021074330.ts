@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import prisma from '../lib/prisma.client';
+import prisma from '@/lib/prisma.client';
 import bcrypt from 'bcrypt';
 
 type LoginPayload = {

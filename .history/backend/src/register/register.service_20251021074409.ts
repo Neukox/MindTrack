@@ -66,15 +66,6 @@ export class RegisterService {
       });
 
       console.log('User created:', userCreated);
-
-      return {
-        message: 'Usuário registrado com sucesso.',
-        user: {
-          id: userCreated.id,
-          username: userCreated.username,
-          email: userCreated.email,
-        },
-      };
     } catch (error) {
       // Se for uma BadRequestException, re-lança para o NestJS tratar
       if (error instanceof BadRequestException) {
