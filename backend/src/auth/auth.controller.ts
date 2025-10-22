@@ -5,6 +5,7 @@ import ResetPasswordDto from './dto/reset-password.dto';
 import RecoverPasswordEmailService from '@/email/services/recover-password-email.service';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import LoginDto from './dto/login.dto';
+import RegisterDto from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +25,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: 400,
-    description: "Validação falhou.",
+    description: 'Validação falhou.',
   })
   @ApiResponse({
     status: 404,
@@ -38,12 +39,28 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
+
   @ApiOperation({
     summary: 'Registro de novo usuário',
     description: 'Registra um novo usuário no sistema.',
   })
+  @ApiBody({ type: RegisterDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuário registrado com sucesso.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validação falhou.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'E-mail já está em uso.',
+  })
   @Post('register')
-  async register() {}
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto);
+  }
 
   @ApiOperation({
     summary: 'Solicitar recuperação de senha',

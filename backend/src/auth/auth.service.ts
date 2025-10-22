@@ -1,6 +1,7 @@
 import { ResetPasswordService } from '@/reset-password/reset-password.service';
 import { UserService } from '@/user/user.service';
 import {
+  ConflictException,
   Inject,
   Injectable,
   Logger,
@@ -12,6 +13,7 @@ import TokenHashingService from './hashing/token-hashing.service';
 import resetPasswordConfig from './config/resetPassword.config';
 import { ConfigService, type ConfigType } from '@nestjs/config';
 import LoginDto from './dto/login.dto';
+import RegisterDto from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +27,7 @@ export class AuthService {
     @Inject(resetPasswordConfig.KEY)
     private readonly passRecoveryConfig: ConfigType<typeof resetPasswordConfig>,
     private readonly appConfig: ConfigService,
+    
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -47,7 +50,9 @@ export class AuthService {
     }
 
     //Login bem sucedido
-    this.logger.log(`Login bem sucedido para o usuário: ${userEncontrado.email}`);
+    this.logger.log(
+      `Login bem sucedido para o usuário: ${userEncontrado.email}`,
+    );
 
     return {
       message: 'Login realizado com sucesso.',
@@ -59,7 +64,33 @@ export class AuthService {
     };
   }
 
-  async register() {}
+  async register(registerDto: RegisterDto) {
+    const { email, username, password } = registerDto;
+
+    const usuarioExistente = await this.userService.findByEmail(email);
+
+    if (usuarioExistente) {
+      throw new ConflictException('E-mail já está em uso.');
+    }
+
+    const hashedPassword = await this.hashingService.hash(password);
+
+    const novoUsuario = await this.userService.create({
+      ...registerDto,
+      password: hashedPassword,
+    });
+
+    this.logger.log(`Novo usuário registrado: ${novoUsuario.email}`);
+
+    return {
+      message: 'Usuário registrado com sucesso.',
+      user: {
+        id: novoUsuario.id,
+        username: novoUsuario.username,
+        email: novoUsuario.email,
+      },
+    };
+  }
 
   async requestPasswordReset(email: string) {
     const user = await this.userService.findByEmail(email);
