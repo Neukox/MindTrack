@@ -34,4 +34,11 @@ export class UserService {
       data: { password: newPassword },
     });
   }
+
+  async setRefreshToken(id: string, refreshToken: string) {
+    return this.prismaService.user.update({
+      where: { id },
+      data: { refreshToken },
+    });
+  }
 }

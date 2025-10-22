@@ -15,7 +15,7 @@ import { ContagemUltimaReflexaoCriadaModule } from './contagem-ultima-reflexao-c
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     ResetPasswordModule,
     ReflexaoModule,
     AuthModule,
