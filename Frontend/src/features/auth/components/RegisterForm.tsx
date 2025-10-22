@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
@@ -9,6 +8,9 @@ import {
   registerUser,
   validateRegisterData,
 } from "../api/axiosRegister";
+import { TogglePasswordButton } from "../../../components/ui/TogglePasswordButton";
+import { Button } from "../../../components/ui/Button";
+
 
 type FormData = {
   nome: string;
@@ -73,7 +75,7 @@ export default function TelaCadastro() {
         <title>MindTrack - Cadastro</title>
       </Helmet>
 
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#fff8f3] to-[#f3eef0] p-6">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-primary-gradient p-6">
         {/* Logo e título */}
         <div className="flex flex-col items-center mb-10">
           <div className="flex items-center gap-3 mb-2">
@@ -148,18 +150,10 @@ export default function TelaCadastro() {
               placeholder="********"
               className="w-full pr-10 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
-            <button
-              type="button"
-              onClick={() => setShowSenha((s) => !s)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 cursor-pointer"
-              aria-label={showSenha ? "Esconder senha" : "Mostrar senha"}
-            >
-              {showSenha ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
-            </button>
+            <TogglePasswordButton
+              showPassword={showSenha}
+              onToggle={() => setShowSenha((s) => !s)}
+              />
           </div>
           {errors.senha && (
             <p className="text-sm text-red-500 mb-4">
@@ -187,21 +181,13 @@ export default function TelaCadastro() {
               placeholder="********"
               className="w-full pr-10 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
-            <button
-              type="button"
-              onClick={() => setShowConfirmarSenha((s) => !s)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 cursor-pointer"
-              aria-label={
-                showConfirmarSenha ? "Esconder senha" : "Mostrar senha"
-              }
-            >
-              {showConfirmarSenha ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
-            </button>
+
+            <TogglePasswordButton
+             showPassword={showConfirmarSenha}
+              onToggle={() => setShowConfirmarSenha((s) => !s)}
+            />
           </div>
+
           {errors.confirmarSenha && (
             <p className="text-sm text-red-500 mb-6">
               {String(errors.confirmarSenha.message || "Confirme a senha")}
@@ -209,17 +195,14 @@ export default function TelaCadastro() {
           )}
 
           {/* Botão de cadastro */}
-          <button
+          <Button
             type="submit"
-            disabled={isLoading}
-            className={`w-full py-3 rounded-lg font-medium transition ${
-              isLoading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-            } text-white`}
+            isLoading={isLoading}
+            loadingText="Criando Conta..."
+          
           >
-            {isLoading ? "Criando conta..." : "Criar Conta"}
-          </button>
+            Criar Conta
+          </Button>
 
           {/* Link para login */}
           <div className="text-center mt-4">

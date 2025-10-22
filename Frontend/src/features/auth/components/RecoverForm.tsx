@@ -47,7 +47,7 @@ export default function Recuperar() {
         <title>MindTrack - Login</title>
       </Helmet>
 
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#fff8f3] to-[#f3eef0] p-6">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-primary-gradient p-6">
         {/* Logo e título */}
         <div className="flex flex-col items-center mb-10">
           <div className="flex items-center gap-3 mb-2">
