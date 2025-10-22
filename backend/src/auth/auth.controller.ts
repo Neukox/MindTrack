@@ -4,6 +4,7 @@ import RecoverPasswordDto from './dto/recovery-password.dto';
 import ResetPasswordDto from './dto/reset-password.dto';
 import RecoverPasswordEmailService from '@/email/services/recover-password-email.service';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import LoginDto from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,6 +12,31 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly recoverEmailService: RecoverPasswordEmailService,
   ) {}
+
+  @ApiOperation({
+    summary: 'Login de usuário',
+    description: 'Autentica um usuário com e-mail e senha.',
+  })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Login realizado com sucesso.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Usuário não encontrado.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Senha incorreta.',
+  })
+  @Post('login')
+  async login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
+  }
+
+  @Post('register')
+  async register() {}
 
   @ApiOperation({
     summary: 'Solicitar recuperação de senha',

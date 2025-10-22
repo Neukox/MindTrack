@@ -1,13 +1,22 @@
 import { ResetPasswordService } from '@/reset-password/reset-password.service';
 import { UserService } from '@/user/user.service';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import HashingService from './hashing/hashing.service';
 import TokenHashingService from './hashing/token-hashing.service';
 import resetPasswordConfig from './config/resetPassword.config';
 import { ConfigService, type ConfigType } from '@nestjs/config';
+import LoginDto from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly userService: UserService,
     private readonly hashingService: HashingService,
@@ -17,6 +26,40 @@ export class AuthService {
     private readonly passRecoveryConfig: ConfigType<typeof resetPasswordConfig>,
     private readonly appConfig: ConfigService,
   ) {}
+
+  async login(loginDto: LoginDto) {
+    const { email, password } = loginDto;
+
+    //Buscando se usuário existe no banco de dados
+    const userEncontrado = await this.userService.findByEmail(email);
+
+    if (!userEncontrado) {
+      throw new NotFoundException('Usuário não encontrado.');
+    }
+
+    const senhaCorreta = await this.hashingService.compare(
+      password,
+      userEncontrado.password,
+    );
+
+    if (!senhaCorreta) {
+      throw new UnauthorizedException('Senha incorreta.');
+    }
+
+    //Login bem sucedido
+    this.logger.log(`Login bem sucedido para o usuário: ${userEncontrado.email}`);
+
+    return {
+      message: 'Login realizado com sucesso.',
+      user: {
+        id: userEncontrado.id,
+        username: userEncontrado.username,
+        email: userEncontrado.email,
+      },
+    };
+  }
+
+  async register() {}
 
   async requestPasswordReset(email: string) {
     const user = await this.userService.findByEmail(email);
