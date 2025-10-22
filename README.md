@@ -52,6 +52,8 @@ npm run start:dev
 ```
 🚀 Servidor rodando em: `http://localhost:3000`
 
+📃 Acesse a documentação da api em: `http://localhost:3000/api`
+
 ### Frontend
 ```bash
 cd frontend
