@@ -23,6 +23,10 @@ export class AuthController {
     description: 'Login realizado com sucesso.',
   })
   @ApiResponse({
+    status: 400,
+    description: "Validação falhou.",
+  })
+  @ApiResponse({
     status: 404,
     description: 'Usuário não encontrado.',
   })
@@ -34,7 +38,10 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
-
+  @ApiOperation({
+    summary: 'Registro de novo usuário',
+    description: 'Registra um novo usuário no sistema.',
+  })
   @Post('register')
   async register() {}
 

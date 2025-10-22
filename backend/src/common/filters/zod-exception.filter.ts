@@ -16,19 +16,30 @@ export class ZodExceptionFilter implements ExceptionFilter {
 
     const zodError = exception.getZodError() as ZodError;
 
-    const issues = zodError.issues.map((issue) => ({
-      path: Array.isArray(issue.path)
-        ? issue.path.join('.')
-        : String(issue.path),
-      messages: issue.message,
-    }));
+    const issues = this.formatZodError(zodError);
 
     const payload = {
       statusCode: 400,
-      message: 'Validation failed',
+      message: 'Validação falhou',
       errors: issues,
     };
 
     return res.status(400).json(payload);
+  }
+
+  private formatZodError(zodError: ZodError) {
+    const errorsMap: Record<string, string[]> = {};
+
+    zodError.issues.map((issue) => {
+      const path = issue.path.join('.') || 'root';
+
+      if (!errorsMap[path]) {
+        errorsMap[path] = [];
+      }
+
+      errorsMap[path].push(issue.message);
+    });
+
+    return errorsMap;
   }
 }
