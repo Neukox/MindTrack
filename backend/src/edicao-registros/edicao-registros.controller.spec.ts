@@ -9,7 +9,9 @@ describe('EdicaoRegistrosController', () => {
       controllers: [EdicaoRegistrosController],
     }).compile();
 
-    controller = module.get<EdicaoRegistrosController>(EdicaoRegistrosController);
+    controller = module.get<EdicaoRegistrosController>(
+      EdicaoRegistrosController,
+    );
   });
 
   it('should be defined', () => {

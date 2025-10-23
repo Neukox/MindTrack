@@ -13,9 +13,7 @@ export class RegisterController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async register(
-    @Body() body: RegisterPayload,
-  ): Promise<{
+  async register(@Body() body: RegisterPayload): Promise<{
     message: string;
     user: { id: string; username: string; email: string };
   }> {

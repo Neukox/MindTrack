@@ -13,6 +13,8 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { EdicaoRegistrosModule } from './edicao-registros/edicao-registros.module';
+import { ContagemTotalRegistrosModule } from './contagem-total-registros/contagem-total-registros.module';
+import { ContagemUltimaReflexaoCriadaModule } from './contagem-ultima-reflexao-criada/contagem-ultima-reflexao-criada.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { EdicaoRegistrosModule } from './edicao-registros/edicao-registros.modul
     UserModule,
     EmailModule,
     EdicaoRegistrosModule,
+    ContagemTotalRegistrosModule,
+    ContagemUltimaReflexaoCriadaModule,
   ],
   controllers: [AppController],
   providers: [

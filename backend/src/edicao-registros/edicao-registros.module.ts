@@ -4,6 +4,6 @@ import { EdicaoRegistrosController } from './edicao-registros.controller';
 
 @Module({
   providers: [EdicaoRegistrosService],
-  controllers: [EdicaoRegistrosController]
+  controllers: [EdicaoRegistrosController],
 })
 export class EdicaoRegistrosModule {}
