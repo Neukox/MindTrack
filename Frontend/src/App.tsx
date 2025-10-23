@@ -8,13 +8,15 @@ import Recuperar from './features/auth/pages/RecoverPage'
 /* Rotas do Dashboard*/ 
 import DashboardLayout from './features/dashboard/layouts/DashbboardLayout'
 import { DashboardPage } from './features/dashboard/pages/DashboardPage';
+import HomePage from './features/home/pages/HomePage';
 function App() {
 
   return (
     <>
       
       <Routes>
-        <Route path='/' element={<Login />} />
+        <Route path='/' element={<HomePage />} />
+        <Route path='/login' element={<Login />} />
         <Route path='/cadastro' element={<Cadastro />} />
         <Route path='/recuperar' element={<Recuperar />} />
      
