@@ -90,8 +90,8 @@ export default function NavBar({ title }: NavBarProps) {
               </div>
 
               {/* Dark Mode Button */}
-              <button
-                className="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"
+              <button 
+                className="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors" 
                 aria-label="Ativar modo escuro"
                 title="Ativar modo escuro"
               >
@@ -118,13 +118,13 @@ export default function NavBar({ title }: NavBarProps) {
               </div>
 
               {/* Logout Button */}
-              <button
-                className="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"
+              <button 
+                className="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors" 
                 aria-label="Logout"
                 title="Sair"
                 onClick={() => {
                   localStorage.clear();
-                  navigate("/login");
+                  navigate('/login');
                 }}
               >
                 <RxExit className="w-5 h-5 text-gray-600 hover:text-white" />

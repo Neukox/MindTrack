@@ -90,12 +90,12 @@ export default function NavBar({ title }: NavBarProps) {
               </div>
 
               {/* Dark Mode Button */}
-              <button
-                className="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"
+              <button 
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors" 
                 aria-label="Ativar modo escuro"
                 title="Ativar modo escuro"
               >
-                <HiMoon className="w-5 h-5 text-gray-600 hover:text-white" />
+                <HiMoon className="w-5 h-5 text-gray-600" />
               </button>
 
               {/* User Profile Info */}
@@ -113,21 +113,21 @@ export default function NavBar({ title }: NavBarProps) {
               </div>
 
               {/* User Avatar */}
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors cursor-pointer">
-                <HiUser className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-semibold">G</span>
               </div>
 
               {/* Logout Button */}
-              <button
-                className="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"
+              <button 
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors" 
                 aria-label="Logout"
                 title="Sair"
                 onClick={() => {
                   localStorage.clear();
-                  navigate("/login");
+                  navigate('/login');
                 }}
               >
-                <RxExit className="w-5 h-5 text-gray-600 hover:text-white" />
+                <RxExit className="w-5 h-5 text-gray-600" />
               </button>
             </nav>
 

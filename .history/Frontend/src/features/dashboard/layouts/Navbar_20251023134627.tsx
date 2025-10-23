@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaAlignRight } from "react-icons/fa";
 import { RxExit } from "react-icons/rx";
-import { HiMoon, HiUser } from "react-icons/hi";
+import { HiMoon } from "react-icons/hi";
 import MindLog from "@/assets/MindTrack.png";
 import Button from "../../../components/ui/Button";
 import { Helmet } from "react-helmet-async";
@@ -89,46 +89,30 @@ export default function NavBar({ title }: NavBarProps) {
                 </Button>
               </div>
 
-              {/* Dark Mode Button */}
-              <button
-                className="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"
-                aria-label="Ativar modo escuro"
-                title="Ativar modo escuro"
-              >
-                <HiMoon className="w-5 h-5 text-gray-600 hover:text-white" />
-              </button>
-
               {/* User Profile Info */}
+              <div
+                className="border-r-2 border-gray-200 h-8"
+                aria-hidden="true"
+              />
               <div
                 className="flex flex-col"
                 role="group"
                 aria-label="User profile"
               >
                 <span className="text-sm font-semibold text-right">
-                  gabrielefonline0900
+                  DaviLeal444
                 </span>
                 <span className="text-sm font-sans font-medium text-gray-500">
-                  gabrielefonline0900@gmail.com
+                  davi.leal@example.com
                 </span>
-              </div>
-
-              {/* User Avatar */}
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors cursor-pointer">
-                <HiUser className="w-5 h-5 text-white" />
               </div>
 
               {/* Logout Button */}
-              <button
-                className="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"
-                aria-label="Logout"
-                title="Sair"
-                onClick={() => {
-                  localStorage.clear();
-                  navigate("/login");
-                }}
-              >
-                <RxExit className="w-5 h-5 text-gray-600 hover:text-white" />
-              </button>
+              <div>
+                <button className="flex items-center" aria-label="Logout">
+                  <RxExit className="font-extrabold" size={21} />
+                </button>
+              </div>
             </nav>
 
             {/* Hamburger Mobile */}
