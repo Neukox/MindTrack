@@ -1,64 +1,68 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import prisma from '../lib/prisma.client';
-import { Category, Emotion } from '../../generated/prisma';
-
-type ReflexaoPayload = {
-  title: string;
-  category: Category;
-  content: string;
-  emotion: Emotion;
-  userId: string;
-};
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
+import { PrismaService } from '@/prisma/prisma.service';
+import CreateReflectionDto from './dtos/create-reflection.dto';
+import { UserService } from '@/user/user.service';
+import ReflectionFiltersDto from './dtos/reflection-flilters.dto';
 
 @Injectable()
 export class ReflexaoService {
-  private prisma = prisma;
+  private readonly logger = new Logger(ReflexaoService.name);
 
-  async createReflexao(payload: ReflexaoPayload): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { title, category, content, emotion, userId } = payload;
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService,
+  ) {}
 
-    try {
-      // Validações básicas
-      if (!title || !category || !content || !emotion || !userId) {
-        throw new BadRequestException('Todos os campos são obrigatórios.');
-      }
+  async create(reflection: CreateReflectionDto): Promise<void> {
+    const { title, category, content, emotion, userId } = reflection;
 
-      // Valida se o usuário existe
-      const userExists = await this.prisma.user.findUnique({
-        where: { id: userId },
-      });
+    // Valida se o usuário existe
+    const userExists = await this.userService.findOne(userId);
 
-      if (!userExists) {
-        throw new BadRequestException('Usuário não encontrado.');
-      }
-
-      // Cria a reflexão no banco de dados
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      const reflexaoCreated = await this.prisma.reflection.create({
-        data: {
-          title,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          category: category,
-          content,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          emotion: emotion,
-          userId,
-        },
-      });
-
-      console.log('Reflexão criada:', reflexaoCreated);
-    } catch (error) {
-      // Se for uma BadRequestException, relança para o NestJS tratar
-      if (error instanceof BadRequestException) {
-        throw error;
-      }
-
-      // Para outros erros, registra no log e lança uma exceção genérica
-      console.error('Erro ao criar reflexão:', error);
-      throw new BadRequestException(
-        'Erro interno. Tente novamente mais tarde.',
-      );
+    if (!userExists) {
+      throw new BadRequestException('Usuário não encontrado.');
     }
+
+    const reflexaoCreated = await this.prismaService.reflection.create({
+      data: {
+        title,
+        category: category,
+        content,
+        emotion: emotion,
+        userId,
+      },
+    });
+
+    this.logger.log(
+      `Reflexão criada com ID: ${reflexaoCreated.id}`,
+      reflexaoCreated,
+    );
+  }
+
+  async findAllByUser(userId: string, filters: ReflectionFiltersDto) {
+    const reflections = await this.prismaService.reflection.findMany({
+      where: {
+        userId,
+        category: filters.category,
+        emotion: filters.emotion,
+        createdAt: {
+          gte: filters.startDate,
+          lte: filters.endDate,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return reflections;
+  }
+
+  async findOne(id: string) {
+    const reflection = await this.prismaService.reflection.findUnique({
+      where: { id },
+    });
+
+    return reflection;
   }
 }

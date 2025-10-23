@@ -24,3 +24,34 @@ input[type="password"], input[type="text"] { padding-right: 2.5rem; }
     @apply border-border outline-ring/50; }
   body {
     @apply bg-background text-foreground; } }
+
+
+    @layer utilities {
+  .bg-primary-gradient {
+    @apply bg-gradient-to-br from-[#fff8f3] to-[#f3eef0];
+  }
+  .text-primary {
+    @apply hover:text-gray-600 cursor-pointer  text-black font-medium transition
+  }
+}
+
+    
+    /* Stronger global rule: hide scrollbar UI on all elements while preserving scrolling */
+    * {
+      -ms-overflow-style: none !important; /* IE/Edge */
+      scrollbar-width: none !important; /* Firefox */
+    }
+    *::-webkit-scrollbar {
+      display: none !important; /* Chrome, Safari, Opera */
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+/* Classe utilitária: mantém scroll, barra invisível */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari e Opera */
+}

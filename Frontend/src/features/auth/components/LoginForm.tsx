@@ -1,12 +1,14 @@
 import { toast } from "sonner";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import MindLog from "../../../assets/MindTrack.png";
 import { Helmet } from "react-helmet-async";
 import { loginUser } from "../api/axiosLogin";
 import type { LoginData } from "../api/axiosLogin";
+import { TogglePasswordButton } from "../../../components/ui/TogglePasswordButton";
+import { Button } from "../../../components/ui/Button";
+
 
 export default function TelaLogin() {
   const [showPassword, setShowPassword] = useState(false);
@@ -45,7 +47,7 @@ export default function TelaLogin() {
         <title>MindTrack - Login</title>
       </Helmet>
 
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#fff8f3] to-[#f3eef0] p-6">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-primary-gradient p-6">
         {/* Logo e título */}
         <div className="flex flex-col items-center mb-10">
           <div className="flex items-center gap-3 mb-2">
@@ -100,18 +102,10 @@ export default function TelaLogin() {
               className="w-full pr-10 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
 
-            <button
-              type="button"
-              onClick={() => setShowPassword((s) => !s)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 cursor-pointer"
-              aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
-            >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
-            </button>
+            <TogglePasswordButton
+        showPassword={showPassword}
+        onToggle={() => setShowPassword((s) => !s)}
+      />
           </div>
 
           {errors.password && (
@@ -132,17 +126,13 @@ export default function TelaLogin() {
 
           {/* Botão de login */}
           <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full py-3 rounded-lg font-medium transition ${
-                isLoading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-              } text-white`}
-            >
-              {isLoading ? "Entrando..." : "Entrar"}
-            </button>
+               <Button
+            type="submit"
+            isLoading={isLoading}
+            loadingText="Entrando..."
+          >
+            Entrar 
+          </Button>
           </div>
 
           {/* Link de criar conta */}

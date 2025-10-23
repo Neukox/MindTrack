@@ -1,19 +1,17 @@
 import type { ConfigType } from '@nestjs/config';
 import { Transporter, createTransport } from 'nodemailer';
-import path from 'path';
 import emailConfig from '../config/email.config';
 import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
-import * as fs from 'fs/promises';
-import Handlebars from 'handlebars';
+import { TemplatesService } from '@/templates/templates.service';
 
 @Injectable()
 export default class EmailService implements OnModuleDestroy {
   protected transporter: Transporter;
-  protected templatesDir = path.join(__dirname, '..', '..', '..', 'templates');
 
   constructor(
     @Inject(emailConfig.KEY)
     protected readonly emailConfiguration: ConfigType<typeof emailConfig>,
+    private readonly templatesService: TemplatesService,
   ) {
     // Initialize the transporter using the email configuration
     this.transporter = createTransport({
@@ -23,16 +21,6 @@ export default class EmailService implements OnModuleDestroy {
         pass: this.emailConfiguration.pass,
       },
     });
-  }
-
-  protected async renderTemplate(
-    templateName: string,
-    context: Record<string, any>,
-  ): Promise<string> {
-    const filePath = path.join(this.templatesDir, `${templateName}.hbs`);
-    const content = await fs.readFile(filePath, 'utf-8');
-    const compiled = Handlebars.compile(content);
-    return compiled(context);
   }
 
   async sendEmail(options: {
@@ -49,7 +37,10 @@ export default class EmailService implements OnModuleDestroy {
     let html = options.html;
 
     if (options.template) {
-      html = await this.renderTemplate(options.template, options.context || {});
+      html = await this.templatesService.renderTemplate(
+        options.template,
+        options.context || {},
+      );
     }
 
     const info = await this.transporter.sendMail({

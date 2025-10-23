@@ -26,8 +26,13 @@ import { ContagemUltimaReflexaoCriadaModule } from './contagem-ultima-reflexao-c
     UserModule,
     EmailModule,
     EdicaoRegistrosModule,
+<<<<<<< HEAD
     ContagemTotalRegistrosModule,
     ContagemUltimaReflexaoCriadaModule,
+=======
+    TemplatesModule,
+    PdfModule,
+>>>>>>> 03a8dfc45745ee3524004061980777ee8d2bb17b
   ],
   controllers: [AppController],
   providers: [
