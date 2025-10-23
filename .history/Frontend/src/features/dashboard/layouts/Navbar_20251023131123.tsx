@@ -10,7 +10,9 @@ interface NavBarProps {
   title?: string;
 }
 
-export default function NavBar({ title }: NavBarProps) {
+export default function NavBar({
+  title = "MindTrack - Dashboard",
+}: NavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -66,12 +68,7 @@ export default function NavBar({ title }: NavBarProps) {
                   </Button>
                 </li>
                 <li role="none">
-                  <Button
-                    variant="tertiary"
-                    onClick={() => navigate("/exportar-relatorio")}
-                  >
-                    Exportar
-                  </Button>
+                  <Button variant="tertiary">Exportar</Button>
                 </li>
               </ul>
 
@@ -79,10 +76,7 @@ export default function NavBar({ title }: NavBarProps) {
                 className="flex ml-80 whitespace-nowrap"
                 aria-label="Actions"
               >
-                <Button
-                  className="p-2 flex items-center gap-2"
-                  onClick={() => navigate("/novo-registro")}
-                >
+                <Button className="p-2 flex items-center gap-2">
                   <FaPlus />
                   Novo Registro
                 </Button>
@@ -131,17 +125,9 @@ export default function NavBar({ title }: NavBarProps) {
               <Button variant="tertiary" onClick={() => navigate("/registros")}>
                 Registros
               </Button>
-              <Button
-                variant="tertiary"
-                onClick={() => navigate("/exportar-relatorio")}
-              >
-                Exportar
-              </Button>
+              <Button variant="tertiary">Exportar</Button>
 
-              <Button
-                className="p-2 flex items-center gap-2 mt-2"
-                onClick={() => navigate("/novo-registro")}
-              >
+              <Button className="p-2 flex items-center gap-2 mt-2">
                 <FaPlus />
                 Novo Registro
               </Button>

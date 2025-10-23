@@ -28,7 +28,6 @@ function App() {
           <Route path='/dashboard' element={<DashboardPage />} />
           <Route path='/registros' element={<MindTrackRecords />} />
           <Route path='/novo-registro' element={<NovoRegistro />} />
-          <Route path='/exportar-relatorio' element={<ExportReportPage />} />
         </Route>
       </Routes>
       

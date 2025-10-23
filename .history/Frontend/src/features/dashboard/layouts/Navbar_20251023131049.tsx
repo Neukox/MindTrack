@@ -10,7 +10,9 @@ interface NavBarProps {
   title?: string;
 }
 
-export default function NavBar({ title }: NavBarProps) {
+export default function NavBar({
+  title = "MindTrack - Dashboard",
+}: NavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -50,28 +52,13 @@ export default function NavBar({ title }: NavBarProps) {
             >
               <ul role="menubar" className="flex translate-x-40 space-x-5">
                 <li role="none">
-                  <Button
-                    variant="tertiary"
-                    onClick={() => navigate("/dashboard")}
-                  >
-                    Dashboard
-                  </Button>
+                  <Button variant="tertiary">Dashboard</Button>
                 </li>
                 <li role="none">
-                  <Button
-                    variant="tertiary"
-                    onClick={() => navigate("/registros")}
-                  >
-                    Registros
-                  </Button>
+                  <Button variant="tertiary">Registros</Button>
                 </li>
                 <li role="none">
-                  <Button
-                    variant="tertiary"
-                    onClick={() => navigate("/exportar-relatorio")}
-                  >
-                    Exportar
-                  </Button>
+                  <Button variant="tertiary">Exportar</Button>
                 </li>
               </ul>
 
@@ -79,10 +66,7 @@ export default function NavBar({ title }: NavBarProps) {
                 className="flex ml-80 whitespace-nowrap"
                 aria-label="Actions"
               >
-                <Button
-                  className="p-2 flex items-center gap-2"
-                  onClick={() => navigate("/novo-registro")}
-                >
+                <Button className="p-2 flex items-center gap-2">
                   <FaPlus />
                   Novo Registro
                 </Button>
@@ -125,23 +109,11 @@ export default function NavBar({ title }: NavBarProps) {
           {/* Mobile Menu */}
           {isOpen && (
             <div className="bg-[#EAE8E7] flex flex-col right-0 top-full shadow-lg p-3 pl-4 rounded-md space-y-3 sm:hidden text-right justify-between mt-2">
-              <Button variant="tertiary" onClick={() => navigate("/dashboard")}>
-                Dashboard
-              </Button>
-              <Button variant="tertiary" onClick={() => navigate("/registros")}>
-                Registros
-              </Button>
-              <Button
-                variant="tertiary"
-                onClick={() => navigate("/exportar-relatorio")}
-              >
-                Exportar
-              </Button>
+              <Button variant="tertiary">Dashboard</Button>
+              <Button variant="tertiary">Registros</Button>
+              <Button variant="tertiary">Exportar</Button>
 
-              <Button
-                className="p-2 flex items-center gap-2 mt-2"
-                onClick={() => navigate("/novo-registro")}
-              >
+              <Button className="p-2 flex items-center gap-2 mt-2">
                 <FaPlus />
                 Novo Registro
               </Button>

@@ -10,7 +10,9 @@ interface NavBarProps {
   title?: string;
 }
 
-export default function NavBar({ title }: NavBarProps) {
+export default function NavBar({
+  title = "MindTrack - Dashboard",
+}: NavBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 

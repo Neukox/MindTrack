@@ -11,7 +11,7 @@ import { DashboardPage } from './features/dashboard/pages/DashboardPage';
 import HomePage from './features/home/pages/HomePage';
 import MindTrackRecords from './features/registros-criados/registros-criados';
 import NovoRegistro from './features/novo-registro/Novo-Registro';
-import ExportReportPage from './features/exportar-relatorio/Exportar-Relatorio';
+import Ex
 function App() {
 
   return (
@@ -28,7 +28,6 @@ function App() {
           <Route path='/dashboard' element={<DashboardPage />} />
           <Route path='/registros' element={<MindTrackRecords />} />
           <Route path='/novo-registro' element={<NovoRegistro />} />
-          <Route path='/exportar-relatorio' element={<ExportReportPage />} />
         </Route>
       </Routes>
       
