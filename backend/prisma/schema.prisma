@@ -37,6 +37,7 @@ model User {
   password          String
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
+  refreshToken      String?
 
   passwordResetTokens PasswordResetToken[]
   reflections         Reflection[]          // Relacionamento 1:N com Reflexões

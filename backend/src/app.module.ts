@@ -10,6 +10,8 @@ import { ZodValidationPipe } from 'nestjs-zod';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { EdicaoRegistrosModule } from './edicao-registros/edicao-registros.module';
+import { TemplatesModule } from './templates/templates.module';
+import { PdfModule } from './pdf/pdf.module';
 import { ContagemTotalRegistrosModule } from './contagem-total-registros/contagem-total-registros.module';
 import { ContagemUltimaReflexaoCriadaModule } from './contagem-ultima-reflexao-criada/contagem-ultima-reflexao-criada.module';
 
@@ -22,6 +24,8 @@ import { ContagemUltimaReflexaoCriadaModule } from './contagem-ultima-reflexao-c
     UserModule,
     EmailModule,
     EdicaoRegistrosModule,
+    TemplatesModule,
+    PdfModule,
     ContagemTotalRegistrosModule,
     ContagemUltimaReflexaoCriadaModule,
   ],
