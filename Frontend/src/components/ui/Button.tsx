@@ -15,7 +15,7 @@ const variants = {
   secondary:
     "bg-gray-200 hover:bg-gray-300 text-black font-medium transition disabled:bg-gray-400 disabled:cursor-not-allowed",
   tertiary:
-    "bg-transparent text-blue-600 hover:text-blue-700 font-medium transition disabled:text-gray-400 disabled:cursor-not-allowed",
+    "text-primary text-shadow-2xs whitespace-nowrap font-medium transition disabled:text-gray-400 disabled:cursor-not-allowed",
 };
 
 
