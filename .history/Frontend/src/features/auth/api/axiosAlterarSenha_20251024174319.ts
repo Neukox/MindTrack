@@ -30,7 +30,7 @@ export const changeUserPassword = async (
     const response = await api.post("/user/change-password", passwordData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
@@ -41,17 +41,17 @@ export const changeUserPassword = async (
 
     if (error instanceof Error && "response" in error) {
       const axiosError = error as {
-        response?: {
+        response?: { 
           data?: { message?: string };
           status?: number;
           statusText?: string;
         };
       };
-
+      
       console.error("Status:", axiosError.response?.status);
       console.error("Status Text:", axiosError.response?.statusText);
       console.error("Response Data:", axiosError.response?.data);
-
+      
       throw new Error(
         axiosError.response?.data?.message || "Erro ao alterar senha"
       );

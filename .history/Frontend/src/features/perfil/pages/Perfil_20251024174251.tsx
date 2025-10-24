@@ -9,15 +9,8 @@ import { useForm } from "react-hook-form";
 import { FaRegUser } from "react-icons/fa";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { toast } from "sonner";
-import {
-  getUserProfile,
-  updateUserProfile,
-  type UserProfile,
-} from "../../auth/api/axiosPerfil";
-import {
-  changeUserPassword,
-  type ChangePasswordData,
-} from "../../auth/api/axiosAlterarSenha";
+import { getUserProfile, updateUserProfile, type UserProfile } from "../../auth/api/axiosPerfil";
+import { changeUserPassword, type ChangePasswordData } from "../../auth/api/axiosAlterarSenha";
 
 type ProfileFormData = {
   username: string;
@@ -31,29 +24,27 @@ type PasswordFormData = {
 };
 
 export default function Perfil() {
-  const [activeTab, setActiveTab] = useState<"informacoes" | "senha">(
-    "informacoes"
-  );
+  const [activeTab, setActiveTab] = useState<"informacoes" | "senha">("informacoes");
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   // react-hook-form para informações do perfil
-  const {
-    register: registerProfile,
-    handleSubmit: handleSubmitProfile,
+  const { 
+    register: registerProfile, 
+    handleSubmit: handleSubmitProfile, 
     formState: { errors: errorsProfile },
-    setValue: setValueProfile,
+    setValue: setValueProfile 
   } = useForm<ProfileFormData>();
 
   // react-hook-form para alteração de senha
-  const {
-    register: registerPassword,
-    handleSubmit: handleSubmitPassword,
+  const { 
+    register: registerPassword, 
+    handleSubmit: handleSubmitPassword, 
     formState: { errors: errorsPassword },
     reset: resetPassword,
-    watch: watchPassword,
+    watch: watchPassword 
   } = useForm<PasswordFormData>();
 
   // Carregar dados do perfil ao montar o componente
@@ -63,7 +54,7 @@ export default function Perfil() {
         setIsLoadingProfile(true);
         const profile = await getUserProfile();
         setUserProfile(profile);
-
+        
         // Preencher o formulário com os dados do usuário
         setValueProfile("username", profile.username);
         setValueProfile("email", profile.email);
@@ -82,23 +73,19 @@ export default function Perfil() {
   const onSubmitProfile = async (data: ProfileFormData) => {
     try {
       setIsUpdatingProfile(true);
-
+      
       const updateData = {
-        username: data.username.trim(),
+        username: data.username.trim()
       };
 
       const response = await updateUserProfile(updateData);
-
+      
       // Atualizar estado local
-      setUserProfile((prev) =>
-        prev ? { ...prev, username: data.username } : null
-      );
-
+      setUserProfile(prev => prev ? { ...prev, username: data.username } : null);
+      
       toast.success(response.message || "Perfil atualizado com sucesso!");
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Erro ao atualizar perfil"
-      );
+      toast.error(error instanceof Error ? error.message : "Erro ao atualizar perfil");
     } finally {
       setIsUpdatingProfile(false);
     }
@@ -107,7 +94,7 @@ export default function Perfil() {
   // Função para alterar senha
   const onSubmitPassword = async (data: PasswordFormData) => {
     console.log("Dados do formulário de senha:", data);
-
+    
     // Validar se as senhas coincidem
     if (data.newPassword !== data.confirmPassword) {
       toast.error("Nova senha e confirmação não coincidem");
@@ -128,28 +115,26 @@ export default function Perfil() {
 
     try {
       setIsChangingPassword(true);
-
+      
       const passwordData: ChangePasswordData = {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
-        confirmPassword: data.confirmPassword,
+        confirmPassword: data.confirmPassword
       };
 
       console.log("Enviando dados para API:", passwordData);
-
+      
       const response = await changeUserPassword(passwordData);
-
+      
       console.log("Resposta da API:", response);
-
+      
       toast.success(response.message || "Senha alterada com sucesso!");
-
+      
       // Limpar formulário
       resetPassword();
     } catch (error) {
       console.error("Erro ao alterar senha:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Erro ao alterar senha"
-      );
+      toast.error(error instanceof Error ? error.message : "Erro ao alterar senha");
     } finally {
       setIsChangingPassword(false);
     }
@@ -158,8 +143,7 @@ export default function Perfil() {
   // Verificar se nova senha e confirmação coincidem em tempo real
   const newPassword = watchPassword("newPassword");
   const confirmPassword = watchPassword("confirmPassword");
-  const passwordsMatch =
-    newPassword && confirmPassword && newPassword === confirmPassword;
+  const passwordsMatch = newPassword && confirmPassword && newPassword === confirmPassword;
 
   if (isLoadingProfile) {
     return (
@@ -189,9 +173,7 @@ export default function Perfil() {
           </Link>
 
           <h1 className="text-2xl sm:text-3xl font-bold mb-1">Meu Perfil</h1>
-          <p className="text-gray-500 mb-6">
-            Gerencie suas informações e preferências
-          </p>
+          <p className="text-gray-500 mb-6">Gerencie suas informações e preferências</p>
 
           {/* Tabs */}
           <nav className="relative gap-4 grid grid-cols-2 w-full sm:w-max mx-auto mb-6">
@@ -202,10 +184,8 @@ export default function Perfil() {
               }`}
               aria-current={activeTab === "informacoes" ? "page" : undefined}
             >
-              <span className="flex items-center gap-2">
-                <FaRegUser />
-                Informações
-              </span>
+             <span className="flex items-center gap-2"><FaRegUser />Informações</span> 
+
             </button>
 
             <button
@@ -215,10 +195,8 @@ export default function Perfil() {
               }`}
               aria-current={activeTab === "senha" ? "page" : undefined}
             >
-              <span className="flex items-center gap-2 ml-4">
-                <IoLockClosedOutline />
-                Senha
-              </span>
+             <span className="flex items-center gap-2 ml-4"><IoLockClosedOutline />Senha</span>
+
             </button>
 
             <div
@@ -231,6 +209,7 @@ export default function Perfil() {
           {/* Conteúdo */}
           <div className="w-full bg-white rounded-lg shadow-lg text-left">
             <div className="relative min-h-96 sm:min-h-96 md:min-h-96">
+
               {/* Painel Informações */}
               <div
                 className={`absolute inset-0 transition-all duration-300 ease-in-out ${
@@ -241,20 +220,14 @@ export default function Perfil() {
                 aria-hidden={activeTab !== "informacoes"}
               >
                 <section className="p-6 sm:p-8">
-                  <h2 className="text-lg font-semibold mb-2">
-                    Informações Pessoais
-                  </h2>
-                  <p className="text-sm text-gray-500 mb-6">
-                    Atualize suas informações de perfil
-                  </p>
+                  <h2 className="text-lg font-semibold mb-2">Informações Pessoais</h2>
+                  <p className="text-sm text-gray-500 mb-6">Atualize suas informações de perfil</p>
 
                   <form onSubmit={handleSubmitProfile(onSubmitProfile)}>
                     {/* Nome usando TextInput */}
                     <TextInput
                       label="Nome de Usuário"
-                      placeholder={
-                        userProfile?.username || "Seu nome de usuário"
-                      }
+                      placeholder={userProfile?.username || "Seu nome de usuário"}
                       register={registerProfile}
                       name="username"
                       error={errorsProfile.username}
@@ -270,13 +243,11 @@ export default function Perfil() {
                       disabled
                       error={errorsProfile.email}
                     />
-                    <div className="text-xs text-gray-400 mb-6">
-                      Email não pode ser alterado
-                    </div>
+                    <div className="text-xs text-gray-400 mb-6">Email não pode ser alterado</div>
 
-                    <Button
-                      type="submit"
-                      variant="secondary"
+                    <Button 
+                      type="submit" 
+                      variant="secondary" 
                       className="w-full sm:w-auto"
                       disabled={isUpdatingProfile}
                     >
@@ -297,68 +268,51 @@ export default function Perfil() {
               >
                 <section className="p-6 sm:p-8">
                   <h2 className="text-lg font-semibold mb-2">Alterar Senha</h2>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Atualize sua senha de acesso
-                  </p>
+                  <p className="text-sm text-gray-500 mb-4">Atualize sua senha de acesso</p>
 
                   <form onSubmit={handleSubmitPassword(onSubmitPassword)}>
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Senha Atual *
-                      </label>
-                      <PasswordInput
-                        placeholder="Digite sua senha atual"
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Senha Atual</label>
+                      <PasswordInput 
+                        placeholder="Digite sua senha atual" 
                         register={registerPassword}
                         name="currentPassword"
                         error={errorsPassword.currentPassword}
-                        required
                       />
                     </div>
 
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Nova Senha *
-                      </label>
-                      <PasswordInput
-                        placeholder="Digite a nova senha (mín. 8 caracteres)"
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Nova Senha</label>
+                      <PasswordInput 
+                        placeholder="Digite a nova senha (mín. 8 caracteres)" 
                         register={registerPassword}
                         name="newPassword"
                         error={errorsPassword.newPassword}
-                        required
                       />
                     </div>
 
                     <div className="mb-6">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Confirmar Nova Senha *
-                      </label>
-                      <PasswordInput
-                        placeholder="Confirme a nova senha"
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar Nova Senha</label>
+                      <PasswordInput 
+                        placeholder="Confirme a nova senha" 
                         register={registerPassword}
                         name="confirmPassword"
                         error={errorsPassword.confirmPassword}
-                        required
                       />
                       {confirmPassword && newPassword && !passwordsMatch && (
-                        <p className="text-red-500 text-xs mt-1">
-                          As senhas não coincidem
-                        </p>
+                        <p className="text-red-500 text-xs mt-1">As senhas não coincidem</p>
                       )}
                       {passwordsMatch && newPassword && (
-                        <p className="text-green-500 text-xs mt-1">
-                          ✓ Senhas coincidem
-                        </p>
+                        <p className="text-green-500 text-xs mt-1">✓ Senhas coincidem</p>
                       )}
                     </div>
 
                     <div className="flex justify-end">
-                      <Button
-                        type="submit"
-                        variant="secondary"
+                      <Button 
+                        type="submit" 
+                        variant="secondary" 
                         className="w-full sm:w-auto"
-                        disabled={
-                          isChangingPassword || !passwordsMatch || !newPassword
-                        }
+                        disabled={isChangingPassword || !passwordsMatch || !newPassword}
                       >
                         {isChangingPassword ? "Alterando..." : "Alterar Senha"}
                       </Button>
@@ -366,6 +320,7 @@ export default function Perfil() {
                   </form>
                 </section>
               </div>
+
             </div>
           </div>
         </div>
