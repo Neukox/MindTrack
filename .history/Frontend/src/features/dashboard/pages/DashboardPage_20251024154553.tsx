@@ -33,9 +33,7 @@ export function DashboardPage() {
             variant="minCard"
             description="Neste semestre"
             value={42}
-            meta={
-              <span className="text-green-500">↑ 15% vs semana anterior</span>
-            }
+            meta={<span className="text-green-500">↑ 15% vs semana anterior</span>}
           >
             <IoBookOutline />
           </Cards>
@@ -49,9 +47,7 @@ export function DashboardPage() {
             variant="minCard"
             description="Registros esta semana"
             value={7}
-            meta={
-              <span className="text-green-500">↑ 40% vs semana anterior</span>
-            }
+            meta={<span className="text-green-500">↑ 40% vs semana anterior</span>}
           >
             <FaArrowTrendUp />
           </Cards>
