@@ -9,9 +9,10 @@ import Recuperar from './features/auth/pages/RecoverPage'
 import DashboardLayout from './features/dashboard/layouts/DashbboardLayout'
 import { DashboardPage } from './features/dashboard/pages/DashboardPage';
 import HomePage from './features/home/pages/HomePage';
-import MindTrackRecords from './features/registros-criados/registros-criados';
-import NovoRegistro from './features/novo-registro/Novo-Registro';
-import ExportReportPage from './features/exportar-relatorio/Exportar-Relatorio';
+import MindTrackRecords from './features/registros-criados/pages/registros-criados';
+import NovoRegistro from './features/novo-registro/pages/Novo-Registro';
+import ExportReportPage from './features/exportar-relatorio/pages/Exportar-Relatorio';
+import Perfil from './features/perfil/pages/Perfil';
 function App() {
 
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path='/registros' element={<MindTrackRecords />} />
           <Route path='/novo-registro' element={<NovoRegistro />} />
           <Route path='/exportar-relatorio' element={<ExportReportPage />} />
+          <Route path='/Perfil' element={<Perfil/>} />
         </Route>
       </Routes>
       

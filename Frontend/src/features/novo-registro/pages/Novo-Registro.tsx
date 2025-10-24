@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa6";
 
 export default function NovoRegistro() {
   const [categoria, setCategoria] = useState("Estudo");
@@ -32,9 +34,13 @@ export default function NovoRegistro() {
       <div className="min-h-screen bg-primary-gradient text-slate-800">
         {/* Main content */}
         <main className="max-w-4xl mx-auto px-4 py-10">
-          <a href="#" className="text-sky-600 hover:underline text-sm">
-            ← Voltar para registros
-          </a>
+         <Link
+            to="/dashboard"
+            className="text-blue-600 font-semibold text-sm mb-3 inline-flex items-center gap-2 outline-none"
+          >
+            <FaArrowLeft className="w-4 h-4" />
+            <span className="text-sm">Voltar</span>
+          </Link>
 
           <h1 className="text-3xl font-extrabold mt-4 mb-1">Novo Registro</h1>
           <p className="text-slate-500 mb-8">

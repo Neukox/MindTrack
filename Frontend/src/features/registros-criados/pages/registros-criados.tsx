@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { FaArrowLeft } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export default function MindTrackRecords() {
   const [query, setQuery] = useState("");
@@ -39,13 +41,13 @@ export default function MindTrackRecords() {
       <div className="min-h-screen bg-primary-gradient text-slate-800">
         {/* Page content */}
         <main className="max-w-6xl mx-auto px-4 py-10">
-          <a
-            href="/dashboard"
-            className="text-blue-600 text-sm mb-3 inline-block hover:underline"
-          >
-            ← Voltar para dashboard
-          </a>
-
+          <Link
+                    to="/dashboard"
+                      className=" text-blue-600 font-bold text-sm mb-3 flex items-center gap-1 outline-none "
+                    >
+                                <FaArrowLeft className="w-4 h-4" />
+            <span className="text-sm">Voltar</span>
+          </Link>
           <h1 className="text-3xl font-extrabold mb-1">Meus Registros</h1>
           <p className="text-sm text-slate-500 mb-6">
             {records.length} registro{records.length !== 1 ? "s" : ""}{" "}

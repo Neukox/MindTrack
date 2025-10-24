@@ -8,12 +8,14 @@ import { loginUser } from "../api/axiosLogin";
 import type { LoginData } from "../api/axiosLogin";
 import { TogglePasswordButton } from "../../../components/ui/TogglePasswordButton";
 import { Button } from "../../../components/ui/Button";
-
+import PasswordInput from "../../../components/ui/PasswordInput";
+import TextInput from "../../../components/ui/TextInput";
 
 export default function TelaLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -31,9 +33,7 @@ export default function TelaLogin() {
       navigate("/home");
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Erro interno. Tente novamente.";
+        error instanceof Error ? error.message : "Erro interno. Tente novamente.";
       toast.error(errorMessage);
       console.error("Erro no login:", error);
     } finally {
@@ -78,36 +78,29 @@ export default function TelaLogin() {
           </p>
 
           {/* Campo de e-mail */}
-          <label className="block text-slate-700 text-sm mb-1">Email</label>
-          <input
+          <TextInput
+            label="Email"
             type="email"
-            {...register("email", {
-              required: true,
-              pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            })}
             placeholder="seu@email.com"
-            className="w-full mb-4 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            register={register}
+            name="email"
+            error={errors.email}
           />
-          {errors.email && (
-            <p className="text-sm text-red-500">Email inválido</p>
-          )}
 
           {/* Campo de senha */}
           <label className="block text-slate-700 text-sm mb-1">Senha</label>
           <div className="relative mb-3">
-            <input
-              type={showPassword ? "text" : "password"}
-              {...register("password", { required: true, minLength: 8 })}
+            <PasswordInput
+              register={register}
+              name="password"
+              showPassword={showPassword}
               placeholder="********"
-              className="w-full pr-10 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
-
             <TogglePasswordButton
-        showPassword={showPassword}
-        onToggle={() => setShowPassword((s) => !s)}
-      />
+              showPassword={showPassword}
+              onToggle={() => setShowPassword((s) => !s)}
+            />
           </div>
-
           {errors.password && (
             <p className="text-sm text-red-500">
               Senha inválida (mínimo 8 caracteres)
@@ -126,13 +119,14 @@ export default function TelaLogin() {
 
           {/* Botão de login */}
           <div>
-               <Button
-            type="submit"
-            isLoading={isLoading}
-            loadingText="Entrando..."
-          >
-            Entrar 
-          </Button>
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              loadingText="Entrando..."
+              variant="primary"
+            >
+              Entrar
+            </Button>
           </div>
 
           {/* Link de criar conta */}

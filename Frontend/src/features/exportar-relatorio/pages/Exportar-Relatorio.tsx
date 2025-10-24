@@ -1,7 +1,9 @@
 import { useState } from "react";
-import Button from "../../components/ui/Button";
+import Button from "../../../components/ui/Button";
 import { Calendar } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { FaArrowLeft } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export default function ExportReportPage() {
   const [startDate, setStartDate] = useState("2025-10-01");
@@ -15,12 +17,13 @@ export default function ExportReportPage() {
 
       <div className="min-h-screen bg-primary-gradient text-gray-800 flex flex-col items-center p-4 sm:p-6 md:p-10">
         <div className="w-full max-w-6xl">
-          <a
-            href="/dashboard"
-            className="text-blue-600 text-sm mb-3 inline-block hover:underline"
-          >
-            ← Voltar para dashboard
-          </a>
+           <Link
+                                to="/dashboard"
+                                className=" text-blue-600 font-bold text-sm mb-3 flex items-center gap-1 outline-none "
+                              >
+                               <FaArrowLeft />
+                     Voltar 
+                              </Link>
 
           <h1 className="text-2xl sm:text-3xl font-bold mb-1">
             Exportar Relatório

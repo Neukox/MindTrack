@@ -37,7 +37,7 @@ export default function CustomBarChart() {
     <div
       style={{
         width: "100%",
-        height: 300,
+        height: 400,
         display: "flex",
         justifyContent: "center",
       }}
@@ -45,7 +45,7 @@ export default function CustomBarChart() {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
+          margin={{ top: 10, right: 15, left: -15, bottom: 10 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis

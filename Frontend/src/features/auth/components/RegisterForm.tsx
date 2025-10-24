@@ -4,14 +4,13 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import MindLog from "../../../assets/MindTrack.png";
 import { Helmet } from "react-helmet-async";
-import {
-  registerUser,
-  validateRegisterData,
-} from "../api/axiosRegister";
+import { registerUser, validateRegisterData } from "../api/axiosRegister";
 import { TogglePasswordButton } from "../../../components/ui/TogglePasswordButton";
 import { Button } from "../../../components/ui/Button";
+import PasswordInput from "../../../components/ui/PasswordInput";
+import TextInput from "../../../components/ui/TextInput";
 
-
+// Tipagem do formulário
 type FormData = {
   nome: string;
   email: string;
@@ -20,22 +19,21 @@ type FormData = {
 };
 
 export default function TelaCadastro() {
-  const [showSenha, setShowSenha] = useState(false);
-  const [showConfirmarSenha, setShowConfirmarSenha] = useState(false);
+  // 👇 Estados separados para cada olho
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: { nome: "", email: "", senha: "", confirmarSenha: "" },
   });
 
   async function onSubmit(data: FormData) {
-    // Validação local primeiro
     const validationErrors = validateRegisterData({
       username: data.nome,
       email: data.email,
@@ -98,62 +96,45 @@ export default function TelaCadastro() {
           onSubmit={handleSubmit(onSubmit)}
           className="w-full max-w-md bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg p-8"
         >
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">
-            Criar conta
-          </h2>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Criar conta</h2>
           <p className="text-sm text-slate-500 mb-6">
             Comece sua jornada de reflexão e autoconhecimento
           </p>
 
           {/* Nome completo */}
-          <label className="block text-slate-700 text-sm mb-1" htmlFor="nome">
-            Nome completo
-          </label>
-          <input
-            id="nome"
-            type="text"
-            {...register("nome", { required: true })}
+          <TextInput
+            label="Nome completo"
             placeholder="Seu nome"
-            className="w-full mb-4 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            register={register}
+            name="nome"
+            error={errors.nome}
           />
-          {errors.nome && (
-            <p className="text-sm text-red-500">Nome é obrigatório</p>
-          )}
 
           {/* Email */}
-          <label className="block text-slate-700 text-sm mb-1" htmlFor="email">
-            Email
-          </label>
-          <input
-            id="email"
+          <TextInput
+            label="Email"
             type="email"
-            {...register("email", {
-              required: true,
-              pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            })}
             placeholder="seu@email.com"
-            className="w-full mb-4 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            register={register}
+            name="email"
+            error={errors.email}
           />
-          {errors.email && (
-            <p className="text-sm text-red-500">Email inválido</p>
-          )}
 
           {/* Senha */}
           <label className="block text-slate-700 text-sm mb-1" htmlFor="senha">
             Senha
           </label>
-          <div className="relative mb-4">
-            <input
-              id="senha"
-              type={showSenha ? "text" : "password"}
-              {...register("senha", { required: true, minLength: 8 })}
+          <div className="relative mb-3">
+            <PasswordInput<FormData>
+              register={register}
+              name="senha"
+              showPassword={showPassword}
               placeholder="********"
-              className="w-full pr-10 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
             <TogglePasswordButton
-              showPassword={showSenha}
-              onToggle={() => setShowSenha((s) => !s)}
-              />
+              showPassword={showPassword}
+              onToggle={() => setShowPassword((s) => !s)}
+            />
           </div>
           {errors.senha && (
             <p className="text-sm text-red-500 mb-4">
@@ -168,26 +149,18 @@ export default function TelaCadastro() {
           >
             Confirmar senha
           </label>
-
           <div className="relative mb-6">
-            <input
-              id="confirmarSenha"
-              type={showConfirmarSenha ? "text" : "password"}
-              {...register("confirmarSenha", {
-                required: true,
-                validate: (value) =>
-                  value === watch("senha") || "As senhas não coincidem",
-              })}
+            <PasswordInput<FormData>
+              register={register}
+              name="confirmarSenha"
+              showPassword={showConfirmPassword}
               placeholder="********"
-              className="w-full pr-10 px-4 py-2 border border-slate-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
-
             <TogglePasswordButton
-             showPassword={showConfirmarSenha}
-              onToggle={() => setShowConfirmarSenha((s) => !s)}
+              showPassword={showConfirmPassword}
+              onToggle={() => setShowConfirmPassword((s) => !s)}
             />
           </div>
-
           {errors.confirmarSenha && (
             <p className="text-sm text-red-500 mb-6">
               {String(errors.confirmarSenha.message || "Confirme a senha")}
@@ -199,7 +172,6 @@ export default function TelaCadastro() {
             type="submit"
             isLoading={isLoading}
             loadingText="Criando Conta..."
-          
           >
             Criar Conta
           </Button>
@@ -207,7 +179,7 @@ export default function TelaCadastro() {
           {/* Link para login */}
           <div className="text-center mt-4">
             <span className="text-sm text-slate-500">Já tem uma conta? </span>
-            <Link to="/" className="text-sm text-blue-600 hover:underline">
+            <Link to="/login" className="text-sm text-blue-600 hover:underline">
               Fazer login
             </Link>
           </div>
