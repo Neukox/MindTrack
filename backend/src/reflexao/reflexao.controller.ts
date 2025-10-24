@@ -1,4 +1,4 @@
-import { Controller, Body, Post, Get, Query, Param } from '@nestjs/common';
+import { Controller, Body, Post, Get, Query, Param, UseGuards } from '@nestjs/common';
 import { ReflexaoService } from './reflexao.service';
 import CreateReflectionDto from './dtos/create-reflection.dto';
 import ReflectionFiltersDto from './dtos/reflection-flilters.dto';
@@ -10,6 +10,7 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
+import JwtAuthGuard from '@/auth/guards/jwt-auth.guard';
 
 @Controller('reflexao')
 export class ReflexaoController {
@@ -36,6 +37,7 @@ export class ReflexaoController {
     description: 'Usuário não encontrado',
   })
   @Get('usuario/:userId')
+  @UseGuards(JwtAuthGuard)
   async getReflexoesByUser(
     @Query() filters: ReflectionFiltersDto,
     @Param('userId', ParamIdPipe) userId: string,

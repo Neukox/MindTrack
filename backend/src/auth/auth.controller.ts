@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import RecoverPasswordDto from './dto/recovery-password.dto';
 import ResetPasswordDto from './dto/reset-password.dto';
@@ -6,6 +6,8 @@ import RecoverPasswordEmailService from '@/email/services/recover-password-email
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import LoginDto from './dto/login.dto';
 import RegisterDto from './dto/register.dto';
+import type { Request, Response } from 'express';
+import JwtRefreshGuard from './guards/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,8 +38,17 @@ export class AuthController {
     description: 'Senha incorreta.',
   })
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.login(loginDto, res);
+  
+    return {
+      message: 'Login realizado com sucesso',
+      accessToken: result.accessToken,
+      user: { ...result.payload },
+    };
   }
 
   @ApiOperation({
@@ -58,8 +69,17 @@ export class AuthController {
     description: 'E-mail já está em uso.',
   })
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.register(registerDto, res);
+
+    return {
+      message: 'Usuário registrado com sucesso',
+      accessToken: result.accessToken,
+      user: { ...result.payload },
+    };
   }
 
   @ApiOperation({
@@ -123,5 +143,42 @@ export class AuthController {
     await this.authService.resetPassword(token, new_password);
 
     return { message: 'Senha redefinida com sucesso.' };
+  }
+
+  @ApiOperation({
+    summary: 'Refresh do token de acesso',
+    description:
+      'Gera um novo token de acesso usando o token de refresh válido.',
+  })
+  @ApiResponse({ status: 200 })
+  @ApiResponse({
+    status: 401,
+    description: 'Acesso negado.',
+  })
+  @Post('refresh')
+  @UseGuards(JwtRefreshGuard)
+  async refresh(@Req() req: Request) {
+    const payload = req.user;
+
+    console.log('Payload do refresh token:', payload);
+
+    const accessToken = await this.authService.refreshAccessToken(payload);
+
+    return { accessToken };
+  }
+
+  @Post('logout')
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const payload = req.user as any;
+
+    await this.authService.logout(payload.sub);
+
+    res.clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+
+    return { message: 'Logout realizado com sucesso.' };
   }
 }

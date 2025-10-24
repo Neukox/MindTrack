@@ -35,7 +35,7 @@ export class UserService {
     });
   }
 
-  async setRefreshToken(id: string, refreshToken: string) {
+  async setRefreshToken(id: string, refreshToken: string | null) {
     return this.prismaService.user.update({
       where: { id },
       data: { refreshToken },

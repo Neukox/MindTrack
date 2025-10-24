@@ -10,6 +10,9 @@ import resetPasswordConfig from './config/resetPassword.config';
 import { UserModule } from '@/user/user.module';
 import { EmailModule } from '@/email/email.module';
 import { JwtModule } from '@nestjs/jwt';
+import TokenService from './tokens.service';
+import JwtRefreshStrategy from './strategies/jwt-refresh.strategy';
+import JwtStrategy from './strategies/jwt.strategy';
 
 @Global()
 @Module({
@@ -28,6 +31,9 @@ import { JwtModule } from '@nestjs/jwt';
       provide: HashingService,
       useClass: BcryptService,
     },
+    TokenService,
+    JwtRefreshStrategy,
+    JwtStrategy,
   ],
   exports: [AuthService, HashingService, TokenHashingService, ConfigModule],
 })
