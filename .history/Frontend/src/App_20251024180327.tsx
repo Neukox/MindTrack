@@ -13,7 +13,7 @@ import NovoRegistro from "./features/novo-registro/pages/Novo-Registro";
 import ExportReportPage from "./features/exportar-relatorio/pages/Exportar-Relatorio";
 import Perfil from "./features/perfil/pages/Perfil";
 import EditarRegistro from "./features/editar-registros/page/EditarRegistros";
-import VerMais from "./features/ver-mais/pages/VerMais";
+import VisualizarRegistro from "./features/ver-mais/page/VerMais";
 function App() {
   return (
     <>
@@ -30,7 +30,6 @@ function App() {
           <Route path="/exportar-relatorio" element={<ExportReportPage />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/editar-registro/:id" element={<EditarRegistro />} />
-          <Route path="/ver-mais/:id" element={<VerMais />} />
         </Route>
       </Routes>
     </>

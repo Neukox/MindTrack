@@ -30,7 +30,7 @@ function App() {
           <Route path="/exportar-relatorio" element={<ExportReportPage />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/editar-registro/:id" element={<EditarRegistro />} />
-          <Route path="/ver-mais/:id" element={<VerMais />} />
+          <Route path="/ver-mais/:id" element={<VisualizarRegistro />} />
         </Route>
       </Routes>
     </>

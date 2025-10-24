@@ -7,8 +7,6 @@ import {
   buscarRegistros,
   type RegistroData,
 } from "../../auth/api/axiosBuscarRegistros";
-import { excluirRegistro } from "../../auth/api/axiosExcluirRegistro";
-import ConfirmDeleteModal from "../../../components/modals/ConfirmDeleteModal";
 
 export default function MindTrackRecords() {
   const [query, setQuery] = useState("");
@@ -17,11 +15,6 @@ export default function MindTrackRecords() {
   const [month, setMonth] = useState("Todos os meses");
   const [records, setRecords] = useState<RegistroData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [recordToDelete, setRecordToDelete] = useState<RegistroData | null>(
-    null
-  );
 
   // Carregar registros ao montar o componente
   useEffect(() => {
@@ -73,42 +66,6 @@ export default function MindTrackRecords() {
         return "Tristeza";
       default:
         return emotion;
-    }
-  };
-
-  // Funções para controle do modal de exclusão
-  const handleDeleteClick = (record: RegistroData) => {
-    setRecordToDelete(record);
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleDeleteCancel = () => {
-    setIsDeleteModalOpen(false);
-    setRecordToDelete(null);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!recordToDelete) return;
-
-    try {
-      setIsDeleting(true);
-      await excluirRegistro(recordToDelete.id.toString());
-
-      // Atualizar a lista de registros removendo o registro excluído
-      setRecords((prevRecords) =>
-        prevRecords.filter((record) => record.id !== recordToDelete.id)
-      );
-
-      toast.success("Registro excluído com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir registro:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Erro ao excluir registro";
-      toast.error(errorMessage);
-    } finally {
-      setIsDeleting(false);
-      setIsDeleteModalOpen(false);
-      setRecordToDelete(null);
     }
   };
 
@@ -276,10 +233,7 @@ export default function MindTrackRecords() {
                           <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                         </svg>
                       </Link>
-                      <button
-                        onClick={() => handleDeleteClick(r)}
-                        className="p-2 rounded-full hover:bg-rose-50"
-                      >
+                      <button className="p-2 rounded-full hover:bg-rose-50">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-5 w-5 text-red-500"
@@ -322,12 +276,9 @@ export default function MindTrackRecords() {
                       </span>
                     </div>
 
-                    <Link
-                      to={`/ver-mais/${r.id}`}
-                      className="text-sm text-sky-600 hover:underline self-end"
-                    >
+                    <a className="text-sm text-sky-600 hover:underline self-end">
                       Ver mais
-                    </Link>
+                    </a>
                   </div>
                 </article>
               ))
@@ -337,15 +288,6 @@ export default function MindTrackRecords() {
 
         {/* Footer spacing */}
         <div className="h-16" />
-
-        {/* Modal de confirmação de exclusão */}
-        <ConfirmDeleteModal
-          isOpen={isDeleteModalOpen}
-          onClose={handleDeleteCancel}
-          onConfirm={handleDeleteConfirm}
-          title={recordToDelete?.title || ""}
-          isLoading={isDeleting}
-        />
       </div>
     </>
   );

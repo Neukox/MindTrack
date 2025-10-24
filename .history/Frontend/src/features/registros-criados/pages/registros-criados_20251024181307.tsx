@@ -19,9 +19,7 @@ export default function MindTrackRecords() {
   const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [recordToDelete, setRecordToDelete] = useState<RegistroData | null>(
-    null
-  );
+  const [recordToDelete, setRecordToDelete] = useState<RegistroData | null>(null);
 
   // Carregar registros ao montar o componente
   useEffect(() => {
@@ -93,17 +91,18 @@ export default function MindTrackRecords() {
     try {
       setIsDeleting(true);
       await excluirRegistro(recordToDelete.id.toString());
-
+      
       // Atualizar a lista de registros removendo o registro excluído
-      setRecords((prevRecords) =>
-        prevRecords.filter((record) => record.id !== recordToDelete.id)
+      setRecords(prevRecords => 
+        prevRecords.filter(record => record.id !== recordToDelete.id)
       );
-
+      
       toast.success("Registro excluído com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir registro:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Erro ao excluir registro";
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Erro ao excluir registro";
       toast.error(errorMessage);
     } finally {
       setIsDeleting(false);
@@ -276,7 +275,7 @@ export default function MindTrackRecords() {
                           <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
                         </svg>
                       </Link>
-                      <button
+                      <button 
                         onClick={() => handleDeleteClick(r)}
                         className="p-2 rounded-full hover:bg-rose-50"
                       >
@@ -337,15 +336,6 @@ export default function MindTrackRecords() {
 
         {/* Footer spacing */}
         <div className="h-16" />
-
-        {/* Modal de confirmação de exclusão */}
-        <ConfirmDeleteModal
-          isOpen={isDeleteModalOpen}
-          onClose={handleDeleteCancel}
-          onConfirm={handleDeleteConfirm}
-          title={recordToDelete?.title || ""}
-          isLoading={isDeleting}
-        />
       </div>
     </>
   );
