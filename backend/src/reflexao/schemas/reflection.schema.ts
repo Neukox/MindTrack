@@ -15,7 +15,6 @@ export const ReflectionSchema = z.object({
   category: CategoryEnum,
   content: z.string().min(1, 'O conteúdo é obrigatório.'),
   emotion: EmotionEnum,
-  // userId será adicionado no controller a partir do token JWT
 });
 
 export const ReflectionFilterSchema = z

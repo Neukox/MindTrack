@@ -3,6 +3,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import CreateReflectionDto from './dtos/create-reflection.dto';
 import { UserService } from '@/user/user.service';
 import ReflectionFiltersDto from './dtos/reflection-flilters.dto';
+import UpdateReflectionDto from './dtos/update-reflection.dto';
 
 @Injectable()
 export class ReflexaoService {
@@ -13,10 +14,13 @@ export class ReflexaoService {
     private readonly userService: UserService,
   ) {}
 
-  async create(
-    reflection: CreateReflectionDto & { userId: string },
-  ): Promise<void> {
-    const { title, category, content, emotion, userId } = reflection;
+  async create(reflection: CreateReflectionDto, userId: string): Promise<void> {
+    const { title, category, content, emotion } = reflection;
+    
+    this.logger.log(
+      `Criando reflexão para o usuário ID: ${userId}`,
+      reflection,
+    );
 
     // Valida se o usuário existe
     const userExists = await this.userService.findOne(userId);
@@ -68,6 +72,7 @@ export class ReflexaoService {
     return reflection;
   }
 
+  // TODO -> Mover para um serviço de métricas
   async getFrequenciaSemanal(userId: string) {
     // Calcular início e fim da semana atual (domingo a sábado)
     const hoje = new Date();
@@ -130,6 +135,7 @@ export class ReflexaoService {
     };
   }
 
+  // TODO -> Mover para um serviço de métricas
   async getCategoriasEstatisticas(userId: string) {
     const categorias = await this.prismaService.reflection.groupBy({
       by: ['category'],
@@ -228,5 +234,33 @@ export class ReflexaoService {
         emocaoMaisFrequente: emocaoMaisFrequente?.emocao || 'Nenhuma',
       },
     };
+  }
+  
+  async update(id: string, updateReflectionDto: UpdateReflectionDto) {
+    const { title, category, content, emotion } = updateReflectionDto;
+
+    const reflection = await this.prismaService.reflection.update({
+      where: { id },
+      data: {
+        title,
+        category,
+        content,
+        emotion,
+      },
+    });
+    
+    this.logger.log(`Reflexão atualizada com ID: ${reflection.id}`, reflection);
+
+    return reflection;
+  }
+  
+  async delete(id: string) {
+    const reflection = await this.prismaService.reflection.delete({
+      where: { id },
+    });
+
+    this.logger.log(`Reflexão deletada com ID: ${reflection.id}`, reflection);
+
+    return reflection;
   }
 }

@@ -9,7 +9,6 @@ import { UserModule } from './user/user.module';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
-import { EdicaoRegistrosModule } from './edicao-registros/edicao-registros.module';
 import { TemplatesModule } from './templates/templates.module';
 import { PdfModule } from './pdf/pdf.module';
 import { ContagemTotalRegistrosModule } from './contagem-total-registros/contagem-total-registros.module';
@@ -26,7 +25,6 @@ import { MetricsModule } from './metrics/metrics.module';
     AuthModule,
     UserModule,
     EmailModule,
-    EdicaoRegistrosModule,
     TemplatesModule,
     PdfModule,
     ContagemTotalRegistrosModule,

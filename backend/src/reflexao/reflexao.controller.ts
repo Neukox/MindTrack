@@ -8,19 +8,17 @@ import {
   UseGuards,
   Request,
   BadRequestException,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import { ReflexaoService } from './reflexao.service';
 import CreateReflectionDto from './dtos/create-reflection.dto';
 import ReflectionFiltersDto from './dtos/reflection-flilters.dto';
 import { ParamIdPipe } from '@/common/pipes/param-id.pipe';
-import {
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import JwtAuthGuard from '@/auth/guards/jwt-auth.guard';
+import ReflectionOwnerGuard from './guards/reflection-owner.guard';
+import { User } from '@/auth/decorators/user.decorator';
 
 @Controller('reflexao')
 export class ReflexaoController {
@@ -31,10 +29,7 @@ export class ReflexaoController {
     description:
       'Retorna uma lista de reflexões associadas a um usuário específico, aplicando filtros opcionais como data e palavras-chave.',
   })
-  @ApiParam({
-    name: 'userId',
-    description: 'ID do usuário cujas reflexões serão obtidas',
-  })
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
   })
@@ -43,14 +38,18 @@ export class ReflexaoController {
     description: 'ID de usuário inválido',
   })
   @ApiResponse({
+    status: 401,
+    description: 'Acesso negado',
+  })
+  @ApiResponse({
     status: 404,
     description: 'Usuário não encontrado',
   })
-  @Get('usuario/:userId')
+  @Get('')
   @UseGuards(JwtAuthGuard)
   async getReflexoesByUser(
     @Query() filters: ReflectionFiltersDto,
-    @Param('userId', ParamIdPipe) userId: string,
+    @User('id') userId: string,
   ) {
     const reflexoes = await this.reflexaoService.findAllByUser(userId, filters);
     return reflexoes;
@@ -161,6 +160,7 @@ export class ReflexaoController {
     name: 'id',
     description: 'ID da reflexão a ser obtida',
   })
+  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
   })
@@ -169,10 +169,15 @@ export class ReflexaoController {
     description: 'ID de reflexão inválido',
   })
   @ApiResponse({
+    status: 401,
+    description: 'Acesso negado',
+  })
+  @ApiResponse({
     status: 404,
     description: 'Reflexão não encontrada',
   })
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async getReflexaoById(@Param('id', ParamIdPipe) id: string) {
     const reflexao = await this.reflexaoService.findOne(id);
     return reflexao;
@@ -184,6 +189,7 @@ export class ReflexaoController {
       'Cria uma nova reflexão com os dados fornecidos no corpo da requisição.',
   })
   @ApiBody({ type: CreateReflectionDto })
+  @ApiBearerAuth()
   @ApiResponse({
     status: 201,
     description: 'Reflexão criada com sucesso.',
@@ -193,6 +199,10 @@ export class ReflexaoController {
     description: 'Validation error.',
   })
   @ApiResponse({
+    status: 401,
+    description: 'Acesso negado',
+  })
+  @ApiResponse({
     status: 404,
     description: 'Usuário não encontrado.',
   })
@@ -200,27 +210,95 @@ export class ReflexaoController {
   @UseGuards(JwtAuthGuard)
   async createReflexao(
     @Body() createRefelctionDto: CreateReflectionDto,
-    @Request() req: any,
+    @User('sub') userId: string,
   ) {
-    // Extrair userId do token JWT
-    const userId: string = req.user?.sub;
-
-    if (!userId) {
-      throw new BadRequestException(
-        'Token inválido: usuário não identificado.',
-      );
-    }
-
-    // Adicionar userId ao DTO
-    const reflexaoData = {
-      ...createRefelctionDto,
-      userId,
-    };
-
-    await this.reflexaoService.create(reflexaoData);
+    await this.reflexaoService.create(createRefelctionDto, userId);
 
     return {
       message: 'Reflexão criada com sucesso.',
     };
   }
+
+  @ApiOperation({
+    summary: 'Atualizar uma reflexão existente',
+    description:
+      'Atualiza uma reflexão existente com os dados fornecidos no corpo da requisição.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da reflexão a ser atualizada',
+  })
+  @ApiBody({ type: CreateReflectionDto })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'Reflexão atualizada com sucesso.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation error.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Acesso negado',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Acesso negado. Você não é o proprietário desta reflexão.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Reflexão não encontrada.',
+  })
+  @Put(':id')
+  @UseGuards(JwtAuthGuard, ReflectionOwnerGuard)
+  async updateReflexao(
+    @Body() updateReflectionDto: CreateReflectionDto,
+    @Param('id', ParamIdPipe) id: string,
+  ) {
+    await this.reflexaoService.update(id, updateReflectionDto);
+
+    return {
+      message: 'Reflexão atualizada com sucesso.',
+    };
+  }
+  
+  @ApiOperation({
+    summary: 'Deletar uma reflexão existente',
+    description:
+      'Deleta uma reflexão existente.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da reflexão a ser deletada',
+  })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'Reflexão deletada com sucesso.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Acesso negado',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Acesso negado. Você não é o proprietário desta reflexão.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Reflexão não encontrada.',
+  })
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, ReflectionOwnerGuard)
+  async deleteReflexao(
+    @Param('id', ParamIdPipe) id: string,
+  ) {
+    await this.reflexaoService.delete(id);
+
+    return {
+      message: 'Reflexão deletada com sucesso.',
+    };
+  }
 }
+

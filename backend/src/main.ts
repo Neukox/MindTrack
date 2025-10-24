@@ -30,6 +30,7 @@ async function bootstrap() {
     .setDescription(
       'API para gerenciamento de reflexões e monitoramento mental',
     )
+    .addBearerAuth()
     .setVersion('1.0')
     .build();
 
