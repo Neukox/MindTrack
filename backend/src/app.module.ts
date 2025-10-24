@@ -16,6 +16,7 @@ import { ContagemTotalRegistrosModule } from './contagem-total-registros/contage
 import { ContagemUltimaReflexaoCriadaModule } from './contagem-ultima-reflexao-criada/contagem-ultima-reflexao-criada.module';
 import { RegistrosEssaSemanaModule } from './registros-essa-semana/registros-essa-semana.module';
 import { DiasConsecutivosModule } from './dias-consecutivos/dias-consecutivos.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { DiasConsecutivosModule } from './dias-consecutivos/dias-consecutivos.mo
     ContagemUltimaReflexaoCriadaModule,
     RegistrosEssaSemanaModule,
     DiasConsecutivosModule,
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [
