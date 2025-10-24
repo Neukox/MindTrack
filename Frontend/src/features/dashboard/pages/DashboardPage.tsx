@@ -18,7 +18,7 @@ export function DashboardPage() {
       <div className="min-h-screen flex flex-col bg-primary-gradient pt-6 px-4 sm:px-6 lg:px-16 overflow-x-hidden">
         {/* Header */}
         <div className="text-left max-w-full">
-          <h1 className="text-3xl font-bold font-sans mt-2 break-words">
+          <h1 className="text-3xl font-bold font-sans mt-2 wrap-break-words">
             Bem-vindo ao seu Dashboard
           </h1>
           <span className="text-md font-sans font-medium text-gray-400 block mt-1">

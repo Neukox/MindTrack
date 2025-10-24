@@ -81,7 +81,7 @@ export default function Perfil() {
 
           {/* Conteúdo */}
           <div className="w-full bg-white rounded-lg shadow-lg text-left">
-            <div className="relative min-h-[25rem] sm:min-h-[420px] md:min-h-[25rem]">
+            <div className="relative min-h-96 sm:min-h-96 md:min-h-96">
 
               {/* Painel Informações */}
               <div
