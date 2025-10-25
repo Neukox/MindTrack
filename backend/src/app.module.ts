@@ -14,7 +14,6 @@ import { PdfModule } from './pdf/pdf.module';
 import { ContagemTotalRegistrosModule } from './contagem-total-registros/contagem-total-registros.module';
 import { ContagemUltimaReflexaoCriadaModule } from './contagem-ultima-reflexao-criada/contagem-ultima-reflexao-criada.module';
 import { RegistrosEssaSemanaModule } from './registros-essa-semana/registros-essa-semana.module';
-import { DiasConsecutivosModule } from './dias-consecutivos/dias-consecutivos.module';
 import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
@@ -30,7 +29,6 @@ import { MetricsModule } from './metrics/metrics.module';
     ContagemTotalRegistrosModule,
     ContagemUltimaReflexaoCriadaModule,
     RegistrosEssaSemanaModule,
-    DiasConsecutivosModule,
     MetricsModule,
   ],
   controllers: [AppController],

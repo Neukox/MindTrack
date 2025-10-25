@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MetricsService {
-  constructor(private readonly reflexaoService: ReflexaoService) { }
+  constructor(private readonly reflexaoService: ReflexaoService) {}
 
   /**
    * Filtra reflexões por um intervalo de datas (inclusive)
@@ -35,14 +35,14 @@ export class MetricsService {
         type === 'category'
           ? reflection.category || 'uncategorized'
           : reflection.emotion || 'unknown';
-      stats[key] = stats[key] || { count: 0 };
-      stats[key]['count'] = (stats[key]['count'] as number) + 1;
+      stats[key] = stats[key] || { total: 0 };
+      stats[key]['total'] = (stats[key]['total'] as number) + 1;
     });
 
     for (const key in stats) {
-      const count = stats[key]['count'] as number;
+      const count = stats[key]['total'] as number;
       const percentage = (count / (reflections.length || 1)) * 100;
-      stats[key]['percentage'] = parseFloat(percentage.toFixed(2));
+      stats[key]['percentual'] = parseFloat(percentage.toFixed(2));
     }
 
     return stats;
@@ -87,8 +87,11 @@ export class MetricsService {
         : (difference / lastTotal) * 100;
 
     return {
-      totalCurrentSemester: total,
-      percentageChange: percentageChange,
+      registrosEsseSemestre: total,
+      registrosSemestreAnterior: lastTotal,
+      crescimentoPercentual: percentageChange,
+      semesterStart: start,
+      semesterEnd: end,
     };
   }
 
@@ -147,8 +150,11 @@ export class MetricsService {
         : (difference / lastWeekCount) * 100;
 
     return {
-      currentWeekCount: count,
-      percentageChange: percentageChange,
+      registrosEssaSemana: count,
+      registrosSemanaAnterior: lastWeekCount,
+      crescimentoPercentual: percentageChange,
+      weekStart: start,
+      weekEnd: end,
     };
   }
 }

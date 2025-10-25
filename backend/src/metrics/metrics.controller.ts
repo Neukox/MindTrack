@@ -35,9 +35,9 @@ export class MetricsController {
 
     return {
       total: totalReflections,
-      category: categoryStats,
-      emotion: emotionStats,
-      total_semester: totalThisSemester.totalCurrentSemester,
+      categorias: categoryStats,
+      emocoes: emotionStats,
+      semestre: totalThisSemester.registrosEsseSemestre,
     };
   }
 
