@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type {
   UseFormRegister,
   Path,
@@ -12,7 +12,12 @@ interface PasswordInputProps<T extends FieldValues> {
   name?: Path<T>;
   placeholder?: string;
   className?: string;
-  showPassword?: boolean; // inicial, opcional
+  /**
+   * When provided, component becomes controlled: visibility is driven by this prop.
+   * When omitted, the component manages visibility internally.
+   */
+  showPassword?: boolean; // controlled (if provided) or initial (if omitted)
+  
   error?: FieldError;
   disabled?: boolean;
   required?: boolean;
@@ -23,12 +28,14 @@ export default function PasswordInput<T extends FieldValues>({
   name,
   placeholder = "********",
   className = "",
-  showPassword = false,
+  showPassword,
   error,
   disabled = false,
   required = false,
 }: PasswordInputProps<T>) {
-  const [visible, setVisible] = useState(showPassword);
+  const isControlled = typeof showPassword === "boolean";
+  const [internalVisible, setInternalVisible] = useState(false);
+  const visible = isControlled ? (showPassword as boolean) : internalVisible;
 
   const inputProps =
     register && name
@@ -52,12 +59,13 @@ export default function PasswordInput<T extends FieldValues>({
           disabled ? "bg-gray-100 cursor-not-allowed" : ""
         } ${className}`}
       />
-      {!disabled && (
+      {!disabled && !isControlled && (
         <TogglePasswordButton
           showPassword={visible}
-          onToggle={() => setVisible((v) => !v)}
+          onToggle={() => setInternalVisible((v) => !v)}
         />
       )}
+      {/* If parent controls visibility, it should render its own TogglePasswordButton and pass onToggle to control that state. */}
       {error && (
         <p className="text-sm text-red-500 mt-1">
           {error.message || "Campo inválido"}

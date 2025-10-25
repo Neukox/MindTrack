@@ -328,7 +328,7 @@ export default function Perfil() {
                       />
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-2">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Confirmar Nova Senha *
                       </label>
@@ -351,7 +351,7 @@ export default function Perfil() {
                       )}
                     </div>
 
-                    <div className="flex justify-end">
+                    <div className="flex justify-end -mt-2">
                       <Button
                         type="submit"
                         variant="secondary"

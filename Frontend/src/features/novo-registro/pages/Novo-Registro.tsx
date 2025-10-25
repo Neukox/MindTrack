@@ -241,7 +241,7 @@ export default function NovoRegistro() {
                 <button
                   key={e.nome}
                   onClick={() => handleEmocaoSelect(e.nome)}
-                  className={`px-4 py-2 rounded-xl flex items-center gap-2 ${
+                  className={`px-4 py-2 cursor-pointer rounded-xl flex items-center gap-2 ${
                     e.cor
                   } border ${
                     emocao === e.nome ? "border-blue-400" : "border-transparent"
