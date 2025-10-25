@@ -31,24 +31,26 @@ enum Emotion {
 }
 
 model User {
-  id               String                @id @default(cuid())
-  username         String
-  email            String                @unique
-  password         String
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
-  passwordReset    PasswordResetToken[]
-  reflections      Reflection[]          // Relacionamento 1:N com Reflexões
+  id                String                @id @default(cuid())
+  username          String
+  email             String                @unique
+  password          String
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  refreshToken      String?
+
+  passwordResetTokens PasswordResetToken[]
+  reflections         Reflection[]          // Relacionamento 1:N com Reflexões
 }
 
 model PasswordResetToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  createdAt DateTime @default(now())
-  expiresAt DateTime
-  userId    String
+  id         String   @id @default(cuid())
+  token      String   @unique
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
 
-  User      User     @relation(fields: [userId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Reflection {
@@ -57,11 +59,9 @@ model Reflection {
   category    Category
   emotion     Emotion
   content     String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
-  // Relacionamento com o usuário que criou a reflexão
   userId      String
-  user        User        @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-

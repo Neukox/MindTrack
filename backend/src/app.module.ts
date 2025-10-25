@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LoginModule } from './login/login.module';
-import { RegisterModule } from './register/register.module';
 import { ResetPasswordModule } from './reset-password/reset-password.module';
 import { ReflexaoModule } from './reflexao/reflexao.module';
-import { BuscaReflexaoModule } from './reflexao/busca-reflexao.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma/prisma.service';
 import { UserModule } from './user/user.module';
@@ -14,20 +11,25 @@ import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { TemplatesModule } from './templates/templates.module';
 import { PdfModule } from './pdf/pdf.module';
+import { ContagemTotalRegistrosModule } from './contagem-total-registros/contagem-total-registros.module';
+import { ContagemUltimaReflexaoCriadaModule } from './contagem-ultima-reflexao-criada/contagem-ultima-reflexao-criada.module';
+import { RegistrosEssaSemanaModule } from './registros-essa-semana/registros-essa-semana.module';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    LoginModule,
-    RegisterModule,
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     ResetPasswordModule,
     ReflexaoModule,
-    BuscaReflexaoModule,
     AuthModule,
     UserModule,
     EmailModule,
     TemplatesModule,
     PdfModule,
+    ContagemTotalRegistrosModule,
+    ContagemUltimaReflexaoCriadaModule,
+    RegistrosEssaSemanaModule,
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [
