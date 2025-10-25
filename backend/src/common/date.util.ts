@@ -7,7 +7,7 @@
  * - getWeekRange: retorna início e fim da semana para uma data (semana iniciando em segunda por padrão)
  */
 
-export interface WeekRange {
+export interface DateRange {
   start: Date;
   end: Date;
 }
@@ -116,7 +116,7 @@ export default class DateUtils {
   static getWeekRange(
     input?: Date | string | number,
     weekStartsOnMonday = true,
-  ): WeekRange {
+  ): DateRange {
     const base = input === undefined ? new Date() : DateUtils.parseDate(input);
     // clone
     const date = new Date(base.getTime());
@@ -145,6 +145,49 @@ export default class DateUtils {
     end.setHours(23, 59, 59, 999);
 
     return { start, end };
+  }
+
+  /**
+   * Retorna o inicio e o fim do semestre para a data informada.
+   *
+   * Parâmetros:
+   * - input: Date | string | number (se omitido, usa `new Date()`)
+   *
+   * O horário do `start` é ajustado para 00:00:00.000 e o `end` para 23:59:59.999 no fuso local.
+   */
+
+  static getSemesterRange(input?: Date | string | number): DateRange {
+    const base = input === undefined ? new Date() : DateUtils.parseDate(input);
+    const year = base.getFullYear();
+    const month = base.getMonth();
+
+    let startMonth: number;
+    let endMonth: number;
+
+    if (month < 6) {
+      // Primeiro semestre: janeiro (0) a junho (5)
+      startMonth = 0;
+      endMonth = 5;
+    } else {
+      // Segundo semestre: julho (6) a dezembro (11)
+      startMonth = 6;
+      endMonth = 11;
+    }
+
+    const start = new Date(year, startMonth, 1, 0, 0, 0, 0);
+    const end = new Date(year, endMonth + 1, 0, 23, 59, 59, 999); // último dia do mês
+
+    return { start, end };
+  }
+
+  /**
+   * Normaliza uma data para o início do dia (00:00:00.000).
+   */
+
+  static normalizeToStartOfDay(input: Date | string | number): Date {
+    const d = DateUtils.parseDate(input);
+    d.setHours(0, 0, 0, 0);
+    return d;
   }
 
   /**
