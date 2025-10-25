@@ -56,33 +56,6 @@ export class ReflexaoController {
   }
 
   @ApiOperation({
-    summary: 'Obter reflexões do usuário atual',
-    description:
-      'Retorna as reflexões do usuário autenticado baseado no token JWT.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Reflexões obtidas com sucesso.',
-  })
-  @Get('minhas-reflexoes')
-  @UseGuards(JwtAuthGuard)
-  async getMinhasReflexoes(
-    @Query() filters: ReflectionFiltersDto,
-    @Request() req: any,
-  ) {
-    const userId: string = req.user?.sub;
-
-    if (!userId) {
-      throw new BadRequestException(
-        'Token inválido: usuário não identificado.',
-      );
-    }
-
-    const reflexoes = await this.reflexaoService.findAllByUser(userId, filters);
-    return reflexoes;
-  }
-
-  @ApiOperation({
     summary: 'Obter reflexão por ID',
     description: 'Retorna uma reflexão específica com base no ID fornecido.',
   })
