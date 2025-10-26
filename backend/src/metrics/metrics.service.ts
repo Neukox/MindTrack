@@ -27,14 +27,15 @@ export class MetricsService {
   async getStatsByType(
     reflections: Reflection[],
     type: 'category' | 'emotion',
+    mappedKeys?: Record<string, string>,
   ) {
     const stats: Record<string, Record<string, number>> = {};
 
     reflections.forEach((reflection) => {
       const key =
-        type === 'category'
-          ? reflection.category || 'uncategorized'
-          : reflection.emotion || 'unknown';
+        mappedKeys && mappedKeys[reflection[type]]
+          ? mappedKeys[reflection[type]]
+          : reflection[type];
       stats[key] = stats[key] || { total: 0 };
       stats[key]['total'] = (stats[key]['total'] as number) + 1;
     });

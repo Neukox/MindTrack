@@ -52,15 +52,14 @@ export class TemplatesService {
     name: string,
     options?: LoadTemplateOptions,
   ): Promise<Handlebars.TemplateDelegate> {
-    const fileName = this.resolveFullPath(name, options);
-    const cacheKey = `${options?.service ?? options?.path ?? 'root'}:${path.basename(fileName)}`;
+    const fullPath = this.resolveFullPath(name, options);
+    const cacheKey = `${options?.service ?? options?.path ?? 'root'}:${path.basename(fullPath)}`;
 
     if (this.cache.has(cacheKey)) {
       this.logger.debug(`Template cache hit: ${cacheKey}`);
       return this.cache.get(cacheKey)!;
     }
 
-    const fullPath = path.join(this.templatesDir, fileName);
     this.logger.debug(`Loading template: ${fullPath}`);
     const content = await fs.readFile(fullPath, 'utf-8');
     const compiled = Handlebars.compile(content);

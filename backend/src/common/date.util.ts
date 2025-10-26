@@ -95,9 +95,11 @@ export default class DateUtils {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
-      hour: includeTime ? '2-digit' : undefined,
-      minute: includeTime ? '2-digit' : undefined,
-      second: includeTime ? '2-digit' : undefined,
+      ...(includeTime && {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }),
       hour12: false,
     };
 

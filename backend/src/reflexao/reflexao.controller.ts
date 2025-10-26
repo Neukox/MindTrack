@@ -6,8 +6,6 @@ import {
   Query,
   Param,
   UseGuards,
-  Request,
-  BadRequestException,
   Put,
   Delete,
 } from '@nestjs/common';
@@ -15,10 +13,17 @@ import { ReflexaoService } from './reflexao.service';
 import CreateReflectionDto from './dtos/create-reflection.dto';
 import ReflectionFiltersDto from './dtos/reflection-flilters.dto';
 import { ParamIdPipe } from '@/common/pipes/param-id.pipe';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+} from '@nestjs/swagger';
 import JwtAuthGuard from '@/auth/guards/jwt-auth.guard';
 import ReflectionOwnerGuard from './guards/reflection-owner.guard';
 import { User } from '@/auth/decorators/user.decorator';
+import type { Response } from 'express';
 
 @Controller('reflexao')
 export class ReflexaoController {
@@ -165,11 +170,10 @@ export class ReflexaoController {
       message: 'Reflexão atualizada com sucesso.',
     };
   }
-  
+
   @ApiOperation({
     summary: 'Deletar uma reflexão existente',
-    description:
-      'Deleta uma reflexão existente.',
+    description: 'Deleta uma reflexão existente.',
   })
   @ApiParam({
     name: 'id',
@@ -194,9 +198,7 @@ export class ReflexaoController {
   })
   @Delete(':id')
   @UseGuards(JwtAuthGuard, ReflectionOwnerGuard)
-  async deleteReflexao(
-    @Param('id', ParamIdPipe) id: string,
-  ) {
+  async deleteReflexao(@Param('id', ParamIdPipe) id: string) {
     await this.reflexaoService.delete(id);
 
     return {
@@ -204,4 +206,3 @@ export class ReflexaoController {
     };
   }
 }
-
