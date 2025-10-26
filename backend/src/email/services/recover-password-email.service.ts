@@ -21,6 +21,8 @@ export default class RecoverPasswordEmailService extends EmailService {
       resetUrl,
     };
 
+    this.logger.debug(`Preparing to send recover password email to: ${to}`);
+
     return this.sendEmail({
       to,
       subject,

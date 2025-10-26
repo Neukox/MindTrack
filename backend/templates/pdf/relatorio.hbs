@@ -1,7 +1,7 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <title>MindTrack Relatório {{data}}</title>
+    <title>MindTrack Relatório {{pdfGenerationDate}}</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family:
       'Arial', sans-serif; } .report__header { padding: 16px; text-align:
@@ -48,8 +48,8 @@
 
         <div class="report__info">
           <p>Nome: {{username}}</p>
-          <p>Período: {{startDate}} á {{endDate}}</p>
-          <p>Total de registros: {{reflection_total}}</p>
+          <p>Período: {{periodStart}} á {{periodEnd}}</p>
+          <p>Total de registros: {{totalReflections}}</p>
         </div>
       </div>
 
@@ -59,7 +59,7 @@
         <div class="report__stats">
           <h3>Categorias</h3>
           <ul>
-            {{#each categorias}}
+            {{#each reflectionsCategoryStats}}
               <li>{{@key}}: {{this.total}} ({{this.percentual}}%)</li>
             {{/each}}
           </ul>
@@ -68,7 +68,7 @@
         <div class="report__stats">
           <h3>Emoções</h3>
           <ul>
-            {{#each emocao}}
+            {{#each reflectionsEmotionStats}}
               <li>{{@key}}: {{this.total}} ({{this.percentual}}%)</li>
             {{/each}}
           </ul>
@@ -82,7 +82,7 @@
           <div class="report__reflection">
             <h3>{{this.title}}</h3>
             <div class="report__reflection-meta">
-              <p>{{this.date}}</p>
+              <p>{{this.createdAt}}</p>
               <p>{{this.category}}</p>
               <p>{{this.emotion}}</p>
             </div>

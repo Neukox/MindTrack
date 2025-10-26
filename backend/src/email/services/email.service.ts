@@ -1,12 +1,13 @@
 import type { ConfigType } from '@nestjs/config';
 import { Transporter, createTransport } from 'nodemailer';
 import emailConfig from '../config/email.config';
-import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { TemplatesService } from '@/templates/templates.service';
 
 @Injectable()
 export default class EmailService implements OnModuleDestroy {
   protected transporter: Transporter;
+  protected readonly logger = new Logger(EmailService.name);
 
   constructor(
     @Inject(emailConfig.KEY)
@@ -21,6 +22,8 @@ export default class EmailService implements OnModuleDestroy {
         pass: this.emailConfiguration.pass,
       },
     });
+
+    this.logger.debug('Email transporter initialized');
   }
 
   async sendEmail(options: {
@@ -40,8 +43,15 @@ export default class EmailService implements OnModuleDestroy {
       html = await this.templatesService.renderTemplate(
         options.template,
         options.context || {},
+        {
+          service: 'email',
+        },
       );
     }
+
+    this.logger.debug(
+      `Sending email to: ${options.to} with subject: ${options.subject}`,
+    );
 
     const info = await this.transporter.sendMail({
       from,
@@ -57,10 +67,11 @@ export default class EmailService implements OnModuleDestroy {
   async onModuleDestroy() {
     try {
       if (this.transporter && typeof this.transporter.close === 'function') {
+        this.logger.debug('Closing email transporter');
         this.transporter.close();
       }
     } catch (error) {
-      console.error('Error closing email transporter:', error);
+      this.logger.error('Error closing email transporter', error);
     }
   }
 }
