@@ -1,0 +1,97 @@
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MindTrack Relatório {{data}}</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; } body { font-family:
+      'Arial', sans-serif; } .report__header { padding: 16px; text-align:
+      center; } .report__header h1 { font-size: 48px; } .report__header div {
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+      margin-bottom: 16px; } .report__header img { height: 64px; display:
+      inline-block; border-radius: 16px; } .wrapper { padding: 32px; }
+      .report.wrapper { padding-top: 16px; } .report__section { padding: 16px 0;
+      } .report__section h2 { font-size: 24px; margin-bottom: 24px; }
+      .report__info p { font-size: 16px; margin-bottom: 12px; } .report__stats
+      h3 { font-size: 20px; margin-bottom: 16px; } .report__stats ul {
+      list-style-type: disc; padding-left: 20px; } .report__stats li {
+      font-size: 16px; margin-bottom: 8px; } .report__stats:last-child {
+      margin-top: 32px; } .report__reflection { display: flex; flex-direction:
+      column; gap: 12px; border-bottom: 1px solid #ccc; padding: 24px 0;}
+      .report__reflection h3 { font-size: 20px; } .report__reflection div {
+      font-size: 14px; } .report__reflection p { font-size: 16px; line-height:
+      1.5; } .report__reflection-meta p { margin-right: 16px; display:
+      inline-block; } .report__reflection-meta p:not(:last-child) {
+      margin-right: 16px; border-right: 1px solid #000000; padding-right: 16px;
+      } @media print { body { margin: 0; padding: 0; font-family: 'Arial',
+      sans-serif; } }
+    </style>
+  </head>
+  <body>
+    <header class="report__header wrapper">
+      <div>
+        <img
+          src="https://i.ibb.co/DNV4PvP/Mind-Track-logo.png"
+          alt="Mind-Track-logo"
+          border="0"
+        />
+        <h1>
+          MindTrack
+        </h1>
+      </div>
+      <p>
+        Diário de Bordo Acadêmico
+      </p>
+    </header>
+    <main class="report wrapper">
+      <div class="report__section">
+        <h2>Relatório de Reflexões</h2>
+
+        <div class="report__info">
+          <p>Nome: {{username}}</p>
+          <p>Período: {{startDate}} á {{endDate}}</p>
+          <p>Total de registros: {{reflection_total}}</p>
+        </div>
+      </div>
+
+      <div class="report__section">
+        <h2>Estatísticas</h2>
+
+        <div class="report__stats">
+          <h3>Categorias</h3>
+          <ul>
+            {{#each categorias}}
+              <li>{{@key}}: {{this.total}} ({{this.percentual}}%)</li>
+            {{/each}}
+          </ul>
+        </div>
+
+        <div class="report__stats">
+          <h3>Emoções</h3>
+          <ul>
+            {{#each emocao}}
+              <li>{{@key}}: {{this.total}} ({{this.percentual}}%)</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+
+      <div class="report__section">
+        <h2>Reflexões Detalhadas</h2>
+
+        {{#each reflections}}
+          <div class="report__reflection">
+            <h3>{{this.title}}</h3>
+            <div class="report__reflection-meta">
+              <p>{{this.date}}</p>
+              <p>{{this.category}}</p>
+              <p>{{this.emotion}}</p>
+            </div>
+            <p>
+              {{this.content}}
+            </p>
+          </div>
+        {{/each}}
+      </div>
+    </main>
+  </body>
+</html>
