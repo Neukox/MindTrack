@@ -4,6 +4,10 @@ import { Helmet } from "react-helmet-async";
 import { Header } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
 import { IllustrationSection } from "./components/IlustrationSection";
+import { CardSection } from "./components/CardSection";
+import HowItWorksSections from "./components/HowItWorksSections";
+import FooterSection from "./components/FooterSection";
+
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +18,7 @@ const HomePage: React.FC = () => {
         <title>Home - MindTrack</title>
       </Helmet>
 
-      <div className="min-h-screen bg-white text-gray-800">
+      <div className="min-h-screen bg-primary-gradient text-gray-800">
         {/* Cabeçalho */}
         <Header
           onLogin={() => navigate("/login")}
@@ -31,7 +35,11 @@ const HomePage: React.FC = () => {
 
           {/* Seção de Ilustração (Direita) */}
           <IllustrationSection />
+          
         </main>
+        <CardSection/>
+        <HowItWorksSections/>
+        <FooterSection/>
       </div>
     </>
   );

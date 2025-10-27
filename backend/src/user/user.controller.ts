@@ -8,8 +8,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ChangePasswordDto } from './dto/change-password.dto';
+import UpdateProfileDto from './dto/update-profile.dto';
+import ChangePasswordDto from './dto/change-password.dto';
 import JwtAuthGuard from '@/auth/guards/jwt-auth.guard';
 
 @Controller('user')

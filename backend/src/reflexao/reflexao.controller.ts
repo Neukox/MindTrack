@@ -6,8 +6,6 @@ import {
   Query,
   Param,
   UseGuards,
-  Request,
-  BadRequestException,
   Put,
   Delete,
 } from '@nestjs/common';
@@ -15,10 +13,17 @@ import { ReflexaoService } from './reflexao.service';
 import CreateReflectionDto from './dtos/create-reflection.dto';
 import ReflectionFiltersDto from './dtos/reflection-flilters.dto';
 import { ParamIdPipe } from '@/common/pipes/param-id.pipe';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+} from '@nestjs/swagger';
 import JwtAuthGuard from '@/auth/guards/jwt-auth.guard';
 import ReflectionOwnerGuard from './guards/reflection-owner.guard';
 import { User } from '@/auth/decorators/user.decorator';
+import type { Response } from 'express';
 
 @Controller('reflexao')
 export class ReflexaoController {
@@ -53,103 +58,6 @@ export class ReflexaoController {
   ) {
     const reflexoes = await this.reflexaoService.findAllByUser(userId, filters);
     return reflexoes;
-  }
-
-  @ApiOperation({
-    summary: 'Obter reflexões do usuário atual',
-    description:
-      'Retorna as reflexões do usuário autenticado baseado no token JWT.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Reflexões obtidas com sucesso.',
-  })
-  @Get('minhas-reflexoes')
-  @UseGuards(JwtAuthGuard)
-  async getMinhasReflexoes(
-    @Query() filters: ReflectionFiltersDto,
-    @Request() req: any,
-  ) {
-    const userId: string = req.user?.sub;
-
-    if (!userId) {
-      throw new BadRequestException(
-        'Token inválido: usuário não identificado.',
-      );
-    }
-
-    const reflexoes = await this.reflexaoService.findAllByUser(userId, filters);
-    return reflexoes;
-  }
-
-  @ApiOperation({
-    summary: 'Obter frequência semanal de registros',
-    description: 'Retorna a frequência de registros criados por semana.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Frequência semanal obtida com sucesso.',
-  })
-  @Get('frequencia-semanal')
-  @UseGuards(JwtAuthGuard)
-  async getFrequenciaSemanal(@Request() req: any) {
-    const userId: string = req.user?.sub;
-
-    if (!userId) {
-      throw new BadRequestException(
-        'Token inválido: usuário não identificado.',
-      );
-    }
-
-    const frequencia = await this.reflexaoService.getFrequenciaSemanal(userId);
-    return frequencia;
-  }
-
-  @ApiOperation({
-    summary: 'Obter estatísticas de categorias',
-    description: 'Retorna estatísticas sobre as categorias mais usadas.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Estatísticas de categorias obtidas com sucesso.',
-  })
-  @Get('categorias-estatisticas')
-  @UseGuards(JwtAuthGuard)
-  async getCategoriasEstatisticas(@Request() req: any) {
-    const userId: string = req.user?.sub;
-
-    if (!userId) {
-      throw new BadRequestException(
-        'Token inválido: usuário não identificado.',
-      );
-    }
-
-    const categorias =
-      await this.reflexaoService.getCategoriasEstatisticas(userId);
-    return categorias;
-  }
-
-  @ApiOperation({
-    summary: 'Obter estatísticas de emoções',
-    description: 'Retorna estatísticas sobre as emoções mais registradas.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Estatísticas de emoções obtidas com sucesso.',
-  })
-  @Get('emocoes-estatisticas')
-  @UseGuards(JwtAuthGuard)
-  async getEmocoesEstatisticas(@Request() req: any) {
-    const userId: string = req.user?.sub;
-
-    if (!userId) {
-      throw new BadRequestException(
-        'Token inválido: usuário não identificado.',
-      );
-    }
-
-    const emocoes = await this.reflexaoService.getEmocoesEstatisticas(userId);
-    return emocoes;
   }
 
   @ApiOperation({
@@ -262,11 +170,10 @@ export class ReflexaoController {
       message: 'Reflexão atualizada com sucesso.',
     };
   }
-  
+
   @ApiOperation({
     summary: 'Deletar uma reflexão existente',
-    description:
-      'Deleta uma reflexão existente.',
+    description: 'Deleta uma reflexão existente.',
   })
   @ApiParam({
     name: 'id',
@@ -291,9 +198,7 @@ export class ReflexaoController {
   })
   @Delete(':id')
   @UseGuards(JwtAuthGuard, ReflectionOwnerGuard)
-  async deleteReflexao(
-    @Param('id', ParamIdPipe) id: string,
-  ) {
+  async deleteReflexao(@Param('id', ParamIdPipe) id: string) {
     await this.reflexaoService.delete(id);
 
     return {
@@ -301,4 +206,3 @@ export class ReflexaoController {
     };
   }
 }
-

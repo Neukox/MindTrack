@@ -15,7 +15,7 @@ export class PdfService implements OnModuleInit, OnApplicationShutdown {
     try {
       const puppeteer = require('puppeteer');
       this.browser = await puppeteer.launch({
-        headleess: true,
+        headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
       });
       this.logger.log('Puppeteer browser launched');
@@ -31,11 +31,9 @@ export class PdfService implements OnModuleInit, OnApplicationShutdown {
     }
   }
 
-  async generatePdf(
-    html: string,
-    options: Record<string, any> = {},
-  ): Promise<Buffer> {
+  async generatePdf(html: string, options: Record<string, any> = {}) {
     if (!this.browser) {
+      this.logger.error('Puppeteer browser is not initialized');
       throw new Error('Puppeteer browser is not initialized');
     }
 
@@ -49,16 +47,27 @@ export class PdfService implements OnModuleInit, OnApplicationShutdown {
       const pdfBuffer = await page.pdf({
         format: 'A4',
         printBackground: true,
-        margin: { top: '20px', bottom: '20px', left: '20px', right: '20px' },
+        omitBackground: false,
+        margin: { top: '15px', bottom: '15px', left: '15px', right: '15px' },
         ...options,
       });
 
-      return pdfBuffer;
+      this.logger.debug(
+        `PDF generated with options: ${JSON.stringify(options)}`,
+      );
+
+      this.logger.log('PDF generation successful');
+
+      return {
+        filename: page.title() + '.pdf',
+        buffer: pdfBuffer as Buffer,
+      };
     } catch (error) {
       this.logger.error('Error generating PDF', error);
       throw error;
     } finally {
       if (page) {
+        this.logger.debug('Closing Puppeteer page');
         await page.close();
       }
     }

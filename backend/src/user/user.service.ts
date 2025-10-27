@@ -5,13 +5,16 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import RegisterDto from '@/auth/dto/register.dto';
-import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import * as bcrypt from 'bcrypt';
+import UpdateProfileDto from './dto/update-profile.dto';
+import ChangePasswordDto from './dto/change-password.dto';
+import HashingService from '@/auth/hashing/hashing.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly hashingService: HashingService,
+  ) {}
 
   async create(registerDto: RegisterDto) {
     return this.prismaService.user.create({
@@ -55,6 +58,7 @@ export class UserService {
 
   async updateProfile(userId: string, updateData: UpdateProfileDto) {
     const user = await this.findOne(userId);
+
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
@@ -80,30 +84,27 @@ export class UserService {
     userId: string,
     changePasswordDto: ChangePasswordDto,
   ) {
-    const { currentPassword, newPassword, confirmPassword } = changePasswordDto;
-
-    // Verificar se nova senha e confirmação coincidem
-    if (newPassword !== confirmPassword) {
-      throw new BadRequestException('Nova senha e confirmação não coincidem');
-    }
+    const { currentPassword, newPassword } = changePasswordDto;
 
     // Buscar usuário
     const user = await this.findOne(userId);
+
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
 
     // Verificar senha atual
-    const isCurrentPasswordValid = await bcrypt.compare(
+    const isCurrentPasswordValid = await this.hashingService.compare(
       currentPassword,
       user.password,
     );
+
     if (!isCurrentPasswordValid) {
       throw new BadRequestException('Senha atual incorreta');
     }
 
     // Hash da nova senha
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    const hashedNewPassword = await this.hashingService.hash(newPassword);
 
     // Atualizar senha
     await this.prismaService.user.update({
