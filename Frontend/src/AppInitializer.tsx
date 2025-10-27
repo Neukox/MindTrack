@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useAuthStore from "./features/auth/store/auth.store";
-import api from "./lib/api/api";
+import api from "./lib/api/axios";
 
 export default function AppInitializer({
   children,

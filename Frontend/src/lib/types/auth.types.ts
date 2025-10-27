@@ -1,10 +1,4 @@
-// Tipos compartilhados para autenticação
-
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-}
+import type { User } from "./user.type";
 
 export interface LoginData {
   email: string;
@@ -17,12 +11,6 @@ export interface RegisterData {
   password: string;
 }
 
-export interface AuthResponse {
-  message: string;
-  user?: User;
-  token?: string;
-}
-
 export interface RecoverPasswordData {
   email: string;
 }
@@ -30,12 +18,6 @@ export interface RecoverPasswordData {
 export interface ResetPasswordData {
   token: string;
   newPassword: string;
-}
-
-export interface ApiError {
-  message: string;
-  statusCode?: number;
-  error?: string;
 }
 
 // Estados de loading para componentes

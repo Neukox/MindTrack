@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { User } from "../../../lib/types/auth.types";
-import { setAuthToken } from "../../../lib/api/api";
+import type { User } from "@/lib/types/user.type";
+import { setAuthToken } from "../../../lib/api/axios";
 
 interface AuthState {
   isLoading: boolean;
