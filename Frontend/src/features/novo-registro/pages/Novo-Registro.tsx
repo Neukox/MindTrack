@@ -3,10 +3,8 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
 import { toast } from "sonner";
-import {
-  criarRegistro,
-  type CriarRegistroData,
-} from "../../auth/api/axiosCriarRegistros";
+import { criarRegistro } from "@/services/reflection/create-reflection.service";
+import type { CreateReflectionData } from "@/services/types/reflection-request.interface";
 
 export default function NovoRegistro() {
   const [categoria, setCategoria] = useState("ESTUDO");
@@ -130,10 +128,10 @@ export default function NovoRegistro() {
           throw new Error("Emoção inválida");
       }
 
-      const dadosRegistro: CriarRegistroData = {
+      const dadosRegistro: CreateReflectionData = {
         title: titulo.trim(),
-        category: categoriaEnum as CriarRegistroData["category"],
-        emotion: emocaoEnum as CriarRegistroData["emotion"],
+        category: categoriaEnum as CreateReflectionData["category"],
+        emotion: emocaoEnum as CreateReflectionData["emotion"],
         content: reflexao.trim(),
       };
 

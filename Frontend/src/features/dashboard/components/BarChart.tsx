@@ -8,7 +8,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-import { getFrequenciaRegistros } from "../../auth/api/axiosFrequenciadeRegistros";
+import { getFrequenciaRegistros } from "@/services/metrics/metrics.service";
 
 type FrequenciaData = {
   name: string;
@@ -26,12 +26,15 @@ export default function CustomBarChart() {
       try {
         const response = await getFrequenciaRegistros();
 
-        // A API agora retorna diretamente os dados
-        const dadosFormatados = [
-          { name: "Semana Atual", valor: response.registrosEssaSemana },
-          { name: "Semana Anterior", valor: response.registrosSemanaAnterior },
-        ];
-        setData(dadosFormatados);
+        if (response.status === 200 && response.data.length > 0) {
+          const dadosFormatados = response.data.map((item, index) => ({
+            name: `Semana ${index + 1}`,
+            valor: item.count,
+          }));
+          setData(dadosFormatados);
+        } else {
+          setData([{ name: "Sem dados", valor: 1 }]);
+        }
       } catch (error) {
         console.error("Erro ao carregar frequência:", error);
         setData([{ name: "Erro ao carregar", valor: 1 }]);
@@ -44,8 +47,10 @@ export default function CustomBarChart() {
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      if (width < 640) setBarSize(25); // mobile
-      else if (width < 1024) setBarSize(40); // tablet
+      if (width < 640)
+        setBarSize(25); // mobile
+      else if (width < 1024)
+        setBarSize(40); // tablet
       else setBarSize(70); // desktop
     };
 

@@ -4,7 +4,10 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import MindLog from "../../../assets/MindTrack.png";
 import { Helmet } from "react-helmet-async";
-import { registerUser, validateRegisterData } from "../api/axiosRegister";
+import {
+  registerUser,
+  validateRegisterData,
+} from "../../../services/auth/register.service";
 import { TogglePasswordButton } from "../../../components/ui/TogglePasswordButton";
 import { Button } from "../../../components/ui/Button";
 import PasswordInput from "../../../components/ui/PasswordInput";

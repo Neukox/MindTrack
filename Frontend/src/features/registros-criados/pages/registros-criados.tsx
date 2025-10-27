@@ -3,24 +3,22 @@ import { Helmet } from "react-helmet-async";
 import { FaArrowLeft } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import {
-  buscarRegistros,
-  type RegistroData,
-} from "../../auth/api/axiosBuscarRegistros";
-import { excluirRegistro } from "../../auth/api/axiosExcluirRegistro";
+import { buscarRegistros } from "@/services/reflection/search-reflections.service";
+import { excluirRegistro } from "@/services/reflection/delete-reflection.service";
 import ConfirmDeleteModal from "../../../components/modals/ConfirmDeleteModal";
+import type { Reflection } from "@/lib/types/reflection.type";
 
 export default function MindTrackRecords() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Todas");
   const [emotion, setEmotion] = useState("Todas");
   const [month, setMonth] = useState("Todos os meses");
-  const [records, setRecords] = useState<RegistroData[]>([]);
+  const [records, setRecords] = useState<Reflection[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [recordToDelete, setRecordToDelete] = useState<RegistroData | null>(
-    null
+  const [recordToDelete, setRecordToDelete] = useState<Reflection | null>(
+    null,
   );
 
   // Carregar registros ao montar o componente
@@ -32,7 +30,7 @@ export default function MindTrackRecords() {
     try {
       setLoading(true);
       const response = await buscarRegistros();
-      setRecords(response.data);
+      setRecords(response);
     } catch (error) {
       console.error("Erro ao carregar registros:", error);
       toast.error("Erro ao carregar registros");
@@ -77,7 +75,7 @@ export default function MindTrackRecords() {
   };
 
   // Funções para controle do modal de exclusão
-  const handleDeleteClick = (record: RegistroData) => {
+  const handleDeleteClick = (record: Reflection) => {
     setRecordToDelete(record);
     setIsDeleteModalOpen(true);
   };
@@ -96,7 +94,7 @@ export default function MindTrackRecords() {
 
       // Atualizar a lista de registros removendo o registro excluído
       setRecords((prevRecords) =>
-        prevRecords.filter((record) => record.id !== recordToDelete.id)
+        prevRecords.filter((record) => record.id !== recordToDelete.id),
       );
 
       toast.success("Registro excluído com sucesso!");

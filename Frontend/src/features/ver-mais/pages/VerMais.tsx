@@ -3,16 +3,14 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
-import {
-  buscarRegistroPorId,
-  type RegistroDetalhado,
-} from "../../auth/api/axiosBuscarRegistroPorId";
-import { excluirRegistro } from "../../auth/api/axiosExcluirRegistro";
+import { buscarRegistroPorId } from "../../../services/reflection/get-reflection.service";
+import { excluirRegistro } from "../../../services/reflection/delete-reflection.service";
 import ConfirmDeleteModal from "../../../components/modals/ConfirmDeleteModal";
+import type { Reflection } from "@/lib/types/reflection.type";
 
 export default function VerMais() {
   const { id } = useParams<{ id: string }>();
-  const [registro, setRegistro] = useState<RegistroDetalhado | null>(null);
+  const [registro, setRegistro] = useState<Reflection | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

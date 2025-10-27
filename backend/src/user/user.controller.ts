@@ -32,7 +32,7 @@ export class UserController {
     return this.userService.updateProfile(userId, updateProfileDto);
   }
 
-  @Post('change-password')
+  @Patch('change-password')
   async changePassword(
     @Request() req: any,
     @Body() changePasswordDto: ChangePasswordDto,

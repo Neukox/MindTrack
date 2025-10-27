@@ -10,10 +10,10 @@ import Barchat from "../components/BarChart";
 import HorizontalBarChart from "../components/HorizontalBarChart";
 
 // Importar as funções axios
-import { getEntradasCriadas } from "../../auth/api/axiosEntradasCriadas";
-import { getUltimaEntrada } from "../../auth/api/axiosUltimaEntrada";
-import { getEstatisticasSemanaAtual } from "../../auth/api/axiosSemanaAtual";
-import { getDiasConsecutivos } from "../../auth/api/axiosDiasConsecutivos";
+import { getEntradasCriadas } from "@/services/metrics/entradas-criadas.service";
+import { getUltimaEntrada } from "@/services/metrics/ultima-entrada.service";
+import { getEstatisticasSemanaAtual } from "@/services/metrics/semana-atual.service";
+import { getDiasConsecutivos } from "@/services/metrics/dias-consecutivos.service";
 
 export function DashboardPage() {
   // Estados para os dados dos cards
@@ -56,10 +56,10 @@ export function DashboardPage() {
 
       if (dadosEstatisticasSemana.success) {
         setRegistrosSemana(
-          dadosEstatisticasSemana.data.registrosEssaSemana || 0
+          dadosEstatisticasSemana.data.registrosEssaSemana || 0,
         );
         setCrescimentoSemana(
-          dadosEstatisticasSemana.data.crescimentoPercentual || 0
+          dadosEstatisticasSemana.data.crescimentoPercentual || 0,
         );
       }
 
@@ -87,8 +87,8 @@ export function DashboardPage() {
       valor > 0
         ? "text-green-500"
         : valor < 0
-        ? "text-red-500"
-        : "text-gray-500";
+          ? "text-red-500"
+          : "text-gray-500";
     return (
       <span className={cor}>
         {sinal} {Math.abs(valor)}% vs semana anterior

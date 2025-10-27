@@ -3,15 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { FaPlus, FaAlignRight } from "react-icons/fa";
 import { RxExit } from "react-icons/rx";
 import { HiMoon, HiSun, HiUser } from "react-icons/hi";
-import MindLog from "@/assets/MindTrack.png";
-import Button from "../../../components/ui/Button";
-import { getUserProfile, type UserProfile } from "../../auth/api/axiosPerfil";
 import { useTheme } from "../../../hooks/useTheme";
+import MindLog from "../../../assets/MindTrack.png";
+import Button from "../../../components/ui/Button";
+import { getUserProfile } from "../../../services/user/profile.service";
+import type { Profile } from "@/lib/types/user.type";
 
 export default function NavBar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const { theme, toggleTheme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<Profile | null>(null);
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);

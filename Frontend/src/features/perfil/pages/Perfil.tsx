@@ -13,12 +13,12 @@ import { FloatingThemeToggle } from "../../../components/ui/FloatingThemeToggle"
 import {
   getUserProfile,
   updateUserProfile,
-  type UserProfile,
-} from "../../auth/api/axiosPerfil";
+} from "@/services/user/profile.service";
 import {
   changeUserPassword,
   type ChangePasswordData,
-} from "../../auth/api/axiosAlterarSenha";
+} from "@/services/user/change-password.service";
+import type { Profile } from "@/lib/types/user.type";
 
 type ProfileFormData = {
   username: string;
@@ -33,9 +33,9 @@ type PasswordFormData = {
 
 export default function Perfil() {
   const [activeTab, setActiveTab] = useState<"informacoes" | "senha">(
-    "informacoes"
+    "informacoes",
   );
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userProfile, setUserProfile] = useState<Profile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -92,13 +92,13 @@ export default function Perfil() {
 
       // Atualizar estado local
       setUserProfile((prev) =>
-        prev ? { ...prev, username: data.username } : null
+        prev ? { ...prev, username: data.username } : null,
       );
 
       toast.success(response.message || "Perfil atualizado com sucesso!");
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao atualizar perfil"
+        error instanceof Error ? error.message : "Erro ao atualizar perfil",
       );
     } finally {
       setIsUpdatingProfile(false);
@@ -149,7 +149,7 @@ export default function Perfil() {
     } catch (error) {
       console.error("Erro ao alterar senha:", error);
       toast.error(
-        error instanceof Error ? error.message : "Erro ao alterar senha"
+        error instanceof Error ? error.message : "Erro ao alterar senha",
       );
     } finally {
       setIsChangingPassword(false);

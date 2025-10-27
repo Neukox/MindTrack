@@ -3,16 +3,15 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
 import { toast } from "sonner";
-import { buscarRegistroPorId } from "../../auth/api/axiosBuscarRegistroPorId";
-import {
-  editarRegistro,
-  type EditarRegistroData,
-} from "../../auth/api/axiosEditarRegistro";
+import { buscarRegistroPorId } from "@/services/reflection/get-reflection.service";
+import { editarRegistro } from "@/services/reflection/edit-reflection.service";
+import type { UpdateReflectionData } from "@/services/types/reflection-request.interface";
+import type { Category, Emotion } from "@/lib/types/reflection.type";
 
 export default function EditarRegistro() {
   const { id } = useParams<{ id: string }>();
-  const [categoria, setCategoria] = useState("ESTUDO");
-  const [emocao, setEmocao] = useState("");
+  const [categoria, setCategoria] = useState<Category>("ESTUDO");
+  const [emocao, setEmocao] = useState<Emotion>("ALEGRIA");
   const [titulo, setTitulo] = useState("");
   const [reflexao, setReflexao] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -32,10 +31,7 @@ export default function EditarRegistro() {
         setTitulo(registro.title);
         setReflexao(registro.content);
         setCategoria(registro.category);
-
-        // Mapear emotion do backend para o display name
-        const emocaoDisplay = getEmotionDisplayName(registro.emotion);
-        setEmocao(emocaoDisplay);
+        setEmocao(registro.emotion);
       } catch (error) {
         console.error("Erro ao carregar registro:", error);
         const errorMessage =
@@ -51,26 +47,6 @@ export default function EditarRegistro() {
       carregarRegistro(id);
     }
   }, [id, navigate]);
-
-  // Função auxiliar para mapear emotion do backend para display
-  const getEmotionDisplayName = (emotion: string): string => {
-    switch (emotion) {
-      case "ALEGRIA":
-        return "Alegria";
-      case "CALMA":
-        return "Calma";
-      case "ANSIEDADE":
-        return "Ansiedade";
-      case "REFLEXAO":
-        return "Reflexão";
-      case "MOTIVACAO":
-        return "Motivação";
-      case "TRISTEZA":
-        return "Tristeza";
-      default:
-        return emotion;
-    }
-  };
 
   // Se ainda está carregando os dados, mostrar loading
   if (isLoadingData) {
@@ -92,42 +68,67 @@ export default function EditarRegistro() {
       nome: "Estudo",
       desc: "Aprendizados e aulas",
       icon: "📘",
-      value: "ESTUDO",
+      value: "ESTUDO" as Category,
     },
     {
       nome: "Estágio",
       desc: "Experiência profissional",
       icon: "💼",
-      value: "ESTAGIO",
+      value: "ESTAGIO" as Category,
     },
     {
       nome: "Pessoal",
       desc: "Reflexões pessoais",
       icon: "💖",
-      value: "PESSOAL",
+      value: "PESSOAL" as Category,
     },
     {
       nome: "Pesquisa",
       desc: "Projetos de pesquisa",
       icon: "🔬",
-      value: "PESQUISA",
+      value: "PESQUISA" as Category,
     },
   ];
 
   // Mapeamento de emoções para o backend (igual ao Novo-Registro)
   const emocaoList = [
-    { nome: "Alegria", emoji: "😊", cor: "bg-yellow-100", value: "ALEGRIA" },
-    { nome: "Calma", emoji: "�", cor: "bg-blue-100", value: "CALMA" },
-    { nome: "Ansiedade", emoji: "😰", cor: "bg-red-100", value: "ANSIEDADE" },
-    { nome: "Reflexão", emoji: "🤔", cor: "bg-purple-100", value: "REFLEXAO" },
-    { nome: "Motivação", emoji: "🚀", cor: "bg-green-100", value: "MOTIVACAO" },
-    { nome: "Tristeza", emoji: "😢", cor: "bg-slate-100", value: "TRISTEZA" },
+    {
+      nome: "Alegria",
+      emoji: "😊",
+      cor: "bg-yellow-100",
+      value: "ALEGRIA" as Emotion,
+    },
+    {
+      nome: "Calma",
+      emoji: "�",
+      cor: "bg-blue-100",
+      value: "CALMA" as Emotion,
+    },
+    {
+      nome: "Ansiedade",
+      emoji: "😰",
+      cor: "bg-red-100",
+      value: "ANSIEDADE" as Emotion,
+    },
+    {
+      nome: "Reflexão",
+      emoji: "🤔",
+      cor: "bg-purple-100",
+      value: "REFLEXAO" as Emotion,
+    },
+    {
+      nome: "Motivação",
+      emoji: "🚀",
+      cor: "bg-green-100",
+      value: "MOTIVACAO" as Emotion,
+    },
+    {
+      nome: "Tristeza",
+      emoji: "😢",
+      cor: "bg-slate-100",
+      value: "TRISTEZA" as Emotion,
+    },
   ];
-
-  // Handler para seleção de emoção
-  const handleEmocaoSelect = (emocaoDisplayName: string) => {
-    setEmocao(emocaoDisplayName);
-  };
 
   // Validação do formulário
   const validarFormulario = () => {
@@ -160,54 +161,10 @@ export default function EditarRegistro() {
 
     setIsLoading(true);
     try {
-      // Mapear categoria do nome exibido para o enum
-      let categoriaEnum = "";
-      switch (categoria) {
-        case "ESTUDO":
-          categoriaEnum = "ESTUDO";
-          break;
-        case "PESSOAL":
-          categoriaEnum = "PESSOAL";
-          break;
-        case "ESTAGIO":
-          categoriaEnum = "ESTAGIO";
-          break;
-        case "PESQUISA":
-          categoriaEnum = "PESQUISA";
-          break;
-        default:
-          throw new Error("Categoria inválida");
-      }
-
-      // Mapear emoção do nome exibido para o enum
-      let emocaoEnum = "";
-      switch (emocao) {
-        case "Alegria":
-          emocaoEnum = "ALEGRIA";
-          break;
-        case "Calma":
-          emocaoEnum = "CALMA";
-          break;
-        case "Ansiedade":
-          emocaoEnum = "ANSIEDADE";
-          break;
-        case "Reflexão":
-          emocaoEnum = "REFLEXAO";
-          break;
-        case "Motivação":
-          emocaoEnum = "MOTIVACAO";
-          break;
-        case "Tristeza":
-          emocaoEnum = "TRISTEZA";
-          break;
-        default:
-          throw new Error("Emoção inválida");
-      }
-
-      const dadosEdicao: EditarRegistroData = {
+      const dadosEdicao: UpdateReflectionData = {
         title: titulo.trim(),
-        category: categoriaEnum,
-        emotion: emocaoEnum,
+        category: categoria,
+        emotion: emocao,
         content: reflexao.trim(),
       };
 
@@ -320,8 +277,8 @@ export default function EditarRegistro() {
               {emocaoList.map((e) => (
                 <button
                   key={e.nome}
-                  onClick={() => handleEmocaoSelect(e.nome)}
-                  className={`px-4 py-2 rounded-xl flex items-center gap-2 transition-colors ${
+                  onClick={() => setEmocao(e.value)}
+                  className={`px-4 py-2 rounded-xl flex items-center gap-2 ${
                     e.cor
                   } dark:bg-gray-700 border ${
                     emocao === e.nome

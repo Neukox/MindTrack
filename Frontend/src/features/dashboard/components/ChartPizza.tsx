@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Tooltip, ResponsiveContainer } from "recharts";
-import { getCategoriaMaisUsada } from "../../auth/api/axiosCategoriaMaisUsada";
+import { getCategoriaMaisUsada } from "@/services/metrics/metrics.service";
 
 type DataItem = {
   name: string;

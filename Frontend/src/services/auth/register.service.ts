@@ -1,4 +1,5 @@
-import api from "../../../lib/api/api";
+import api from "../../lib/api/axios";
+import useAuthStore from "../../features/auth/store/auth.store";
 
 // Tipos para o registro
 export interface RegisterData {
@@ -19,19 +20,19 @@ export interface RegisterResponse {
 
 // Função para registrar novo usuário
 export const registerUser = async (
-  registerData: RegisterData
+  registerData: RegisterData,
 ): Promise<RegisterResponse> => {
   try {
     const response = await api.post("/auth/register", registerData);
 
-    // Se o backend retornar accessToken, salvar no localStorage
+    // Se o backend retornar accessToken, salvar na store (não acessar localStorage diretamente)
     if (response.data.accessToken) {
-      localStorage.setItem("token", response.data.accessToken);
+      useAuthStore.getState().login(response.data.accessToken);
     }
 
-    // Salvar dados do usuário no localStorage
+    // Salvar dados do usuário na store (a persistência é responsabilidade da store)
     if (response.data.user) {
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      useAuthStore.getState().setUser(response.data.user);
     }
 
     return response.data;
@@ -75,7 +76,7 @@ export const registerUser = async (
 
 // Função para validar dados antes do envio
 export const validateRegisterData = (
-  data: RegisterData & { confirmarSenha: string }
+  data: RegisterData & { confirmarSenha: string },
 ): string[] => {
   const errors: string[] = [];
 
