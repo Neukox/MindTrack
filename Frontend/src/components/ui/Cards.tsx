@@ -16,11 +16,12 @@ export type CardsProps = {
 };
 
 const variants = {
-  minCard: "bg-white h-50 w-full sm:w-[21rem] rounded-2xl p-5 pt-4 shadow-xl",
+  // let the grid control width; use min-height so cards can grow without overlapping
+  minCard: "bg-white rounded-2xl p-5 pt-4 shadow-xl w-full min-h-[7rem]",
   mediumCard:
-    "flex flex-col bg-white h-[35rem] w-full lg:w-6/12 rounded-2xl mt-5 gap-5 p-5 pt-4 shadow-xl",
+    "flex flex-col bg-white rounded-2xl mt-5 gap-5 p-5 pt-4 shadow-xl w-full min-h-[28rem]",
   longCard:
-    "flex flex-col bg-white h-[35rem] w-full rounded-2xl mt-5 gap-5 p-5 pt-4 shadow-xl",
+    "flex flex-col bg-white rounded-2xl mt-5 gap-5 p-5 pt-4 shadow-xl w-full min-h-[28rem]",
 };
 
 export function Cards({

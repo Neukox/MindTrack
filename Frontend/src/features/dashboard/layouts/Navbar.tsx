@@ -14,7 +14,6 @@ export default function NavBar() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  // Carregar dados do usuário ao montar o componente
   useEffect(() => {
     const loadUserProfile = async () => {
       try {
@@ -22,15 +21,11 @@ export default function NavBar() {
         setUserProfile(profile);
       } catch (error) {
         console.error("Erro ao carregar perfil na navbar:", error);
-        // Se não conseguir carregar o perfil, talvez o token seja inválido
-        // Redirecionar para login ou usar dados padrão
       }
     };
-
     loadUserProfile();
   }, []);
 
-  // Função para gerar iniciais do nome de usuário
   const getInitials = (username: string): string => {
     return username
       .split(" ")
@@ -92,7 +87,7 @@ export default function NavBar() {
             {/* Nav Links (desktop) */}
             <nav
               aria-label="Primary navigation"
-              className="hidden sm:flex flex-2 items-center space-x-4 mx-30 justify-between"
+              className="hidden xl:flex flex-2 items-center space-x-4 mx-30 justify-between"
             >
               <div className="flex justify-center">
                 <ul role="menubar" className="flex translate-x-36 space-x-5">
@@ -193,8 +188,8 @@ export default function NavBar() {
               </div>
             </nav>
 
-            {/* Hamburger Mobile */}
-            <div className="sm:hidden relative -right-3 flex-1 flex justify-end">
+            {/* Hamburger Mobile: visible below 1280px, hidden at >=1280px */}
+            <div className="xl:hidden relative -right-3 flex-1 flex justify-end">
               <button
                 ref={buttonRef}
                 onClick={() => setIsOpen(!isOpen)}
@@ -205,11 +200,11 @@ export default function NavBar() {
             </div>
           </div>
 
-          {/* Mobile Menu (corrigido com perfil igual à imagem) */}
+          {/* Mobile Menu */}
           {isOpen && (
             <div
               ref={menuRef}
-              className="bg-[#EAE8E7] flex flex-col top-full shadow-lg p-4 rounded-md space-y-3 sm:hidden mt-2"
+              className="bg-[#EAE8E7] flex flex-col top-full shadow-lg p-4 rounded-md space-y-3 xl:hidden mt-2"
             >
               {/* Links principais */}
               <Button variant="tertiary" onClick={() => navigate("/dashboard")}>
@@ -233,7 +228,7 @@ export default function NavBar() {
                 Novo Registro
               </Button>
 
-              {/* Perfil (igual à imagem enviada) */}
+              {/* Perfil */}
               <div className="flex items-center justify-between rounded-xl px-3 py-2 mt-4">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-indigo-200 rounded-full flex items-center justify-center">
@@ -244,10 +239,10 @@ export default function NavBar() {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold text-gray-800">
-                      DaviLeal444
+                       {userProfile?.username || "Carregando..."}
                     </span>
                     <span className="text-xs text-gray-500">
-                      davi.leal@example.com
+                      {userProfile?.email || "Carregando..."}
                     </span>
                   </div>
                 </div>
