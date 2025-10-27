@@ -12,12 +12,7 @@ interface PasswordInputProps<T extends FieldValues> {
   name?: Path<T>;
   placeholder?: string;
   className?: string;
-  /**
-   * When provided, component becomes controlled: visibility is driven by this prop.
-   * When omitted, the component manages visibility internally.
-   */
-  showPassword?: boolean; // controlled (if provided) or initial (if omitted)
-  
+  showPassword?: boolean; 
   error?: FieldError;
   disabled?: boolean;
   required?: boolean;
