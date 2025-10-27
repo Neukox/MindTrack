@@ -1,7 +1,7 @@
 // src/components/FooterSection.tsx
 import React from "react";
-import { MdOutlineTrackChanges } from "react-icons/md";
-
+import MindLogo from "../../../assets/MindTracksemfund-blue.png"
+import Button from "../../../components/ui/Button"
 const footerLinks = {
 Produto: ["Recursos", "Preços", "Segurança"],
 Empresa: ["Sobre", "Blog", "Contato"],
