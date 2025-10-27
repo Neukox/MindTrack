@@ -7,7 +7,7 @@ import Recuperar from "./features/auth/pages/RecoverPage";
 /* Rotas do Dashboard*/
 import DashboardLayout from "./features/dashboard/layouts/DashbboardLayout";
 import { DashboardPage } from "./features/dashboard/pages/DashboardPage";
-import HomePage from "./features/home/pages/HomePage";
+import HomePage from "./features/home/pages/HomePage"
 import MindTrackRecords from "./features/registros-criados/pages/registros-criados";
 import NovoRegistro from "./features/novo-registro/pages/Novo-Registro";
 import ExportReportPage from "./features/exportar-relatorio/pages/Exportar-Relatorio";
