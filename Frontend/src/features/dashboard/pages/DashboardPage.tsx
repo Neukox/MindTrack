@@ -68,6 +68,8 @@ export function DashboardPage() {
         const dias = dadosDiasConsecutivos.diasConsecutivosAtual;
         setDiasConsecutivos(`${dias} ${dias === 1 ? "dia" : "dias"}`);
       }
+      
+      console.log("dados da semana", dadosEstatisticasSemana)
     } catch (error) {
       console.error("Erro ao carregar dados do dashboard:", error);
       toast.error("Erro ao carregar dados do dashboard");

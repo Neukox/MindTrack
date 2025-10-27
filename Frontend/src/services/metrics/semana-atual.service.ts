@@ -67,7 +67,7 @@ export const getRegistrosSemanaAtual =
 export const getEstatisticasSemanaAtual =
   async (): Promise<EstatisticasSemanaResponse> => {
     try {
-      const response = await api.get("/registros-essa-semana/estatisticas");
+      const response = await api.get("/metrics/week");
       return response.data as EstatisticasSemanaResponse;
     } catch (error: unknown) {
       console.error("Erro ao buscar estatísticas da semana atual:", error);
