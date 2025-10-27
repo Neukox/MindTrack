@@ -8,6 +8,7 @@ import LoginDto from './dto/login.dto';
 import RegisterDto from './dto/register.dto';
 import type { Request, Response } from 'express';
 import JwtRefreshGuard from './guards/jwt-refresh.guard';
+import { User } from './decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -162,17 +163,20 @@ export class AuthController {
     return { accessToken };
   }
 
+  @ApiOperation({
+    summary: 'Logout do usuário',
+    description: 'Realiza o logout do usuário, invalidando o token de refresh.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Logout realizado com sucesso.',
+  })
   @Post('logout')
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const payload = req.user as any;
-
-    await this.authService.logout(payload.sub);
-
-    res.clearCookie('refresh_token', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-    });
+  async logout(
+    @User('sub') userId: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.authService.logout(userId, res);
 
     return { message: 'Logout realizado com sucesso.' };
   }

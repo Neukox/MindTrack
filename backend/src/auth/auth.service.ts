@@ -75,12 +75,7 @@ export class AuthService {
       hashedRefreshToken,
     );
 
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
-      maxAge: this.configService.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
-    });
+    this.setRefreshCookie(res, refreshToken);
 
     return {
       accessToken,
@@ -120,12 +115,7 @@ export class AuthService {
 
     await this.userService.setRefreshToken(novoUsuario.id, hashedRefreshToken);
 
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
-      maxAge: this.configService.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
-    });
+    this.setRefreshCookie(res, refreshToken);
 
     return {
       accessToken,
@@ -206,7 +196,17 @@ export class AuthService {
     return accessToken;
   }
 
-  async logout(userId: string) {
+  async logout(userId: string, res: Response) {
+    res.clearCookie('refresh_token');
     await this.userService.setRefreshToken(userId, null);
+  }
+
+  async setRefreshCookie(res: Response, refreshToken: string) {
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: this.appConfig.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
+    });
   }
 }
