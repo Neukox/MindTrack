@@ -1,4 +1,5 @@
 import api from "../../../lib/api/api";
+import useAuthStore from "../../../features/auth/store/auth.store";
 
 // Tipos para o login
 export interface LoginData {
@@ -18,19 +19,19 @@ export interface LoginResponse {
 
 // Função para fazer login
 export const loginUser = async (
-  loginData: LoginData
+  loginData: LoginData,
 ): Promise<LoginResponse> => {
   try {
     const response = await api.post("/auth/login", loginData);
 
     // Se o backend retornar accessToken, salvar no localStorage
     if (response.data.accessToken) {
-      localStorage.setItem("token", response.data.accessToken);
+      useAuthStore.getState().login(response.data.accessToken);
     }
 
     // Salvar dados do usuário no localStorage
     if (response.data.user) {
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      useAuthStore.getState().setUser(response.data.user);
     }
 
     return response.data;
@@ -76,13 +77,16 @@ export const loginUser = async (
 
 // Função para fazer logout
 export const logoutUser = (): void => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+  // TODO -> fazer chamada ao backend para /auth/logout
+  // Chamar a ação de logout na store
+  useAuthStore.getState().logout();
+  // Remover dados do usuário do localStorage (manualmente, se necessário)
+  localStorage.removeItem("user-storage");
 };
 
 // Função para verificar se usuário está logado
 export const isUserLoggedIn = (): boolean => {
-  return !!localStorage.getItem("token");
+  return useAuthStore.getState().token !== null;
 };
 
 // Função para obter dados do usuário logado
@@ -91,6 +95,6 @@ export const getLoggedUser = (): {
   username: string;
   email: string;
 } | null => {
-  const userData = localStorage.getItem("user");
-  return userData ? JSON.parse(userData) : null;
+  const userData = localStorage.getItem("user-storage");
+  return userData ? JSON.parse(userData).state.user : null;
 };

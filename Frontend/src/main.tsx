@@ -5,6 +5,7 @@ import "./index.css";
 import { Toaster } from "sonner";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import AppInitializer from "./AppInitializer";
 
 const root = document.getElementById("root") as HTMLElement;
 
@@ -12,8 +13,10 @@ ReactDOM.createRoot(root).render(
   <BrowserRouter>
     <HelmetProvider>
       <ThemeProvider>
-        <App />
-        <Toaster />
+        <AppInitializer>
+          <App />
+          <Toaster />
+        </AppInitializer>
       </ThemeProvider>
     </HelmetProvider>
   </BrowserRouter>

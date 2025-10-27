@@ -15,6 +15,7 @@ import ExportReportPage from "./features/exportar-relatorio/pages/Exportar-Relat
 import Perfil from "./features/perfil/pages/Perfil";
 import EditarRegistro from "./features/editar-registros/page/EditarRegistros";
 import VerMais from "./features/ver-mais/pages/VerMais";
+import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <>
@@ -25,14 +26,17 @@ function App() {
         <Route path="/recuperar" element={<Recuperar />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/registros" element={<MindTrackRecords />} />
-          <Route path="/novo-registro" element={<NovoRegistro />} />
-          <Route path="/exportar-relatorio" element={<ExportReportPage />} />
-          <Route path="/perfil" element={<Perfil />} />
-          <Route path="/editar-registro/:id" element={<EditarRegistro />} />
-          <Route path="/ver-mais/:id" element={<VerMais />} />
+        <Route element={<ProtectedRoute />}>
+          {/* Rotas protegidas vão aqui */}
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/registros" element={<MindTrackRecords />} />
+            <Route path="/novo-registro" element={<NovoRegistro />} />
+            <Route path="/exportar-relatorio" element={<ExportReportPage />} />
+            <Route path="/perfil" element={<Perfil />} />
+            <Route path="/editar-registro/:id" element={<EditarRegistro />} />
+            <Route path="/ver-mais/:id" element={<VerMais />} />
+          </Route>
         </Route>
       </Routes>
     </>
