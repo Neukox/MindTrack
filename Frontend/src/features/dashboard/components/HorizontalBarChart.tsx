@@ -8,7 +8,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { getEmocoesRegistradas } from "@/services/metrics/metrics.service";
+import { getEmocoesRegistradas } from "@/services/metrics/emocoes-registradas.service";
 
 type EmocaoData = {
   nome: string;

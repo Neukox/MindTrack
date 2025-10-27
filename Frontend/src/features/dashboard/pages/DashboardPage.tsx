@@ -13,7 +13,7 @@ import HorizontalBarChart from "../components/HorizontalBarChart";
 import { getEntradasCriadas } from "@/services/metrics/entradas-criadas.service";
 import { getUltimaEntrada } from "@/services/metrics/ultima-entrada.service";
 import { getEstatisticasSemanaAtual } from "@/services/metrics/semana-atual.service";
-import { getDiasConsecutivos } from "@/services/metrics/dias-consecutivos.service";
+import { getEstatisticasDetalhadas } from "@/services/metrics/dias-consecutivos.service";
 
 export function DashboardPage() {
   // Estados para os dados dos cards
@@ -40,13 +40,14 @@ export function DashboardPage() {
         getEntradasCriadas(),
         getUltimaEntrada(),
         getEstatisticasSemanaAtual(),
-        getDiasConsecutivos(),
+        getEstatisticasDetalhadas(),
       ]);
 
       // Atualizar estados com dados reais
-      if (dadosEntradas.success) {
-        setEntradasCriadas(dadosEntradas.data.entradasEsseSemestre || 0);
-        setCrescimentoEntradas(dadosEntradas.data.crescimentoPercentual || 0);
+      if (dadosEntradas) {
+        console.log("Dados Entradas Criadas:", dadosEntradas);
+        setEntradasCriadas(dadosEntradas.registrosEsseSemestre || 0);
+        setCrescimentoEntradas(dadosEntradas.crescimentoPercentual || 0);
       }
 
       if (dadosUltimaEntrada.success) {
@@ -54,12 +55,12 @@ export function DashboardPage() {
         setUltimaEntrada(tempo || "Nunca");
       }
 
-      if (dadosEstatisticasSemana.success) {
+      if (dadosEstatisticasSemana) {
         setRegistrosSemana(
-          dadosEstatisticasSemana.data.registrosEssaSemana || 0,
+          dadosEstatisticasSemana.registrosEssaSemana || 0,
         );
         setCrescimentoSemana(
-          dadosEstatisticasSemana.data.crescimentoPercentual || 0,
+          dadosEstatisticasSemana.crescimentoPercentual || 0,
         );
       }
 

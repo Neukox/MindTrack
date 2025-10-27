@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Tooltip, ResponsiveContainer } from "recharts";
-import { getCategoriaMaisUsada } from "@/services/metrics/metrics.service";
+import { getCategoriaMaisUsada } from "@/services/metrics/categoria-mais-usada.service";
 
 type DataItem = {
   name: string;
@@ -42,15 +42,13 @@ export default function ChartPizza() {
       try {
         const response = await getCategoriaMaisUsada();
 
-        // A API agora retorna um objeto com categorias
-        const dadosFormatados = Object.entries(response).map(
-          ([categoria, dados]) => ({
-            name: categoria,
-            uv: dados.total,
-          })
-        );
-
-        if (dadosFormatados.length > 0) {
+        if (response.status === 200 && response.data) {
+          const dadosFormatados = Object.entries(response.data).map(
+            ([key, value]) => ({
+              name: key,
+              uv: value.total,
+            }),
+          );
           setData(dadosFormatados);
         } else {
           setData([{ name: "Sem dados", uv: 1 }]);

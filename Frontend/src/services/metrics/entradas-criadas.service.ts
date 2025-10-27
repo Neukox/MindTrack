@@ -3,24 +3,18 @@ import api from "../../lib/api/axios";
 
 // Tipos para entradas criadas
 export interface EntradasCriadasResponse {
-  success: boolean;
-  data: {
-    totalEntradas: number;
-    entradasEsseSemestre: number;
-    crescimentoPercentual: number;
-    ultimaEntrada: string | null;
-  };
-  meta: {
-    semestreInicio: string;
-    semestreFim: string;
-  };
+  registrosEsseSemestre: number;
+  registrosSemestreAnterior: number;
+  crescimentoPercentual: number;
+  semesterStart: Date;
+  semesterEnd: Date;
 }
 
 // Função para buscar total de entradas criadas
 export const getEntradasCriadas =
   async (): Promise<EntradasCriadasResponse> => {
     try {
-      const response = await api.get("/contagem-total-registros");
+      const response = await api.get("/metrics/semester");
 
       return response.data;
     } catch (error: unknown) {

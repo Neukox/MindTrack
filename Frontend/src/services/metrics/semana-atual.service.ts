@@ -21,14 +21,11 @@ export interface SemanaAtualResponse {
 
 // Tipos para estatísticas da semana
 export interface EstatisticasSemanaResponse {
-  success: boolean;
-  data: {
-    registrosEssaSemana: number;
-    registrosSemanaAnterior: number;
-    crescimentoPercentual: number;
-    weekStart: string;
-    weekEnd: string;
-  };
+  registrosEssaSemana: number;
+  registrosSemanaAnterior: number;
+  crescimentoPercentual: number;
+  weekStart: string;
+  weekEnd: string;
 }
 
 /**
@@ -42,7 +39,7 @@ export interface EstatisticasSemanaResponse {
 export const getRegistrosSemanaAtual =
   async (): Promise<SemanaAtualResponse> => {
     try {
-      const response = await api.get("/registros-essa-semana");
+      const response = await api.get("/metrics/week");
       return response.data as SemanaAtualResponse;
     } catch (error: unknown) {
       console.error("Erro ao buscar registros da semana atual:", error);

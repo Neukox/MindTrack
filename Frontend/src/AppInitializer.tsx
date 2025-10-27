@@ -11,6 +11,9 @@ export default function AppInitializer({
 
   useEffect(() => {
     const verifySession = async () => {
+      // Indica que a verificação de sessão está em andamento
+      setLoading(true);
+      
       try {
         const response = await api.post("/auth/refresh");
         const newToken = response.data.accessToken;

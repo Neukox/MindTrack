@@ -61,13 +61,20 @@ const processQueue = (error: unknown, token: string | null = null) => {
 // Interceptor para tratar respostas e erros
 api.interceptors.response.use(
   (response) => response,
-  async (error) =>  {
+  async (error) => {
     // Trtamento de erros
     const originalRequest = error.config;
     const status = error.response ? error.response.status : null;
 
     // Verifica se o erro é de autenticação (401)
-    if (status === 401 && originalRequest !== "/auth/refresh") {
+    if (
+      status === 401 &&
+      originalRequest &&
+      originalRequest.url !== "/auth/refresh"
+    ) {
+      if (originalRequest._retry) {
+        return Promise.reject(error);
+      }
       // Se já estiver atualizando o token, adiciona a requisição à fila
       if (isRefreshing) {
         // Adiciona a requisição à fila
@@ -76,7 +83,7 @@ api.interceptors.response.use(
         })
           .then((token) => {
             // Atualiza o token na requisição original
-            originalRequest.headers["Authorization"] = 'Bearer ' + token;
+            originalRequest.headers["Authorization"] = "Bearer " + token;
             return api(originalRequest);
           })
           .catch((err) => {
@@ -99,19 +106,19 @@ api.interceptors.response.use(
         // atualizar o token no axios
         api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
         originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-        
+
         // Processar a fila de requisições falhadas
         processQueue(null, newToken);
-        
+
         // Retornar a requisição original com o novo token
         return api(originalRequest);
       } catch (err) {
         // Se falhar ao atualizar o token, processa a fila com erro
         processQueue(err, null);
-        
+
         // Realizar logout
         useAuthStore.getState().logout();
-        
+
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
@@ -119,7 +126,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
