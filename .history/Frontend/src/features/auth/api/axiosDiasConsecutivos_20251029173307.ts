@@ -2,28 +2,28 @@ import api from "../../../lib/api/api";
 
 // Tipos para dias consecutivos
 export interface DiasConsecutivosResponse {
-  diasConsecutivosAtual: number;
-  maiorSequencia: number;
-  totalDiasComReflexoes: number;
-  percentualDiasAtivos: number;
-  ultimosDias: Array<{
-    data: string;
-    temReflexao: boolean;
-    quantidadeReflexoes: number;
-  }>;
+  success: boolean;
+  data: {
+    diasConsecutivos: number;
+    dataUltimaReflexao: string | null;
+    sequenciaAtual: boolean;
+  };
 }
 
-// Tipos para estatísticas detalhadas (deprecated - usar DiasConsecutivosResponse)
+// Tipos para estatísticas detalhadas
 export interface EstatisticasDetalhadasResponse {
-  diasConsecutivosAtual: number;
-  maiorSequencia: number;
-  totalDiasComReflexoes: number;
-  percentualDiasAtivos: number;
-  ultimosDias: Array<{
-    data: string;
-    temReflexao: boolean;
-    quantidadeReflexoes: number;
-  }>;
+  success: boolean;
+  data: {
+    diasConsecutivosAtual: number;
+    maiorSequencia: number;
+    totalDiasComReflexoes: number;
+    percentualDiasAtivos: number;
+    ultimosDias: Array<{
+      data: string;
+      temReflexao: boolean;
+      quantidadeReflexoes: number;
+    }>;
+  };
 }
 
 // Função para buscar dias consecutivos atuais
@@ -75,7 +75,7 @@ export const getEstatisticasDetalhadas =
         throw new Error("Token de autenticação não encontrado");
       }
 
-      const response = await api.get("/metrics/streak", {
+      const response = await api.get("/dias-consecutivos/estatisticas", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

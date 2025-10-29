@@ -2,9 +2,15 @@ import api from "../../../lib/api/api";
 
 // Tipos para categorias mais usadas
 export interface CategoriaMaisUsadaResponse {
-  [categoria: string]: {
-    total: number;
+  success: boolean;
+  data: Array<{
+    categoria: string;
+    quantidade: number;
     percentual: number;
+  }>;
+  meta: {
+    totalRegistros: number;
+    categoriaMaisFrequente: string;
   };
 }
 

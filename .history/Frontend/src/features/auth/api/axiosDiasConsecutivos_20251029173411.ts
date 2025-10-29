@@ -75,7 +75,7 @@ export const getEstatisticasDetalhadas =
         throw new Error("Token de autenticação não encontrado");
       }
 
-      const response = await api.get("/metrics/streak", {
+      const response = await api.get("/dias-consecutivos/estatisticas", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

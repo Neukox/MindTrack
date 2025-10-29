@@ -62,6 +62,8 @@ export const exportarRelatorioPDF = async (
     // Limpar
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+
+    console.log("Relatório PDF baixado com sucesso!");
   } catch (error: unknown) {
     console.error("Erro ao exportar relatório PDF:", error);
 

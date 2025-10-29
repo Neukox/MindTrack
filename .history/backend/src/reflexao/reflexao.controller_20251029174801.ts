@@ -59,6 +59,7 @@ export class ReflexaoController {
     const reflexoes = await this.reflexaoService.findAllByUser(userId, filters);
     return reflexoes;
   }
+  }
 
   @ApiOperation({
     summary: 'Obter reflexão por ID',

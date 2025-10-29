@@ -11,7 +11,10 @@ export const exportarRelatorioPDF = async (
   params: ExportarPDFParams
 ): Promise<void> => {
   try {
+    console.log("🔍 Iniciando exportação PDF com parâmetros:", params);
+    
     const token = localStorage.getItem("token");
+    console.log("🔐 Token encontrado:", !!token, "Tamanho:", token?.length || 0);
 
     if (!token) {
       throw new Error("Token de autenticação não encontrado");
@@ -25,7 +28,15 @@ export const exportarRelatorioPDF = async (
       throw new Error("A data de início deve ser anterior à data de fim");
     }
 
+    console.log("📅 Datas validadas:", {
+      startDate: params.startDate,
+      endDate: params.endDate,
+      startDateObj: startDate,
+      endDateObj: endDate
+    });
+
     // Fazer requisição para gerar PDF
+    console.log("🌐 Fazendo requisição para:", "/reports/reflections");
     const response = await api.get("/reports/reflections", {
       params: {
         startDate: params.startDate,
@@ -35,6 +46,12 @@ export const exportarRelatorioPDF = async (
         Authorization: `Bearer ${token}`,
       },
       responseType: "blob", // Importante para receber arquivo binário
+    });
+
+    console.log("✅ Resposta recebida:", {
+      status: response.status,
+      contentType: response.headers['content-type'],
+      size: response.data.size
     });
 
     // Criar URL do blob para download
@@ -62,6 +79,8 @@ export const exportarRelatorioPDF = async (
     // Limpar
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+
+    console.log("Relatório PDF baixado com sucesso!");
   } catch (error: unknown) {
     console.error("Erro ao exportar relatório PDF:", error);
 

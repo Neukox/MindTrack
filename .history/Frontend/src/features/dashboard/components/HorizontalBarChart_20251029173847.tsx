@@ -26,13 +26,11 @@ export default function GraficoEmocoes() {
         const response = await getEmocoesRegistradas();
 
         // A API agora retorna um objeto com emoções
-        const dadosFormatados = Object.entries(response).map(
-          ([emocao, dados]) => ({
-            nome: emocao,
-            valor: dados.total,
-          })
-        );
-
+        const dadosFormatados = Object.entries(response).map(([emocao, dados]) => ({
+          nome: emocao,
+          valor: dados.total,
+        }));
+        
         if (dadosFormatados.length > 0) {
           setData(dadosFormatados);
         } else {

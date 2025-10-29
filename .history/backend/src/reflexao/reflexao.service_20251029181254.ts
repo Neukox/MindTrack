@@ -55,7 +55,7 @@ export class ReflexaoService {
     if (filters.category) {
       whereClause.category = filters.category;
     }
-
+    
     if (filters.emotion) {
       whereClause.emotion = filters.emotion;
     }
@@ -63,47 +63,31 @@ export class ReflexaoService {
     // Processar filtros de data se existirem
     if (filters.startDate || filters.endDate) {
       whereClause.createdAt = {};
-
+      
       if (filters.startDate) {
-        try {
-          // Garantir que temos uma string de data válida
-          let dateString: string;
-          if (filters.startDate instanceof Date) {
-            dateString = filters.startDate.toISOString().split('T')[0];
-          } else {
-            dateString = String(filters.startDate);
-          }
-
-          // Criar data de início do dia em UTC
-          const startDate = new Date(dateString + 'T00:00:00.000Z');
-          if (!isNaN(startDate.getTime())) {
-            whereClause.createdAt.gte = startDate;
-          }
-        } catch (error) {
-          console.error('Erro ao processar startDate:', error);
-        }
+        // Converter string para Date e depois para UTC no início do dia
+        const startDateString = filters.startDate instanceof Date 
+          ? filters.startDate.toISOString().split('T')[0] 
+          : filters.startDate;
+        const startDate = new Date(startDateString + 'T00:00:00.000Z');
+        whereClause.createdAt.gte = startDate;
       }
-
+      
       if (filters.endDate) {
-        try {
-          // Garantir que temos uma string de data válida
-          let dateString: string;
-          if (filters.endDate instanceof Date) {
-            dateString = filters.endDate.toISOString().split('T')[0];
-          } else {
-            dateString = String(filters.endDate);
-          }
-
-          // Criar data de final do dia em UTC
-          const endDate = new Date(dateString + 'T23:59:59.999Z');
-          if (!isNaN(endDate.getTime())) {
-            whereClause.createdAt.lte = endDate;
-          }
-        } catch (error) {
-          console.error('Erro ao processar endDate:', error);
-        }
+        // Converter string para Date e depois para UTC no final do dia
+        const endDateString = filters.endDate instanceof Date 
+          ? filters.endDate.toISOString().split('T')[0] 
+          : filters.endDate;
+        const endDate = new Date(endDateString + 'T23:59:59.999Z');
+        whereClause.createdAt.lte = endDate;
       }
     }
+
+    console.log('🔍 Filtros aplicados (corrigido):', {
+      userId,
+      filters,
+      whereClause: JSON.stringify(whereClause, null, 2)
+    });
 
     const reflections = await this.prismaService.reflection.findMany({
       where: whereClause,
@@ -112,6 +96,8 @@ export class ReflexaoService {
       },
     });
 
+    console.log(`✅ Encontrados ${reflections.length} registros para o usuário ${userId}`);
+    
     return reflections;
   }
 

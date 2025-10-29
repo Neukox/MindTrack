@@ -43,13 +43,11 @@ export default function ChartPizza() {
         const response = await getCategoriaMaisUsada();
 
         // A API agora retorna um objeto com categorias
-        const dadosFormatados = Object.entries(response).map(
-          ([categoria, dados]) => ({
-            name: categoria,
-            uv: dados.total,
-          })
-        );
-
+        const dadosFormatados = Object.entries(response).map(([categoria, dados]) => ({
+          name: categoria,
+          uv: dados.total,
+        }));
+        
         if (dadosFormatados.length > 0) {
           setData(dadosFormatados);
         } else {

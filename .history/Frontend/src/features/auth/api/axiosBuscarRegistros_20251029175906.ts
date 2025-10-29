@@ -71,7 +71,7 @@ export const buscarRegistros = async (filtros?: {
       const axiosError = error as {
         response?: { status?: number; data?: { message?: string } };
       };
-
+      
       if (axiosError.response?.status === 401) {
         localStorage.removeItem("token");
         window.location.href = "/login";

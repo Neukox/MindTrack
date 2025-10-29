@@ -67,11 +67,12 @@ export const buscarRegistros = async (filtros?: {
       },
     };
   } catch (error: unknown) {
+    console.error("Erro ao buscar registros:", error);
+
     if (error instanceof Error && "response" in error) {
       const axiosError = error as {
         response?: { status?: number; data?: { message?: string } };
       };
-
       if (axiosError.response?.status === 401) {
         localStorage.removeItem("token");
         window.location.href = "/login";

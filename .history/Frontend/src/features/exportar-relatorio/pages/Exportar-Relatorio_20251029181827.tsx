@@ -241,6 +241,18 @@ export default function ExportReportPage() {
                   >
                     Todos os registros
                   </button>
+                  {/* Botão de teste temporário */}
+                  <button
+                    onClick={() => {
+                      console.log("🧪 TESTE: Buscando registros de hoje...");
+                      const hoje = new Date().toISOString().split('T')[0];
+                      setStartDate(hoje);
+                      setEndDate(hoje);
+                    }}
+                    className="px-3 py-1 text-xs bg-yellow-100 hover:bg-yellow-200 text-yellow-700 rounded-md transition-colors border border-yellow-300"
+                  >
+                    🧪 Teste Hoje
+                  </button>
                 </div>
               </div>
 

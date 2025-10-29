@@ -87,13 +87,23 @@ export default function ExportReportPage() {
 
   // Atualizar contagem de registros quando as datas mudarem
   useEffect(() => {
+    console.log("🔄 useEffect executado - Datas:", { startDate, endDate });
+    console.log("🔍 Validação de datas:", {
+      startDateValid: validarFormatoData(startDate),
+      endDateValid: validarFormatoData(endDate),
+      bothExist: !!(startDate && endDate),
+    });
+
     if (
       startDate &&
       endDate &&
       validarFormatoData(startDate) &&
       validarFormatoData(endDate)
     ) {
+      console.log("✅ Condições atendidas, executando contarRegistros");
       contarRegistros();
+    } else {
+      console.log("❌ Condições não atendidas para buscar registros");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
@@ -240,6 +250,18 @@ export default function ExportReportPage() {
                     className="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-md transition-colors border border-blue-300"
                   >
                     Todos os registros
+                  </button>
+                  {/* Botão de teste temporário */}
+                  <button
+                    onClick={() => {
+                      console.log("🧪 TESTE: Buscando registros de hoje...");
+                      const hoje = new Date().toISOString().split('T')[0];
+                      setStartDate(hoje);
+                      setEndDate(hoje);
+                    }}
+                    className="px-3 py-1 text-xs bg-yellow-100 hover:bg-yellow-200 text-yellow-700 rounded-md transition-colors border border-yellow-300"
+                  >
+                    🧪 Teste Hoje
                   </button>
                 </div>
               </div>

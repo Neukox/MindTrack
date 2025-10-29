@@ -10,10 +10,7 @@ import {
   validarFormatoData,
   gerarParametrosUltimoMes,
 } from "../../auth/api/axiosExportarPDF";
-import {
-  buscarRegistros,
-  type RegistroData,
-} from "../../auth/api/axiosBuscarRegistros";
+import { buscarRegistros, RegistroData } from "../../auth/api/axiosBuscarRegistros";
 
 export default function ExportReportPage() {
   const [startDate, setStartDate] = useState("");
@@ -29,11 +26,15 @@ export default function ExportReportPage() {
   const buscarTodosRegistros = async () => {
     try {
       setIsLoadingTodos(true);
+      
       const response = await buscarRegistros(); // Sem filtros = todos os registros
+      
       setTodosRegistros(response.data || []);
       setHasDadosGerais((response.data?.length || 0) > 0);
+      
       return response.data || [];
-    } catch {
+    } catch (error) {
+      console.error("Erro ao buscar todos os registros:", error);
       setTodosRegistros([]);
       setHasDadosGerais(false);
       return [];
@@ -45,25 +46,23 @@ export default function ExportReportPage() {
   // Função para sugerir período com dados
   const sugerirPeriodoComDados = () => {
     if (todosRegistros.length === 0) return null;
-
+    
     // Encontrar a data mais antiga e mais recente
-    const datas = todosRegistros.map((r) => new Date(r.createdAt));
-    const dataMinima = new Date(Math.min(...datas.map((d) => d.getTime())));
-    const dataMaxima = new Date(Math.max(...datas.map((d) => d.getTime())));
-
+    const datas = todosRegistros.map(r => new Date(r.createdAt));
+    const dataMinima = new Date(Math.min(...datas.map(d => d.getTime())));
+    const dataMaxima = new Date(Math.max(...datas.map(d => d.getTime())));
+    
     return {
-      inicio: dataMinima.toISOString().split("T")[0],
-      fim: dataMaxima.toISOString().split("T")[0],
+      inicio: dataMinima.toISOString().split('T')[0],
+      fim: dataMaxima.toISOString().split('T')[0]
     };
-  };
-
   // Definir datas padrão ao carregar o componente
   useEffect(() => {
     const params = gerarParametrosUltimoMes();
-
+    
     // Buscar todos os registros para verificar se há dados
     buscarTodosRegistros();
-
+    
     setStartDate(params.startDate);
     setEndDate(params.endDate);
   }, []);
@@ -72,13 +71,30 @@ export default function ExportReportPage() {
   const contarRegistros = async () => {
     try {
       setIsLoadingCount(true);
+      console.log("🔍 Iniciando busca de registros:", { startDate, endDate });
+
       const response = await buscarRegistros({
         startDate: startDate,
         endDate: endDate,
       });
+
+      console.log("📊 Resposta da API buscarRegistros:", response);
+      console.log("📈 Total de registros encontrados:", response.data?.length || 0);
+      
       setTotalRegistros(response.data?.length || 0);
     } catch (error) {
-      console.error("Erro ao contar registros:", error);
+      console.error("❌ Erro ao contar registros:", error);
+      
+      // Log detalhado do erro
+      if (error instanceof Error && "response" in error) {
+        const axiosError = error as {
+          response?: { status?: number; data?: unknown; statusText?: string };
+        };
+        console.error("🔥 Status HTTP:", axiosError.response?.status);
+        console.error("🔥 Status Text:", axiosError.response?.statusText);
+        console.error("🔥 Dados do erro:", axiosError.response?.data);
+      }
+      
       setTotalRegistros(0);
     } finally {
       setIsLoadingCount(false);
@@ -87,13 +103,23 @@ export default function ExportReportPage() {
 
   // Atualizar contagem de registros quando as datas mudarem
   useEffect(() => {
+    console.log("🔄 useEffect executado - Datas:", { startDate, endDate });
+    console.log("🔍 Validação de datas:", {
+      startDateValid: validarFormatoData(startDate),
+      endDateValid: validarFormatoData(endDate),
+      bothExist: !!(startDate && endDate)
+    });
+    
     if (
       startDate &&
       endDate &&
       validarFormatoData(startDate) &&
       validarFormatoData(endDate)
     ) {
+      console.log("✅ Condições atendidas, executando contarRegistros");
       contarRegistros();
+    } else {
+      console.log("❌ Condições não atendidas para buscar registros");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
@@ -302,30 +328,21 @@ export default function ExportReportPage() {
                       ) : hasDadosGerais ? (
                         <div>
                           <div className="mb-1">
-                            Existem {todosRegistros.length} registros
-                            cadastrados, mas não no período selecionado.
+                            Existem {todosRegistros.length} registros cadastrados, mas não no período selecionado.
                           </div>
                           {(() => {
                             const periodo = sugerirPeriodoComDados();
-                            if (periodo) {
-                              return (
-                                <button
-                                  onClick={() => {
-                                    setStartDate(periodo.inicio);
-                                    setEndDate(periodo.fim);
-                                  }}
-                                  className="text-blue-600 hover:text-blue-800 underline font-medium"
-                                >
-                                  Clique aqui para usar o período completo (
-                                  {new Date(
-                                    periodo.inicio
-                                  ).toLocaleDateString()}{" "}
-                                  - {new Date(periodo.fim).toLocaleDateString()}
-                                  )
-                                </button>
-                              );
-                            }
-                            return null;
+                            return periodo ? (
+                              <button
+                                onClick={() => {
+                                  setStartDate(periodo.inicio);
+                                  setEndDate(periodo.fim);
+                                }}
+                                className="text-blue-600 hover:text-blue-800 underline font-medium"
+                              >
+                                Clique aqui para usar o período completo ({new Date(periodo.inicio).toLocaleDateString()} - {new Date(periodo.fim).toLocaleDateString()})
+                              </button>
+                            ) : null;
                           })()}
                         </div>
                       ) : (

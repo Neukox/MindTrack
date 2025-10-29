@@ -1,0 +1,221 @@
+import { useState, useEffect } from "react";
+import Button from "../../../components/ui/Button";
+import { Calendar } from "lucide-react";
+import { Helmet } from "react-helmet-async";
+import { FaArrowLeft } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { 
+  exportarRelatorioPDF, 
+  validarFormatoData,
+  gerarParametrosUltimoMes 
+} from "../../auth/api/axiosExportarPDF";
+import { buscarRegistros } from "../../auth/api/axiosBuscarRegistros";
+
+export default function ExportReportPage() {
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [totalRegistros, setTotalRegistros] = useState(0);
+  const [isLoadingCount, setIsLoadingCount] = useState(false);
+
+  // Definir datas padrão ao carregar o componente
+  useEffect(() => {
+    const params = gerarParametrosUltimoMes();
+    setStartDate(params.startDate);
+    setEndDate(params.endDate);
+  }, []);
+
+  // Atualizar contagem de registros quando as datas mudarem
+  useEffect(() => {
+    if (startDate && endDate && validarFormatoData(startDate) && validarFormatoData(endDate)) {
+      contarRegistros();
+    }
+  }, [startDate, endDate]);
+
+  const contarRegistros = async () => {
+    try {
+      setIsLoadingCount(true);
+      const response = await buscarRegistros({
+        startDate: startDate,
+        endDate: endDate,
+      });
+      setTotalRegistros(response.data.length);
+    } catch (error) {
+      console.error("Erro ao contar registros:", error);
+      setTotalRegistros(0);
+    } finally {
+      setIsLoadingCount(false);
+    }
+  };
+
+  const handleExportarPDF = async () => {
+    try {
+      // Validações
+      if (!startDate || !endDate) {
+        toast.error("Por favor, selecione ambas as datas");
+        return;
+      }
+
+      if (!validarFormatoData(startDate) || !validarFormatoData(endDate)) {
+        toast.error("Formato de data inválido");
+        return;
+      }
+
+      const inicio = new Date(startDate);
+      const fim = new Date(endDate);
+
+      if (inicio > fim) {
+        toast.error("A data inicial deve ser anterior à data final");
+        return;
+      }
+
+      if (totalRegistros === 0) {
+        toast.error("Nenhum registro encontrado no período selecionado");
+        return;
+      }
+
+      setIsLoading(true);
+      toast.loading("Gerando relatório PDF...");
+
+      await exportarRelatorioPDF({
+        startDate,
+        endDate,
+      });
+
+      toast.dismiss();
+      toast.success("Relatório PDF baixado com sucesso!");
+    } catch (error) {
+      toast.dismiss();
+      console.error("Erro ao exportar PDF:", error);
+      
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro ao gerar relatório. Tente novamente.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const definirPeriodoRapido = (tipo: "ultimoMes" | "este_ano" | "ultimos_3_meses") => {
+    const hoje = new Date();
+    let inicio: Date;
+
+    switch (tipo) {
+      case "ultimoMes":
+        inicio = new Date();
+        inicio.setMonth(hoje.getMonth() - 1);
+        break;
+      case "ultimos_3_meses":
+        inicio = new Date();
+        inicio.setMonth(hoje.getMonth() - 3);
+        break;
+      case "este_ano":
+        inicio = new Date(hoje.getFullYear(), 0, 1);
+        break;
+      default:
+        return;
+    }
+
+    setStartDate(inicio.toISOString().split('T')[0]);
+    setEndDate(hoje.toISOString().split('T')[0]);
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>MindTrack - Exportar Relatório</title>
+      </Helmet>
+
+      <div className="min-h-screen bg-primary-gradient text-gray-800 flex flex-col items-center p-4 sm:p-6 md:p-10">
+        <div className="w-full max-w-6xl">
+           <Link
+                                to="/dashboard"
+                                className=" text-blue-600 font-bold text-sm mb-3 flex items-center gap-1 outline-none "
+                              >
+                               <FaArrowLeft />
+                     Voltar 
+                              </Link>
+
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1">
+            Exportar Relatório
+          </h1>
+          <p className="text-gray-500 mb-6">
+            Gere um PDF com seus registros e estatísticas
+          </p>
+
+          <div className="mb-8 shadow-md bg-white rounded-lg border border-gray-200">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg sm:text-xl font-semibold">
+                Gerar Relatório em PDF
+              </h3>
+              <p className="text-sm text-gray-500">
+                Selecione o período desejado para exportar seus registros
+              </p>
+            </div>
+            <div className="px-6 py-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Data Inicial
+                  </label>
+                  <div className="flex items-center border border-gray-300 rounded-lg p-2 bg-[#f8f4ef]">
+                    <Calendar className="w-4 h-4 text-gray-500 mr-2" />
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="bg-transparent w-full focus:outline-none text-gray-700"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-600 mb-1">
+                    Data Final
+                  </label>
+                  <div className="flex items-center border border-gray-300 rounded-lg p-2 bg-[#f8f4ef]">
+                    <Calendar className="w-4 h-4 text-gray-500 mr-2" />
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="bg-transparent w-full focus:outline-none text-gray-700"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-lg bg-[#eaf3ec] text-center text-gray-600 mb-4">
+                0 registros serão incluídos no relatório
+              </div>
+
+              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg flex justify-center items-center gap-2">
+                <span>📄</span> Gerar e Baixar PDF
+              </Button>
+            </div>
+          </div>
+
+          <div className="shadow-sm border border-[#f2e6da] bg-[#fdf3ee] rounded-lg">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800">
+                O que está incluído no relatório?
+              </h3>
+            </div>
+            <div className="px-6 py-4">
+              <ul className="list-disc pl-6 space-y-2 text-sm text-gray-700">
+                <li>Informações do aluno e período do relatório</li>
+                <li>Estatísticas de categorias e emoções</li>
+                <li>Todos os registros do período com conteúdo completo</li>
+                <li>Data e hora de geração do relatório</li>
+                <li>Branding profissional do MindTrack</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

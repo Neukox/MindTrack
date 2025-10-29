@@ -2,11 +2,16 @@ import api from "../../../lib/api/api";
 
 // Tipos para frequência de registros
 export interface FrequenciaRegistrosResponse {
-  registrosEssaSemana: number;
-  registrosSemanaAnterior: number;
-  crescimentoPercentual: number;
-  weekStart: string;
-  weekEnd: string;
+  success: boolean;
+  data: Array<{
+    semana: string;
+    registros: number;
+    periodo: string;
+  }>;
+  meta: {
+    totalRegistros: number;
+    mediaRegistrosPorSemana: number;
+  };
 }
 
 // Função para buscar frequência de registros por semana

@@ -55,7 +55,7 @@ export class ReflexaoService {
     if (filters.category) {
       whereClause.category = filters.category;
     }
-
+    
     if (filters.emotion) {
       whereClause.emotion = filters.emotion;
     }
@@ -63,7 +63,7 @@ export class ReflexaoService {
     // Processar filtros de data se existirem
     if (filters.startDate || filters.endDate) {
       whereClause.createdAt = {};
-
+      
       if (filters.startDate) {
         try {
           // Garantir que temos uma string de data válida
@@ -73,7 +73,7 @@ export class ReflexaoService {
           } else {
             dateString = String(filters.startDate);
           }
-
+          
           // Criar data de início do dia em UTC
           const startDate = new Date(dateString + 'T00:00:00.000Z');
           if (!isNaN(startDate.getTime())) {
@@ -83,7 +83,7 @@ export class ReflexaoService {
           console.error('Erro ao processar startDate:', error);
         }
       }
-
+      
       if (filters.endDate) {
         try {
           // Garantir que temos uma string de data válida
@@ -93,7 +93,7 @@ export class ReflexaoService {
           } else {
             dateString = String(filters.endDate);
           }
-
+          
           // Criar data de final do dia em UTC
           const endDate = new Date(dateString + 'T23:59:59.999Z');
           if (!isNaN(endDate.getTime())) {
@@ -105,6 +105,24 @@ export class ReflexaoService {
       }
     }
 
+    console.log('🔍 Filtros aplicados (corrigido v2):', {
+      userId,
+      filters: {
+        ...filters,
+        startDate: filters.startDate ? {
+          original: filters.startDate,
+          type: typeof filters.startDate,
+          isDate: filters.startDate instanceof Date
+        } : null,
+        endDate: filters.endDate ? {
+          original: filters.endDate,
+          type: typeof filters.endDate,
+          isDate: filters.endDate instanceof Date
+        } : null
+      },
+      whereClause: JSON.stringify(whereClause, null, 2)
+    });
+
     const reflections = await this.prismaService.reflection.findMany({
       where: whereClause,
       orderBy: {
@@ -112,6 +130,8 @@ export class ReflexaoService {
       },
     });
 
+    console.log(`✅ Encontrados ${reflections.length} registros para o usuário ${userId}`);
+    
     return reflections;
   }
 

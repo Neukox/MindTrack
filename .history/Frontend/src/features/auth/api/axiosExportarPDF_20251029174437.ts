@@ -3,7 +3,7 @@ import api from "../../../lib/api/api";
 // Tipos para exportação de PDF
 export interface ExportarPDFParams {
   startDate: string; // formato: YYYY-MM-DD
-  endDate: string; // formato: YYYY-MM-DD
+  endDate: string;   // formato: YYYY-MM-DD
 }
 
 // Função para exportar relatório em PDF
@@ -44,15 +44,13 @@ export const exportarRelatorioPDF = async (
     // Criar elemento de link temporário para download
     const link = document.createElement("a");
     link.href = url;
-
+    
     // Gerar nome do arquivo com as datas
     const formatDate = (date: string) => {
       return new Date(date).toLocaleDateString("pt-BR").replace(/\//g, "-");
     };
-
-    const fileName = `relatorio-reflexoes_${formatDate(
-      params.startDate
-    )}_${formatDate(params.endDate)}.pdf`;
+    
+    const fileName = `relatorio-reflexoes_${formatDate(params.startDate)}_${formatDate(params.endDate)}.pdf`;
     link.download = fileName;
 
     // Adicionar ao DOM temporariamente e clicar
@@ -62,6 +60,8 @@ export const exportarRelatorioPDF = async (
     // Limpar
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+
+    console.log("Relatório PDF baixado com sucesso!");
   } catch (error: unknown) {
     console.error("Erro ao exportar relatório PDF:", error);
 
@@ -69,7 +69,7 @@ export const exportarRelatorioPDF = async (
       const axiosError = error as {
         response?: { status?: number; data?: { message?: string } };
       };
-
+      
       if (axiosError.response?.status === 401) {
         localStorage.removeItem("token");
         window.location.href = "/login";
@@ -99,7 +99,7 @@ export const exportarRelatorioPDF = async (
 export const validarFormatoData = (date: string): boolean => {
   const regex = /^\d{4}-\d{2}-\d{2}$/;
   if (!regex.test(date)) return false;
-
+  
   const dateObj = new Date(date);
   return dateObj instanceof Date && !isNaN(dateObj.getTime());
 };
@@ -111,8 +111,8 @@ export const gerarParametrosUltimoMes = (): ExportarPDFParams => {
   umMesAtras.setMonth(hoje.getMonth() - 1);
 
   return {
-    startDate: umMesAtras.toISOString().split("T")[0],
-    endDate: hoje.toISOString().split("T")[0],
+    startDate: umMesAtras.toISOString().split('T')[0],
+    endDate: hoje.toISOString().split('T')[0],
   };
 };
 
@@ -122,7 +122,7 @@ export const gerarParametrosEsteAno = (): ExportarPDFParams => {
   const inicioAno = new Date(hoje.getFullYear(), 0, 1);
 
   return {
-    startDate: inicioAno.toISOString().split("T")[0],
-    endDate: hoje.toISOString().split("T")[0],
+    startDate: inicioAno.toISOString().split('T')[0],
+    endDate: hoje.toISOString().split('T')[0],
   };
 };

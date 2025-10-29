@@ -35,7 +35,10 @@ export const buscarRegistros = async (filtros?: {
   keyword?: string;
 }): Promise<BuscarRegistrosResponse> => {
   try {
+    console.log("🔍 buscarRegistros chamada com filtros:", filtros);
+    
     const token = localStorage.getItem("token");
+    console.log("🔐 Token encontrado:", !!token, "Tamanho:", token?.length || 0);
 
     if (!token) {
       throw new Error("Token de autenticação não encontrado");
@@ -51,11 +54,20 @@ export const buscarRegistros = async (filtros?: {
 
     const queryString = params.toString();
     const url = queryString ? `/reflexao?${queryString}` : `/reflexao`;
+    
+    console.log("🌐 URL da requisição:", url);
+    console.log("📋 Query string:", queryString);
 
     const response = await api.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    });
+
+    console.log("✅ Resposta da API recebida:", {
+      status: response.status,
+      dataLength: response.data?.length,
+      data: response.data
     });
 
     return {
@@ -67,11 +79,19 @@ export const buscarRegistros = async (filtros?: {
       },
     };
   } catch (error: unknown) {
+    console.error("❌ Erro detalhado em buscarRegistros:", error);
+
     if (error instanceof Error && "response" in error) {
       const axiosError = error as {
         response?: { status?: number; data?: { message?: string } };
       };
-
+      
+      console.error("🔥 Erro HTTP:", {
+        status: axiosError.response?.status,
+        data: axiosError.response?.data,
+        message: axiosError.response?.data?.message
+      });
+      
       if (axiosError.response?.status === 401) {
         localStorage.removeItem("token");
         window.location.href = "/login";
