@@ -158,4 +158,39 @@ export class MetricsService {
       weekEnd: end,
     };
   }
+
+  /**
+   * Frequência de reflexõe das ultimas 5 semanas
+   */
+  async getFrequencyPerWeeks(userId: string) {
+    const reflections = await this.reflexaoService.findAllByUser(userId, {});
+
+    const frequencyMap: Record<number, number> = {};
+    const periodMap: Record<number, string> = {};
+
+    for (let i = 4; i >= 0; i--) {
+      const weekRange = DateUtils.getWeekRange(
+        new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
+      );
+      const weeklyReflections = await this.filterReflectionsByDateRange(
+        reflections,
+        weekRange.start,
+        weekRange.end,
+      );
+      const weekLabel = i + 1;
+      frequencyMap[weekLabel] = weeklyReflections.length;
+      periodMap[weekLabel] =
+        `${DateUtils.formatToPtBr(weekRange.start)} á ${DateUtils.formatToPtBr(
+          weekRange.end,
+        )}`;
+    }
+
+    const frequencyArray = Object.keys(frequencyMap).map((week) => ({
+      week: parseInt(week),
+      count: frequencyMap[week],
+      period: periodMap[week],
+    }));
+
+    return frequencyArray;
+  }
 }

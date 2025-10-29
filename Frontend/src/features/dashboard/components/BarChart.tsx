@@ -8,17 +8,18 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-import { getFrequenciaRegistros } from "@/services/metrics/metrics.service";
+import { getFrequenciaRegistros } from "@/services/metrics/frequencia-de-registros.service";
 
 type FrequenciaData = {
   name: string;
   valor: number;
+  periodo: string;
 };
 
 export default function CustomBarChart() {
   const [barSize, setBarSize] = useState(70);
   const [data, setData] = useState<FrequenciaData[]>([
-    { name: "Carregando...", valor: 1 },
+    { name: "Carregando...", valor: 1, periodo: "" },
   ]);
 
   useEffect(() => {
@@ -26,18 +27,19 @@ export default function CustomBarChart() {
       try {
         const response = await getFrequenciaRegistros();
 
-        if (response.status === 200 && response.data.length > 0) {
-          const dadosFormatados = response.data.map((item, index) => ({
-            name: `Semana ${index + 1}`,
+        if (response) {
+          const dadosFormatados = response.map((item, index) => ({
+            name: `Semana ${item.week || index + 1}`,
             valor: item.count,
+            periodo: item.period,
           }));
           setData(dadosFormatados);
         } else {
-          setData([{ name: "Sem dados", valor: 1 }]);
+          setData([{ name: "Sem dados", valor: 1, periodo: "" }]);
         }
       } catch (error) {
         console.error("Erro ao carregar frequência:", error);
-        setData([{ name: "Erro ao carregar", valor: 1 }]);
+        setData([{ name: "Erro ao carregar", valor: 1, periodo: "" }]);
       }
     };
 

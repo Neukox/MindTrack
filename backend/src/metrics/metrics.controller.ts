@@ -109,6 +109,24 @@ export class MetricsController {
     return this.metricsService.getReflectionsPerWeekMetrics(userId);
   }
   
+  @Get('week/frequency')
+  @ApiOperation({
+    summary: 'Obter frequência semanal de reflexões do usuário',
+    description:
+      'Retorna a frequência de reflexões feitas pelo usuário nas últimas 5 semanas.',
+  })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Acesso negado',
+  })
+  async getWeeklyFrequency(@User('sub') userId: string) {
+    return this.metricsService.getFrequencyPerWeeks(userId);
+  }
+  
   @ApiOperation({
     summary: 'Obter métricas semestrais das reflexões do usuário',
     description:
