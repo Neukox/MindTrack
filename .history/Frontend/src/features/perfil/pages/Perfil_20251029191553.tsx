@@ -167,9 +167,7 @@ export default function Perfil() {
       <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-300">
-            Carregando perfil...
-          </p>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">Carregando perfil...</p>
         </div>
       </div>
     );
@@ -191,9 +189,7 @@ export default function Perfil() {
             <span className="text-sm">Voltar</span>
           </Link>
 
-          <h1 className="text-2xl sm:text-3xl font-bold mb-1 text-gray-900 dark:text-white">
-            Meu Perfil
-          </h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1 text-gray-900 dark:text-white">Meu Perfil</h1>
           <p className="text-gray-500 dark:text-gray-400 mb-6">
             Gerencie suas informações e preferências
           </p>
@@ -203,8 +199,8 @@ export default function Perfil() {
             <button
               onClick={() => setActiveTab("informacoes")}
               className={`pb-2 text-sm cursor-pointer font-medium text-center transition-colors ${
-                activeTab === "informacoes"
-                  ? "text-blue-600 dark:text-blue-400"
+                activeTab === "informacoes" 
+                  ? "text-blue-600 dark:text-blue-400" 
                   : "text-gray-400 dark:text-gray-500"
               }`}
               aria-current={activeTab === "informacoes" ? "page" : undefined}
@@ -218,8 +214,8 @@ export default function Perfil() {
             <button
               onClick={() => setActiveTab("senha")}
               className={`pb-2 cursor-pointer text-sm font-medium text-center transition-colors ${
-                activeTab === "senha"
-                  ? "text-blue-600 dark:text-blue-400"
+                activeTab === "senha" 
+                  ? "text-blue-600 dark:text-blue-400" 
                   : "text-gray-400 dark:text-gray-500"
               }`}
               aria-current={activeTab === "senha" ? "page" : undefined}
@@ -305,9 +301,7 @@ export default function Perfil() {
                 aria-hidden={activeTab !== "senha"}
               >
                 <section className="p-6 sm:p-8">
-                  <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
-                    Alterar Senha
-                  </h2>
+                  <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Alterar Senha</h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                     Atualize sua senha de acesso
                   </p>
@@ -381,8 +375,6 @@ export default function Perfil() {
           </div>
         </div>
       </div>
-
-      <FloatingThemeToggle />
     </>
   );
 }
