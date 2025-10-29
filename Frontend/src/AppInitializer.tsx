@@ -10,26 +10,37 @@ export default function AppInitializer({
   const { login, logout, setLoading } = useAuthStore();
 
   useEffect(() => {
-    const verifySession = async () => {
-      // Indica que a verificação de sessão está em andamento
-      setLoading(true);
-      
-      try {
-        const response = await api.post("/auth/refresh");
-        const newToken = response.data.accessToken;
-        
-        console.log("Valid session found, logging in with new token.", useAuthStore.getState().token);
+    let mounted = true;
+    const controller = new AbortController();
 
-        login(newToken);
-      } catch(error) {
-        console.log("No valid session found:", error);
-        logout();
+    const verifySession = async () => {
+      setLoading(true);
+
+      try {
+        const response = await api.post(
+          "/auth/refresh",
+          {},
+          {
+            signal: controller.signal,
+            withCredentials: true,
+          },
+        );
+        const newToken = response.data.accessToken;
+
+        if (mounted) login(newToken);
+      } catch {
+        if (mounted) logout();
       } finally {
         setLoading(false);
       }
     };
 
     verifySession();
+
+    return () => {
+      controller.abort();
+      mounted = false;
+    };
   }, [login, logout, setLoading]);
 
   return children;

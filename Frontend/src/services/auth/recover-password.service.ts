@@ -1,4 +1,4 @@
-import type { RecoverPasswordData, ResetPasswordData } from "@/features/auth";
+import type { RecoverPasswordData, ResetPasswordData } from "@/lib/types/auth.types";
 import api from "@/lib/api/axios";
 import type {
   ResponseError,

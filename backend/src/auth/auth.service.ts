@@ -181,11 +181,14 @@ export class AuthService {
   async refreshAccessToken(payload: any) {
     const user = await this.userService.findOne(payload.sub);
 
-    this.logger.debug(`Refreshing access token for user ID: ${payload.sub}`);
-
     if (!user || !user.refreshToken) {
+      this.logger.warn(
+        `Tentativa de refresh de token falhou para o usuário ID: ${payload.sub}`,
+      );
       throw new UnauthorizedException('Acesso Negado');
     }
+
+    this.logger.debug(`Refreshing access token for user ID: ${payload.sub}`);
 
     const accessToken = await this.tokenService.generateAccessToken({
       sub: user.id,
@@ -202,11 +205,22 @@ export class AuthService {
   }
 
   async setRefreshCookie(res: Response, refreshToken: string) {
+    const isProd = this.appConfig.get<string>('NODE_ENV') === 'production';
+    const secureEnv = this.appConfig.get<boolean>('COOKIE_SECURE')!;
+    const sameSiteEnv = this.appConfig.get<string>('COOKIE_SAME_SITE')!;
+
+    let secure = secureEnv ? secureEnv === true : isProd;
+    let sameSite = sameSiteEnv ?? (isProd ? 'lax' : 'none');
+
+    this.logger.debug(
+      `Setting refresh token cookie with secure=${secure} and sameSite=${sameSite}`,
+    );
+
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: this.appConfig.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
+      secure,
+      sameSite: sameSite as 'lax' | 'strict' | 'none',
+      maxAge: this.appConfig.get<number>('JWT_REFRESH_EXPIRATION')!, // em milissegundos
     });
   }
 }

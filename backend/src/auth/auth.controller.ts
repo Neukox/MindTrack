@@ -156,8 +156,6 @@ export class AuthController {
   async refresh(@Req() req: Request) {
     const payload = req.user;
 
-    console.log('Payload do refresh token:', payload);
-
     const accessToken = await this.authService.refreshAccessToken(payload);
 
     return { accessToken };

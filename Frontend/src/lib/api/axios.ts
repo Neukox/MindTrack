@@ -70,11 +70,17 @@ api.interceptors.response.use(
     if (
       status === 401 &&
       originalRequest &&
-      originalRequest.url !== "/auth/refresh"
+      !originalRequest._retry &&
+      !(originalRequest.url && originalRequest.url.includes("/auth/refresh"))
     ) {
+      console.log("original request url", originalRequest.url);
+
       if (originalRequest._retry) {
         return Promise.reject(error);
       }
+
+      originalRequest._retry = true;
+
       // Se já estiver atualizando o token, adiciona a requisição à fila
       if (isRefreshing) {
         // Adiciona a requisição à fila
@@ -83,6 +89,7 @@ api.interceptors.response.use(
         })
           .then((token) => {
             // Atualiza o token na requisição original
+            originalRequest.headers = originalRequest.headers || {};
             originalRequest.headers["Authorization"] = "Bearer " + token;
             return api(originalRequest);
           })
@@ -97,7 +104,7 @@ api.interceptors.response.use(
 
       try {
         // Chamar o endpoint de refresh token
-        const { data } = await api.post("/auth/refresh");
+        const { data } = await api.post("/auth/refresh", {});
 
         // adicionar novo token ao estado global
         const newToken = data.accessToken;
@@ -113,11 +120,12 @@ api.interceptors.response.use(
         // Retornar a requisição original com o novo token
         return api(originalRequest);
       } catch (err) {
+        setTimeout(() => {
+          useAuthStore.getState().logout();
+        }, 0);
+
         // Se falhar ao atualizar o token, processa a fila com erro
         processQueue(err, null);
-
-        // Realizar logout
-        useAuthStore.getState().logout();
 
         return Promise.reject(err);
       } finally {

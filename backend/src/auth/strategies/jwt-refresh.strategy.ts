@@ -29,10 +29,7 @@ export default class JwtRefreshStrategy extends PassportStrategy(
     });
   }
 
-  async validate(
-    req: Request,
-    payload: TokenPayloadDto,
-  ) {
+  async validate(req: Request, payload: TokenPayloadDto) {
     const refreshToken = req.cookies['refresh_token'];
 
     const user = await this.userService.findOne(payload.sub);
@@ -40,6 +37,9 @@ export default class JwtRefreshStrategy extends PassportStrategy(
     this.logger.debug(`Validating refresh token for user ID: ${payload.sub}`);
 
     if (!user || !user.refreshToken) {
+      this.logger.warn(
+        `No user or refresh token found for user ID ${payload.sub}`,
+      );
       throw new UnauthorizedException('Acesso Negado');
     }
 
@@ -48,18 +48,19 @@ export default class JwtRefreshStrategy extends PassportStrategy(
       user.refreshToken,
     );
 
+    if (!isRefreshTokenMatching) {
+      this.logger.warn(`Refresh token mismatch for user ID ${payload.sub}`);
+      throw new UnauthorizedException('Acesso Negado');
+    }
+
     this.logger.debug(
       `Refresh token match status for user ID ${payload.sub}: ${isRefreshTokenMatching}`,
     );
 
-    if (!isRefreshTokenMatching) {
-      throw new UnauthorizedException('Acesso Negado');
-    }
-
     return {
       sub: user.id,
       username: user.username,
-      email: user.email
+      email: user.email,
     };
   }
 }
