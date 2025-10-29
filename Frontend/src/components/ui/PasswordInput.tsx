@@ -12,7 +12,7 @@ interface PasswordInputProps<T extends FieldValues> {
   name?: Path<T>;
   placeholder?: string;
   className?: string;
-  showPassword?: boolean; 
+  showPassword?: boolean;
   error?: FieldError;
   disabled?: boolean;
   required?: boolean;

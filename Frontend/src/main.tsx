@@ -11,13 +11,14 @@ const root = document.getElementById("root") as HTMLElement;
 
 ReactDOM.createRoot(root).render(
   <BrowserRouter>
-    <HelmetProvider>
-      <ThemeProvider>
+    <ThemeProvider>
+      <HelmetProvider>
         <AppInitializer>
           <App />
           <Toaster />
         </AppInitializer>
-      </ThemeProvider>
-    </HelmetProvider>
+      </HelmetProvider>
+      <Toaster />
+    </ThemeProvider>
   </BrowserRouter>
 );
