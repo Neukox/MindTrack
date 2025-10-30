@@ -118,13 +118,7 @@ api.interceptors.response.use(
 
       try {
         // Chamar o endpoint de refresh token
-        const { data } = await api.post(
-          "/auth/refresh",
-          {},
-          {
-            withCredentials: true, // Importante para enviar cookies httpOnly
-          }
-        );
+        const { data } = await api.post("/auth/refresh", {});
 
         // adicionar novo token ao estado global
         const newToken = data.accessToken;
@@ -154,7 +148,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
