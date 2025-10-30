@@ -47,7 +47,7 @@ export default function ChartPizza() {
             ([key, value]) => ({
               name: key,
               uv: value.total,
-            })
+            }),
           );
           setData(dadosFormatados);
         } else {
@@ -163,10 +163,7 @@ export default function ChartPizza() {
               marginBottom: "4px",
             }}
             formatter={(value: number, name: string) => [
-              `${Math.round(value)} registros (${(
-                (value / total) *
-                100
-              ).toFixed(1)}%)`,
+              `${Math.round(value)} registros (${((value / total) * 100).toFixed(1)}%)`,
               name,
             ]}
           />
