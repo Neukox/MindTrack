@@ -88,8 +88,8 @@ pnpm-lock.yaml
 tmp/
 temp/
 
-# NestJS CLI (mantemos para build)
-# nest-cli.json  <- REMOVIDO para permitir build
+# NestJS CLI
+nest-cli.json
 
 # Generated files
 generated/
