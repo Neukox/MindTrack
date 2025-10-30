@@ -1,0 +1,25 @@
+{
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://seu-backend-em-producao.com"
+    }
+  },
+  "functions": {
+    "app/api/**": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

@@ -3,13 +3,8 @@ import axios from "axios";
 // Configuração dinâmica da URL da API
 const getApiBaseURL = () => {
   // Se estiver em produção (Vercel), usar a URL do backend em produção
-  if (
-    typeof window !== "undefined" &&
-    window.location.hostname !== "localhost"
-  ) {
-    return (
-      import.meta.env.VITE_API_URL || "https://seu-backend-em-producao.com"
-    );
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return import.meta.env.VITE_API_URL || "https://seu-backend-em-producao.com";
   }
   // Em desenvolvimento, usar localhost
   return "http://localhost:3000";
