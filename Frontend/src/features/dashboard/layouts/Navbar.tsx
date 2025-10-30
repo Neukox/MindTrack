@@ -8,6 +8,8 @@ import MindLog from "../../../assets/MindTrack.png";
 import Button from "../../../components/ui/Button";
 import { getUserProfile } from "../../../services/user/profile.service";
 import type { Profile } from "@/lib/types/user.type";
+import UserPopover from "@/components/UserPovover";
+import NavPopover from "@/components/NavPopover";
 
 export default function NavBar() {
   const { theme, toggleTheme } = useTheme();
@@ -92,8 +94,9 @@ export default function NavBar() {
               aria-label="Primary navigation"
               className="hidden xl:flex flex-2 items-center space-x-4 mx-30 justify-between"
             >
-              <div className="flex justify-center">
-                <ul role="menubar" className="flex translate-x-36 space-x-5">
+              <NavPopover className="hidden sm:block lg:hidden ml-10" />
+              <div className="hidden lg:flex justify-center">
+                <ul role="menubar" className="flex space-x-5">
                   <li role="none">
                     <Button
                       variant="tertiary"
@@ -121,10 +124,10 @@ export default function NavBar() {
                 </ul>
               </div>
 
-              <div className="flex items-center gap-2 mr-5">
+              <div className="hidden sm:flex gap-4">
                 <div className="flex whitespace-nowrap" aria-label="Actions">
                   <Button
-                    className="flex items-center p-2 gap-2"
+                    className="hidden md:flex items-center p-2 gap-2"
                     onClick={() => navigate("/novo-registro")}
                   >
                     <FaPlus />
@@ -159,7 +162,7 @@ export default function NavBar() {
 
                 {/* User Profile Info */}
                 <div
-                  className="flex flex-col"
+                  className="hidden xl:flex flex-col"
                   role="group"
                   aria-label="User profile"
                 >
