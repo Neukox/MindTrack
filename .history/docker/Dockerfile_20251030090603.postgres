@@ -9,8 +9,8 @@ RUN apk add --no-cache \
 RUN mkdir -p /docker-entrypoint-initdb.d \
     && mkdir -p /var/lib/postgresql/backup
 
-# Note: Copy initialization scripts manually if needed
-# COPY init-scripts/ /docker-entrypoint-initdb.d/
+# Copy initialization scripts if any
+COPY init-scripts/ /docker-entrypoint-initdb.d/ 2>/dev/null || true
 
 # Set default environment variables (can be overridden)
 ENV POSTGRES_USER=mindtrack
@@ -26,7 +26,7 @@ RUN echo "shared_preload_libraries = 'pg_stat_statements'" >> /usr/local/share/p
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1
+  CMD pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1
 
 # Expose PostgreSQL port
 EXPOSE 5432

@@ -26,7 +26,7 @@ RUN echo "shared_preload_libraries = 'pg_stat_statements'" >> /usr/local/share/p
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1
+  CMD pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1
 
 # Expose PostgreSQL port
 EXPOSE 5432
