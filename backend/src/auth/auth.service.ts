@@ -205,9 +205,9 @@ export class AuthService {
   }
 
   async setRefreshCookie(res: Response, refreshToken: string) {
-    const isProd = this.appConfig.get<string>('NODE_ENV') === 'production';
-    const secureEnv = this.appConfig.get<boolean>('COOKIE_SECURE')!;
-    const sameSiteEnv = this.appConfig.get<string>('COOKIE_SAME_SITE')!;
+    const isProd = this.configService.get<string>('NODE_ENV') === 'production';
+    const secureEnv = this.configService.get<boolean>('COOKIE_SECURE')!;
+    const sameSiteEnv = this.configService.get<string>('COOKIE_SAME_SITE')!;
 
     let secure = secureEnv ? secureEnv === true : isProd;
     let sameSite = sameSiteEnv ?? (isProd ? 'lax' : 'none');
@@ -220,7 +220,7 @@ export class AuthService {
       httpOnly: true,
       secure,
       sameSite: sameSite as 'lax' | 'strict' | 'none',
-      maxAge: this.appConfig.get<number>('JWT_REFRESH_EXPIRATION')!, // em milissegundos
+      maxAge: this.configService.get<number>('JWT_REFRESH_EXPIRATION')!, // em milissegundos
     });
   }
 }

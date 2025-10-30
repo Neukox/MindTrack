@@ -45,7 +45,7 @@ export default class EmailService implements OnModuleDestroy {
       this.transporter = createTransport({
         host: this.emailConfiguration.host || 'smtp.gmail.com',
         port: this.emailConfiguration.port || 587,
-        secure: false, // Always false for port 587
+        secure: this.emailConfiguration.secure || false, // true for 465, false for other ports
         auth: {
           user: this.emailConfiguration.user,
           pass: this.emailConfiguration.pass,
