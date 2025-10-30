@@ -10,6 +10,7 @@ import { getUserProfile } from "../../../services/user/profile.service";
 import type { Profile } from "@/lib/types/user.type";
 // import UserPopover from "@/components/UserPovover";
 import NavPopover from "@/components/NavPopover";
+import UserPopover from "@/components/UserPovover";
 
 export default function NavBar() {
   const { theme, toggleTheme } = useTheme();
@@ -66,13 +67,13 @@ export default function NavBar() {
   return (
     <>
       <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-2xl transition-colors">
-        <div className="w-full px-9">
+        <div className="w-full px-6">
           <div className="flex items-center h-16 w-full">
             {/* Logo Section */}
-            <div className="flex items-center lg:mx-10 flex[1.2]">
+            <div className="flex items-center gap-4">
               <div
-                className="flex items-center space-x-3 bg-indigo-100 dark:bg-indigo-800 h-13 w-14 pl-2 pr-2 rounded-2xl text-black dark:text-white font-sans font-bold text-xl
-                relative -left-7 cursor-pointer transition-colors"
+                className="flex items-center space-x-3 bg-indigo-100 dark:bg-indigo-800 size-14 pl-2 pr-2 rounded-2xl text-black dark:text-white font-sans font-bold text-xl
+                cursor-pointer transition-colors"
               >
                 <img
                   className="h-10 rounded-2xl shadow-md"
@@ -80,19 +81,19 @@ export default function NavBar() {
                   alt="MindTrack Logo"
                   onClick={() => navigate("/dashboard")}
                 />
-                <div className="flex flex-col">
-                  <h1 className="text-black dark:text-white">MindTrack</h1>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 flex whitespace-nowrap">
-                    Diário de Bordo Acadêmico
-                  </p>
-                </div>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-black dark:text-white">MindTrack</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400 flex whitespace-nowrap">
+                  Diário de Bordo Acadêmico
+                </p>
               </div>
             </div>
 
             {/* Nav Links (desktop) */}
             <nav
               aria-label="Primary navigation"
-              className="hidden xl:flex flex-2 items-center space-x-4 mx-30 justify-between"
+              className="hidden sm:flex flex-2 items-center space-x-4 justify-end"
             >
               <NavPopover className="hidden sm:block lg:hidden ml-10" />
               <div className="hidden lg:flex justify-center">
@@ -175,7 +176,11 @@ export default function NavBar() {
                 </div>
 
                 {/* User Avatar */}
-                <div className="w-8 h-8 bg-indigo-200 dark:bg-indigo-600 rounded-full shadow-md flex items-center justify-center hover:bg-indigo-300 dark:hover:bg-indigo-700 transition-colors cursor-pointer">
+                <UserPopover
+                  user={userProfile}
+                  className="hidden sm:block xl:hidden"
+                />
+                <div className="hidden xl:flex w-8 h-8 bg-indigo-200 dark:bg-indigo-600 rounded-full shadow-md items-center justify-center hover:bg-indigo-300 dark:hover:bg-indigo-700 transition-colors cursor-pointer">
                   <button
                     className="cursor-pointer"
                     aria-label="Meu Perfil"
@@ -194,7 +199,7 @@ export default function NavBar() {
 
                 {/* Logout Button */}
                 <button
-                  className="p-2 rounded-full hover:shadow-md hover:bg-red-500 dark:hover:bg-red-600 cursor-pointer hover:text-white transition-colors"
+                  className="hidden xl:block p-2 rounded-full hover:shadow-md hover:bg-red-500 dark:hover:bg-red-600 cursor-pointer hover:text-white transition-colors"
                   aria-label="Logout"
                   title="Sair"
                   onClick={() => {
@@ -208,7 +213,7 @@ export default function NavBar() {
             </nav>
 
             {/* Hamburger Mobile: visible below 1280px, hidden at >=1280px */}
-            <div className="xl:hidden relative -right-3 flex-1 flex justify-end">
+            <div className="sm:hidden relative -right-3 flex-1 flex justify-end">
               <button
                 ref={buttonRef}
                 onClick={() => setIsOpen(!isOpen)}

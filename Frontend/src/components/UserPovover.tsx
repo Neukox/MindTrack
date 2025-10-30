@@ -1,9 +1,10 @@
 import type { Profile } from "@/lib/types/user.type";
 import { cn } from "@/utils/cn";
+import { UserIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { HiUser } from "react-icons/hi";
 import { RxExit } from "react-icons/rx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export type UserPopoverProps = {
   user: Profile | null;
@@ -64,31 +65,39 @@ export default function UserPopover({ className, user }: UserPopoverProps) {
       {isOpen && (
         <div
           ref={menuRef}
-          className="bg-white rounded-xl absolute top-12 right-0 p-4 flex items-center gap-2 shadow-lg z-50"
+          className="bg-white dark:bg-gray-800 rounded-xl absolute top-12 right-0 p-4 flex flex-col items-center gap-4 shadow-lg z-50"
         >
-          <div
-            className="flex flex-col"
-            role="group"
-            aria-label="User profile"
-          >
+          <div className="flex flex-col" role="group" aria-label="User profile">
             <span className="text-sm font-semibold text-right">
               {user?.username || "Carregando..."}
             </span>
-            <span className="text-sm font-sans font-medium text-gray-500">
+            <span className="text-sm font-sans font-medium text-gray-700 dark:text-gray-200">
               {user?.email || ""}
             </span>
           </div>
-          <button
-            className="p-2 rounded-full hover:shadow-md hover:bg-red-500 cursor-pointer text-red-500 hover:text-white transition-colors"
-            aria-label="Logout"
-            title="Sair"
-            onClick={() => {
-              localStorage.clear();
-              navigate("/login");
-            }}
-          >
-            <RxExit className="size-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/perfil"
+              className="px-3 py-2 rounded-full hover:shadow-md bg-blue-600 hover:bg-blue-700 cursor-pointer text-white transition-colors flex items-center gap-2 flex-1"
+              aria-label="Perfil"
+              title="Ir para o perfil"
+            >
+              <UserIcon className="size-5" />
+              Perfil
+            </Link>
+            <button
+              className="px-3 py-2 rounded-full hover:shadow-md bg-red-500 hover:bg-red-600 cursor-pointer text-white transition-colors flex items-center gap-2 flex-1"
+              aria-label="Logout"
+              title="Sair"
+              onClick={() => {
+                localStorage.clear();
+                navigate("/login");
+              }}
+            >
+              <RxExit className="size-5" />
+              Sair
+            </button>
+          </div>
         </div>
       )}
     </div>

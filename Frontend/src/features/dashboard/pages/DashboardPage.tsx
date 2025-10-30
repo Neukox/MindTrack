@@ -116,7 +116,7 @@ export function DashboardPage() {
 
         {/* Cards Superiores */}
         {/* Responsive grid: each card has a min width and will fit on a single row when space allows */}
-        <div className="grid gap-4 mt-6 w-full grid-cols-[repeat(auto-fit,minmax(240px,1fr))]">
+        <div className="grid gap-4 mt-6 w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <Cards
             title="Entradas Criadas"
             variant="minCard"

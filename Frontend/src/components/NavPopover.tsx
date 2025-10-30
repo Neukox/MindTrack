@@ -61,7 +61,7 @@ export default function NavPopover({ className }: NavPopoverProps) {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 hover:bg-blue-700/10  rounded-xl flex gap-2 items-center text-primary hover:text-white font-medium"
+        className="p-2 hover:bg-blue-700/10  rounded-xl flex gap-2 items-center text-primary hover:text-white dark:text-white dark:hover:text-white font-medium"
       >
         <ChevronDown
           className={cn(
@@ -75,13 +75,13 @@ export default function NavPopover({ className }: NavPopoverProps) {
       {isOpen && (
         <div
           ref={menuRef}
-          className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+          className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-gray-800 border rounded-md shadow-lg z-50"
         >
           <ul role="menubar" className="flex flex-col gap-4 p-4">
             <li role="none">
               <Link
                 to="/dashboard"
-                className="text-primary text-shadow-2xs whitespace-nowrap font-medium transition disabled:text-gray-400 disabled:cursor-not-allowed"
+                className="text-primary text-shadow-2xs whitespace-nowrap font-medium transition disabled:text-gray-400 disabled:cursor-not-allowed dark:text-white"
               >
                 Dashboard
               </Link>
@@ -89,7 +89,7 @@ export default function NavPopover({ className }: NavPopoverProps) {
             <li role="none">
               <Link
                 to="/registros"
-                className="text-primary text-shadow-2xs whitespace-nowrap font-medium transition disabled:text-gray-400 disabled:cursor-not-allowed"
+                className="text-primary text-shadow-2xs whitespace-nowrap font-medium transition disabled:text-gray-400 disabled:cursor-not-allowed dark:text-white"
               >
                 Registros
               </Link>
@@ -97,7 +97,7 @@ export default function NavPopover({ className }: NavPopoverProps) {
             <li role="none">
               <Link
                 to="/exportar-relatorio"
-                className="text-primary text-shadow-2xs whitespace-nowrap font-medium transition disabled:text-gray-400 disabled:cursor-not-allowed"
+                className="text-primary text-shadow-2xs whitespace-nowrap font-medium transition disabled:text-gray-400 disabled:cursor-not-allowed dark:text-white"
               >
                 Relatório
               </Link>
