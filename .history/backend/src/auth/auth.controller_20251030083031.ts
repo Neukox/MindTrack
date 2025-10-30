@@ -108,9 +108,8 @@ export class AuthController {
         payload.name,
         payload.resetUrl,
       );
-      return {
-        message:
-          'E-mail de recuperação de senha enviado com sucesso! Verifique sua caixa de entrada.',
+      return { 
+        message: 'E-mail de recuperação de senha enviado com sucesso! Verifique sua caixa de entrada.' 
       };
     } catch (error) {
       console.error('Erro ao enviar email:', error);

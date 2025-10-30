@@ -7,6 +7,8 @@ export interface RecoverPasswordData {
 
 export interface RecoverPasswordResponse {
   message: string;
+  token?: string; // Para modo desenvolvimento
+  resetUrl?: string; // Para modo desenvolvimento
 }
 
 export interface ResetPasswordData {

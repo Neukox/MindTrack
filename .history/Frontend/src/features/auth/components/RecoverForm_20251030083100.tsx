@@ -32,7 +32,8 @@ export default function Recuperar() {
       const response = await requestPasswordRecovery({ email: data.email });
 
       toast.success(
-        response.message || "Link de recuperação enviado! Verifique seu email."
+        response.message ||
+          "Link de recuperação enviado! Verifique seu email."
       );
     } catch (error) {
       const errorMessage =

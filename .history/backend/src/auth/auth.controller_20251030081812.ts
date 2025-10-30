@@ -43,7 +43,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(loginDto, res);
-
+  
     return {
       message: 'Login realizado com sucesso',
       accessToken: result.accessToken,
@@ -102,19 +102,34 @@ export class AuthController {
 
     const payload = await this.authService.requestPasswordReset(email);
 
+    // Verificar se as configurações de email estão definidas
+    const emailConfigured = process.env.EMAIL_USER && process.env.EMAIL_PASS;
+
+    if (!emailConfigured) {
+      // Se o email não estiver configurado, retorna o token diretamente para desenvolvimento
+      console.log('Email não configurado. Token de reset:', payload.resetUrl);
+      return {
+        message: 'Email não configurado no servidor. Token para teste (desenvolvimento):',
+        token: payload.resetUrl.split('token=')[1],
+        resetUrl: payload.resetUrl,
+      };
+    }
+
     try {
       await this.recoverEmailService.sendRecoverPasswordEmail(
         payload.to,
         payload.name,
         payload.resetUrl,
       );
-      return {
-        message:
-          'E-mail de recuperação de senha enviado com sucesso! Verifique sua caixa de entrada.',
-      };
+      return { message: 'E-mail de recuperação de senha enviado.' };
     } catch (error) {
       console.error('Erro ao enviar email:', error);
-      throw error; // Propaga o erro em vez de retornar token
+      // Retorna o token para teste quando email falha
+      return {
+        message: 'Erro no envio de email. Token para teste (desenvolvimento):',
+        token: payload.resetUrl.split('token=')[1],
+        resetUrl: payload.resetUrl,
+      };
     }
   }
 

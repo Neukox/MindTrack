@@ -20,11 +20,7 @@ import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-      load: [appConfig],
-    }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     ResetPasswordModule,
     ReflexaoModule,
     AuthModule,

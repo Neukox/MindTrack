@@ -23,7 +23,10 @@ export const requestPasswordRecovery = async (
   recoverData: RecoverPasswordData
 ): Promise<RecoverPasswordResponse> => {
   try {
-    const response = await api.post("/auth/recover-password", recoverData);
+    const response = await api.post(
+      "/auth/recover-password",
+      recoverData
+    );
     return response.data;
   } catch (error: unknown) {
     // Tratar diferentes tipos de erro

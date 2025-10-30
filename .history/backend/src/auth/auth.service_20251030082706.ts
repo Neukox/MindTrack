@@ -124,7 +124,7 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
-      maxAge: this.configService.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
+      maxAge: this.appConfig.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
     });
 
     return {

@@ -7,6 +7,8 @@ export interface RecoverPasswordData {
 
 export interface RecoverPasswordResponse {
   message: string;
+  token?: string; // Para modo desenvolvimento
+  resetUrl?: string; // Para modo desenvolvimento
 }
 
 export interface ResetPasswordData {
@@ -23,7 +25,10 @@ export const requestPasswordRecovery = async (
   recoverData: RecoverPasswordData
 ): Promise<RecoverPasswordResponse> => {
   try {
-    const response = await api.post("/auth/recover-password", recoverData);
+    const response = await api.post(
+      "/auth/recover-password",
+      recoverData
+    );
     return response.data;
   } catch (error: unknown) {
     // Tratar diferentes tipos de erro

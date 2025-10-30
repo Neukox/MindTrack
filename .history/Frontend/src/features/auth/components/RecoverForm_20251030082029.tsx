@@ -31,9 +31,27 @@ export default function Recuperar() {
     try {
       const response = await requestPasswordRecovery({ email: data.email });
 
-      toast.success(
-        response.message || "Link de recuperação enviado! Verifique seu email."
-      );
+      // Verificar se a resposta contém um token (modo desenvolvimento)
+      if (response.token || response.resetUrl) {
+        toast.success(response.message || "Link de recuperação gerado!");
+
+        // Em modo de desenvolvimento, mostrar o token
+        if (response.token) {
+          console.log("Token de recuperação:", response.token);
+          toast.info(`Token para teste: ${response.token}`, {
+            duration: 10000,
+          });
+        }
+
+        if (response.resetUrl) {
+          console.log("URL de recuperação:", response.resetUrl);
+        }
+      } else {
+        toast.success(
+          response.message ||
+            "Link de recuperação enviado! Verifique seu email."
+        );
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error

@@ -29,9 +29,7 @@ export class AuthService {
     private readonly resetPasswordService: ResetPasswordService,
     @Inject(resetPasswordConfig.KEY)
     private readonly passRecoveryConfig: ConfigType<typeof resetPasswordConfig>,
-    @Inject(appConfig.KEY)
-    private readonly appConfiguration: ConfigType<typeof appConfig>,
-    private readonly configService: ConfigService,
+    private readonly appConfig: ConfigService,
     private readonly tokenService: TokenService,
   ) {}
 
@@ -79,7 +77,7 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
-      maxAge: this.configService.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
+      maxAge: this.appConfig.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
     });
 
     return {
@@ -124,7 +122,7 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
-      maxAge: this.configService.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
+      maxAge: this.appConfig.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // em milissegundos
     });
 
     return {
@@ -153,7 +151,7 @@ export class AuthService {
       expiresAt,
     );
 
-    const resetUrl = `${this.appConfiguration.clientUrl}/reset-password?token=${token}`;
+    const resetUrl = `${this.appConfig.get<string>('clientUrl')}/reset-password?token=${token}`;
 
     return {
       to: user.email,

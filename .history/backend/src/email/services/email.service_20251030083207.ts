@@ -8,83 +8,56 @@ import { TemplatesService } from '@/templates/templates.service';
 export default class EmailService implements OnModuleDestroy {
   protected transporter: Transporter;
   protected readonly logger = new Logger(EmailService.name);
-  private isInitialized = false;
 
   constructor(
     @Inject(emailConfig.KEY)
     protected readonly emailConfiguration: ConfigType<typeof emailConfig>,
     private readonly templatesService: TemplatesService,
   ) {
-    // Initialize transporter without blocking startup
-    this.initializeTransporter().catch((error) => {
-      this.logger.error('Failed to initialize email service:', error.message);
-    });
+    this.initializeTransporter();
   }
 
   private async initializeTransporter() {
     // Check if email configuration is available
     if (!this.emailConfiguration.user || !this.emailConfiguration.pass) {
-      this.logger.warn(
-        '⚠️ EMAIL NÃO CONFIGURADO - Sistema funcionará sem envio de emails',
-      );
-      this.logger.warn('Para configurar, defina no arquivo .env:');
-      this.logger.warn('EMAIL_USER=seu_email@gmail.com');
-      this.logger.warn('EMAIL_PASS=sua_senha_de_app_gmail');
-      return; // Don't throw error, just return
+      this.logger.error('❌ EMAIL NÃO CONFIGURADO!');
+      this.logger.error('Para enviar emails reais, configure no arquivo .env:');
+      this.logger.error('EMAIL_USER=seu_email@gmail.com');
+      this.logger.error('EMAIL_PASS=sua_senha_de_app_gmail');
+      this.logger.error('EMAIL_FROM=seu_email@gmail.com');
+      this.logger.error('');
+      this.logger.error('📋 COMO GERAR SENHA DE APP DO GMAIL:');
+      this.logger.error('1. Vá para myaccount.google.com');
+      this.logger.error('2. Segurança > Verificação em duas etapas (ative)');
+      this.logger.error('3. Segurança > Senhas de app');
+      this.logger.error('4. Selecione "Email" e gere a senha');
+      this.logger.error('5. Use essa senha no EMAIL_PASS');
+      this.logger.error('');
+      throw new Error('Email configuration required for sending real emails');
     }
 
     try {
-      // Log configuration for debugging
-      this.logger.debug(
-        `Configurando email: ${this.emailConfiguration.host}:${this.emailConfiguration.port}`,
-      );
-      this.logger.debug(`Usuario: ${this.emailConfiguration.user}`);
-      this.logger.debug(`Secure: ${this.emailConfiguration.secure}`);
-
-      // Initialize the transporter using configuration from .env
+      // Initialize the transporter using the email configuration
       this.transporter = createTransport({
-        host: this.emailConfiguration.host || 'smtp.gmail.com',
-        port: this.emailConfiguration.port || 587,
-        secure: this.emailConfiguration.secure || false, // true for 465, false for other ports
+        service: 'gmail',
         auth: {
           user: this.emailConfiguration.user,
           pass: this.emailConfiguration.pass,
         },
-        tls: {
-          rejectUnauthorized: false,
-        },
-        connectionTimeout: 60000, // 60 seconds
-        greetingTimeout: 30000, // 30 seconds
-        socketTimeout: 75000, // 75 seconds
       });
 
-      // Test the connection with timeout
-      this.logger.debug('Testando conexão SMTP...');
-      const verifyPromise = this.transporter.verify();
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error('Connection timeout after 30s')),
-          30000,
-        ),
-      );
-
-      await Promise.race([verifyPromise, timeoutPromise]);
+      // Test the connection
+      await this.transporter.verify();
       this.logger.log(
         '✅ Gmail transporter initialized and verified successfully',
       );
-      this.isInitialized = true;
     } catch (error) {
       this.logger.error(
         '❌ Failed to initialize Gmail transporter:',
         error.message,
       );
-      this.logger.warn(
-        '⚠️ Sistema continuará funcionando, mas emails não serão enviados',
-      );
-      this.logger.warn(
-        'Para corrigir, configure credenciais válidas no arquivo .env',
-      );
-      // Don't throw error, just log and continue
+      this.logger.error('Verifique suas credenciais no arquivo .env');
+      throw error;
     }
   }
 
@@ -97,9 +70,9 @@ export default class EmailService implements OnModuleDestroy {
     from?: string;
     text?: string;
   }) {
-    if (!this.transporter || !this.isInitialized) {
+    if (!this.transporter) {
       throw new Error(
-        'Email service is not configured properly. Please check your email environment variables.',
+        'Email service is not configured. Please check your email environment variables.',
       );
     }
 

@@ -16,7 +16,7 @@ export default class EmailService implements OnModuleDestroy {
     private readonly templatesService: TemplatesService,
   ) {
     // Initialize transporter without blocking startup
-    this.initializeTransporter().catch((error) => {
+    this.initializeTransporter().catch(error => {
       this.logger.error('Failed to initialize email service:', error.message);
     });
   }
@@ -24,9 +24,7 @@ export default class EmailService implements OnModuleDestroy {
   private async initializeTransporter() {
     // Check if email configuration is available
     if (!this.emailConfiguration.user || !this.emailConfiguration.pass) {
-      this.logger.warn(
-        '⚠️ EMAIL NÃO CONFIGURADO - Sistema funcionará sem envio de emails',
-      );
+      this.logger.warn('⚠️ EMAIL NÃO CONFIGURADO - Sistema funcionará sem envio de emails');
       this.logger.warn('Para configurar, defina no arquivo .env:');
       this.logger.warn('EMAIL_USER=seu_email@gmail.com');
       this.logger.warn('EMAIL_PASS=sua_senha_de_app_gmail');
@@ -35,12 +33,10 @@ export default class EmailService implements OnModuleDestroy {
 
     try {
       // Log configuration for debugging
-      this.logger.debug(
-        `Configurando email: ${this.emailConfiguration.host}:${this.emailConfiguration.port}`,
-      );
+      this.logger.debug(`Configurando email: ${this.emailConfiguration.host}:${this.emailConfiguration.port}`);
       this.logger.debug(`Usuario: ${this.emailConfiguration.user}`);
       this.logger.debug(`Secure: ${this.emailConfiguration.secure}`);
-
+      
       // Initialize the transporter using configuration from .env
       this.transporter = createTransport({
         host: this.emailConfiguration.host || 'smtp.gmail.com',
@@ -51,39 +47,27 @@ export default class EmailService implements OnModuleDestroy {
           pass: this.emailConfiguration.pass,
         },
         tls: {
-          rejectUnauthorized: false,
+          rejectUnauthorized: false
         },
         connectionTimeout: 60000, // 60 seconds
         greetingTimeout: 30000, // 30 seconds
-        socketTimeout: 75000, // 75 seconds
+        socketTimeout: 75000 // 75 seconds
       });
 
       // Test the connection with timeout
       this.logger.debug('Testando conexão SMTP...');
       const verifyPromise = this.transporter.verify();
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error('Connection timeout after 30s')),
-          30000,
-        ),
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Connection timeout after 30s')), 30000)
       );
-
+      
       await Promise.race([verifyPromise, timeoutPromise]);
-      this.logger.log(
-        '✅ Gmail transporter initialized and verified successfully',
-      );
+      this.logger.log('✅ Gmail transporter initialized and verified successfully');
       this.isInitialized = true;
     } catch (error) {
-      this.logger.error(
-        '❌ Failed to initialize Gmail transporter:',
-        error.message,
-      );
-      this.logger.warn(
-        '⚠️ Sistema continuará funcionando, mas emails não serão enviados',
-      );
-      this.logger.warn(
-        'Para corrigir, configure credenciais válidas no arquivo .env',
-      );
+      this.logger.error('❌ Failed to initialize Gmail transporter:', error.message);
+      this.logger.warn('⚠️ Sistema continuará funcionando, mas emails não serão enviados');
+      this.logger.warn('Para corrigir, configure credenciais válidas no arquivo .env');
       // Don't throw error, just log and continue
     }
   }
@@ -98,9 +82,7 @@ export default class EmailService implements OnModuleDestroy {
     text?: string;
   }) {
     if (!this.transporter || !this.isInitialized) {
-      throw new Error(
-        'Email service is not configured properly. Please check your email environment variables.',
-      );
+      throw new Error('Email service is not configured properly. Please check your email environment variables.');
     }
 
     const from = options.from || this.emailConfiguration.user;
