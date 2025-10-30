@@ -20,15 +20,11 @@ export class PdfService implements OnModuleInit, OnApplicationShutdown {
       if (this.browser) {
         await this.browser.close();
       }
-
+      
       const puppeteer = require('puppeteer');
       this.browser = await puppeteer.launch({
         headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-        ],
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
       });
       this.logger.log('Puppeteer browser launched successfully');
     } catch (error) {
@@ -47,16 +43,12 @@ export class PdfService implements OnModuleInit, OnApplicationShutdown {
   async generatePdf(html: string, options: Record<string, any> = {}) {
     // Tenta reinicializar o browser se não estiver disponível
     if (!this.browser) {
-      this.logger.warn(
-        'Browser not initialized, attempting to reinitialize...',
-      );
+      this.logger.warn('Browser not initialized, attempting to reinitialize...');
       await this.initializeBrowser();
     }
 
     if (!this.browser) {
-      this.logger.error(
-        'Puppeteer browser is not initialized and could not be reinitialized',
-      );
+      this.logger.error('Puppeteer browser is not initialized and could not be reinitialized');
       throw new Error('Puppeteer browser is not initialized');
     }
 

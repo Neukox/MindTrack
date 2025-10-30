@@ -33,9 +33,7 @@ export default class JwtRefreshStrategy extends PassportStrategy(
     const refreshToken = req.cookies['refresh_token'];
 
     if (!refreshToken) {
-      this.logger.warn(
-        `No refresh token found in cookies for user ID: ${payload.sub}`,
-      );
+      this.logger.warn(`No refresh token found in cookies for user ID: ${payload.sub}`);
       throw new UnauthorizedException('No refresh token provided');
     }
 
@@ -47,9 +45,7 @@ export default class JwtRefreshStrategy extends PassportStrategy(
       this.logger.warn(
         `No user or refresh token found for user ID ${payload.sub}`,
       );
-      throw new UnauthorizedException(
-        'User not found or no refresh token stored',
-      );
+      throw new UnauthorizedException('User not found or no refresh token stored');
     }
 
     const isRefreshTokenMatching = await this.hashingService.compare(
