@@ -17,17 +17,11 @@ export const corsConfig = {
     // Permitir requisições sem origin (ex: Postman, curl)
     if (!origin) return callback(null, true);
 
-    // Log para debug
-    console.log(`🔍 CORS check for origin: ${origin}`);
-    console.log(`🔍 Allowed origins:`, allowedOrigins);
-
     // Verificar se a origem está na lista permitida
     if (allowedOrigins.includes(origin)) {
-      console.log(`✅ CORS allowed for: ${origin}`);
       return callback(null, true);
     }
 
-    console.log(`❌ CORS blocked for: ${origin}`);
     return callback(new Error('Não permitido pelo CORS'), false);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
