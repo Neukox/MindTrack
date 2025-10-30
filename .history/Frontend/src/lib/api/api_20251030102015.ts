@@ -8,8 +8,7 @@ const getApiBaseURL = () => {
     window.location.hostname !== "localhost"
   ) {
     return (
-      import.meta.env.VITE_API_URL ||
-      "https://mindtrack-backend-ggpl.onrender.com"
+      import.meta.env.VITE_API_URL || "https://mindtrack-backend-ggpl.onrender.com"
     );
   }
   // Em desenvolvimento, usar localhost
