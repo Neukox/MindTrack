@@ -4,7 +4,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Helmet } from "react-helmet-async";
 import MindLog from "../../../assets/MindTrack.png";
-import { resetPassword, validateResetToken } from "../api/axiosRecuperar-Senha";
+import {
+  resetPassword,
+  validateResetToken,
+} from "@/services/auth/recover-password.service";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
 import PasswordInput from "../../../components/ui/PasswordInput";
@@ -61,7 +64,7 @@ export default function ResetPassword() {
     try {
       const response = await resetPassword({
         token,
-        new_password: data.password,
+        newPassword: data.password,
       });
 
       toast.success(response.message || "Senha alterada com sucesso!");

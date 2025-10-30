@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet-async";
 import {
   requestPasswordRecovery,
   validateEmail,
-} from "../api/axiosRecuperar-Senha";
+} from "@/services/auth/recover-password.service";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
 
@@ -32,7 +32,7 @@ export default function Recuperar() {
       const response = await requestPasswordRecovery({ email: data.email });
 
       toast.success(
-        response.message || "Link de recuperação enviado! Verifique seu email.",
+        response.message || "Link de recuperação enviado! Verifique seu email."
       );
     } catch (error) {
       const errorMessage =

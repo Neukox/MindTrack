@@ -277,7 +277,7 @@ export default function EditarRegistro() {
               {emocaoList.map((e) => (
                 <button
                   key={e.nome}
-                  onClick={() => handleEmocaoSelect(e.nome)}
+                  onClick={() => setEmocao(e.nome as Emotion)}
                   className={`px-4 py-2 rounded-xl flex items-center gap-2 transition-colors ${
                     e.cor
                   } dark:bg-gray-700 border ${

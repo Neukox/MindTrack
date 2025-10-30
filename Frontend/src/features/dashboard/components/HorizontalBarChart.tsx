@@ -26,7 +26,7 @@ export default function GraficoEmocoes() {
         const response = await getEmocoesRegistradas();
 
         // A API agora retorna um objeto com emoções
-        const dadosFormatados = Object.entries(response).map(
+        const dadosFormatados = Object.entries(response.data).map(
           ([emocao, dados]) => ({
             nome: emocao,
             valor: dados.total,

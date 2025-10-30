@@ -9,11 +9,9 @@ import {
   exportarRelatorioPDF,
   validarFormatoData,
   gerarParametrosUltimoMes,
-} from "../../auth/api/axiosExportarPDF";
-import {
-  buscarRegistros,
-  type RegistroData,
-} from "../../auth/api/axiosBuscarRegistros";
+} from "@/services/reflection/get-report.service";
+import { buscarRegistros } from "@/services/reflection/search-reflections.service";
+import type { Reflection } from "@/lib/types/reflection.type";
 
 export default function ExportReportPage() {
   const [startDate, setStartDate] = useState("");
@@ -21,7 +19,7 @@ export default function ExportReportPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [totalRegistros, setTotalRegistros] = useState(0);
   const [isLoadingCount, setIsLoadingCount] = useState(false);
-  const [todosRegistros, setTodosRegistros] = useState<RegistroData[]>([]);
+  const [todosRegistros, setTodosRegistros] = useState<Reflection[]>([]);
   const [hasDadosGerais, setHasDadosGerais] = useState(false);
   const [isLoadingTodos, setIsLoadingTodos] = useState(false);
 
@@ -30,9 +28,9 @@ export default function ExportReportPage() {
     try {
       setIsLoadingTodos(true);
       const response = await buscarRegistros(); // Sem filtros = todos os registros
-      setTodosRegistros(response.data || []);
-      setHasDadosGerais((response.data?.length || 0) > 0);
-      return response.data || [];
+      setTodosRegistros(response || []);
+      setHasDadosGerais((response.length || 0) > 0);
+      return response || [];
     } catch {
       setTodosRegistros([]);
       setHasDadosGerais(false);
@@ -76,7 +74,7 @@ export default function ExportReportPage() {
         startDate: startDate,
         endDate: endDate,
       });
-      setTotalRegistros(response.data?.length || 0);
+      setTotalRegistros(response.length || 0);
     } catch (error) {
       console.error("Erro ao contar registros:", error);
       setTotalRegistros(0);

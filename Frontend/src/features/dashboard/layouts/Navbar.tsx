@@ -8,7 +8,7 @@ import MindLog from "../../../assets/MindTrack.png";
 import Button from "../../../components/ui/Button";
 import { getUserProfile } from "../../../services/user/profile.service";
 import type { Profile } from "@/lib/types/user.type";
-import UserPopover from "@/components/UserPovover";
+// import UserPopover from "@/components/UserPovover";
 import NavPopover from "@/components/NavPopover";
 
 export default function NavBar() {
