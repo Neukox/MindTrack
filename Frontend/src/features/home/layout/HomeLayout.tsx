@@ -7,9 +7,11 @@ import FooterSection from "./FooterSection";
 import { IllustrationSection } from "./IlustrationSection";
 import { CardSection } from "../components/CardSection";
 import HowItWorksSections from "../components/HowItWorksSections";
+import useAuthStore from "@/features/auth/store/auth.store";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
 
   return (
     <>
@@ -20,7 +22,13 @@ const HomePage: React.FC = () => {
       <div className="min-h-screen bg-primary-gradient dark:bg-linear-to-br dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-white transition-colors duration-300">
         {/* Cabeçalho */}
         <Header
-          onLogin={() => navigate("/login")}
+          onLogin={() => {
+            if (user) {
+              navigate("/dashboard");
+            } else {
+              navigate("/login");
+            }
+          }}
           onSignup={() => navigate("/cadastro")}
         />
 
@@ -29,7 +37,13 @@ const HomePage: React.FC = () => {
           {/* Seção de Texto (Esquerda) */}
           <HeroSection
             onStart={() => navigate("/cadastro")}
-            onLogin={() => navigate("/login")}
+            onLogin={() => {
+              if (user) {
+                navigate("/dashboard");
+              } else {
+                navigate("/login");
+              }
+            }}
           />
 
           {/* Seção de Ilustração (Direita) */}

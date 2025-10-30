@@ -9,6 +9,7 @@ import RegisterDto from './dto/register.dto';
 import type { Request, Response } from 'express';
 import JwtRefreshGuard from './guards/jwt-refresh.guard';
 import { User } from './decorators/user.decorator';
+import JwtAuthGuard from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -170,6 +171,7 @@ export class AuthController {
     description: 'Logout realizado com sucesso.',
   })
   @Post('logout')
+  @UseGuards(JwtAuthGuard)
   async logout(
     @User('sub') userId: string,
     @Res({ passthrough: true }) res: Response,

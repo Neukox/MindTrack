@@ -1,10 +1,12 @@
 import type { Profile } from "@/lib/types/user.type";
+import logoutUser from "@/services/auth/logout.service";
 import { cn } from "@/utils/cn";
 import { UserIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { HiUser } from "react-icons/hi";
 import { RxExit } from "react-icons/rx";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "sonner";
 
 export type UserPopoverProps = {
   user: Profile | null;
@@ -49,10 +51,20 @@ export default function UserPopover({ className, user }: UserPopoverProps) {
       .slice(0, 2);
   };
 
+  const logout = async () => {
+    try {
+      await logoutUser();
+      localStorage.removeItem("user-storage");
+      navigate("/login");
+    } catch {
+      toast.error("Erro ao fazer logout. Tente novamente.");
+    }
+  };
+
   return (
     <div className={cn("relative", className)}>
       <button ref={buttonRef} onClick={() => setIsOpen(!isOpen)}>
-        <div className="w-8 h-8 bg-indigo-200 rounded-full shadow-md flex items-center justify-center hover:bg-indigo-300 transition-colors cursor-pointer">
+        <div className="w-8 h-8 bg-indigo-200 dark:bg-indigo-600 rounded-full shadow-md flex items-center justify-center hover:bg-indigo-300 transition-colors cursor-pointer">
           {user ? (
             <span className="text-white text-sm font-semibold">
               {getInitials(user.username)}
@@ -90,8 +102,7 @@ export default function UserPopover({ className, user }: UserPopoverProps) {
               aria-label="Logout"
               title="Sair"
               onClick={() => {
-                localStorage.clear();
-                navigate("/login");
+                logout();
               }}
             >
               <RxExit className="size-5" />

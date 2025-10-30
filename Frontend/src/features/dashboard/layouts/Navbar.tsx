@@ -11,6 +11,8 @@ import type { Profile } from "@/lib/types/user.type";
 // import UserPopover from "@/components/UserPovover";
 import NavPopover from "@/components/NavPopover";
 import UserPopover from "@/components/UserPovover";
+import logoutUser from "@/services/auth/logout.service";
+import { toast } from "sonner";
 
 export default function NavBar() {
   const { theme, toggleTheme } = useTheme();
@@ -39,6 +41,16 @@ export default function NavBar() {
       .join("")
       .toUpperCase()
       .slice(0, 2);
+  };
+
+  const logout = async () => {
+    try {
+      await logoutUser();
+      localStorage.removeItem("user-storage");
+      navigate("/login");
+    } catch {
+      toast.error("Erro ao fazer logout. Tente novamente.");
+    }
   };
 
   useEffect(() => {
@@ -203,8 +215,7 @@ export default function NavBar() {
                   aria-label="Logout"
                   title="Sair"
                   onClick={() => {
-                    localStorage.clear();
-                    navigate("/login");
+                    logout();
                   }}
                 >
                   <RxExit className="w-5 h-5 text-gray-600 dark:text-gray-300 hover:text-white" />
@@ -274,7 +285,7 @@ export default function NavBar() {
 
                 <button
                   className="flex items-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-                  onClick={() => navigate("/login")}
+                  onClick={() => logout()}
                 >
                   <RxExit className="w-5 h-5" />
                   <span className="ml-1 text-sm font-semibold">Sair</span>
