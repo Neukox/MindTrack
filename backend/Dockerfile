@@ -31,7 +31,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:18-bullseye-slim AS production
 
 # Install necessary system dependencies for running Chromium
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -55,15 +55,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
     && rm -rf /var/lib/apt/lists/*
 
-# Install curl for health checks
-RUN apk add --no-cache curl
-
 # Create app directory
 WORKDIR /app
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs || true
-RUN adduser -S nestjs -u 1001 -g -m -s /bin/bash nestjs || true
+RUN groupadd -r -g 1001 nodejs || (echo "groupadd failed" && exit 1) \
+ && useradd -r -u 1001 -g nodejs -m -d /home/nestjs -s /bin/bash nestjs || (echo "useradd failed" && exit 1)
 
 # Copy package files
 COPY package.json package-lock.json ./
@@ -79,8 +76,8 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 # Copy templates directory if it exists
 COPY templates ./templates
 
-# Change ownership to nodejs user
-RUN chown -R nestjs:nodejs /app
+# Change ownership to non-root user
+RUN chown -R 1001:1001 /app
 USER nestjs
 
 # Expose port
