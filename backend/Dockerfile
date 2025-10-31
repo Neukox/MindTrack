@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-bullseye-slim AS builder
+FROM node:22-bullseye-slim AS builder
 
 # Set working directory
 WORKDIR /app
@@ -31,7 +31,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # Production stage
-FROM node:18-bullseye-slim AS production
+FROM node:22-bullseye-slim AS production
 
 # Install necessary system dependencies for running Chromium
 RUN apt-get update && apt-get install -y --no-install-recommends \
