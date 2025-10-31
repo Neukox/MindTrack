@@ -10,7 +10,8 @@ export function HeroSection(
 ) {
   const { onStart, onLogin } = props;
   return (
-    <section className="flex flex-col lg:flex-row items-center justify-center min-h-[calc(100vh-64px)] px-6 sm:px-10 lg:px-20 py-16">
+        <section className="flex flex-col lg:flex-row items-center justify-center px-6 sm:px-10 lg:px-20 py-8">
+
       <div className="max-w-xl lg:mr-20 mb-12 lg:mb-0 text-center lg:text-left">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-2 text-gray-900 dark:text-white">
           Seu Diário de Bordo Acadêmico
