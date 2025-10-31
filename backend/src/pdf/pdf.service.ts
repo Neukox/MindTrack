@@ -22,25 +22,36 @@ export class PdfService implements OnModuleInit, OnApplicationShutdown {
       }
 
       const puppeteer = require('puppeteer');
+      const executablePath = process.env.CHROME_EXECUTABLE_PATH || undefined;
+
+      this.logger.debug(
+        `Launching Puppeteer with executable path: ${executablePath}`,
+      );
       this.browser = await puppeteer.launch({
         headless: true,
+        executablePath,
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
+          '--no-zygote',
         ],
       });
       this.logger.log('Puppeteer browser launched successfully');
     } catch (error) {
       this.logger.error('Error launching Puppeteer browser', error);
-      this.browser = null;
+
+      if (this.browser) {
+        await this.browser.close();
+        this.logger.log('Puppeteer browser closed');
+      }
     }
   }
 
   async onApplicationShutdown() {
     if (this.browser) {
+      this.logger.log('Closing Puppeteer browser on application shutdown');
       await this.browser.close();
-      this.logger.log('Puppeteer browser closed');
     }
   }
 
