@@ -58,13 +58,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Ensure there is a canonical /usr/bin/chromium and export path
 RUN if [ -x /usr/bin/chromium ]; then \
-    echo "/usr/bin/chromium exists"; \
+        echo "/usr/bin/chromium exists"; \
     elif [ -x /usr/bin/chromium-browser ]; then \
-    ln -sf /usr/bin/chromium-browser /usr/bin/chromium; \
+        ln -sf /usr/bin/chromium-browser /usr/bin/chromium; \
     elif command -v chromium >/dev/null 2>&1; then \
-    ln -sf "$(command -v chromium)" /usr/bin/chromium; \
+        ln -sf "$(command -v chromium)" /usr/bin/chromium; \
     else \
-    echo "Warning: chromium binary not found"; \
+        echo "Warning: chromium binary not found"; \
     fi
 
 # Create app directory
