@@ -22,7 +22,7 @@ export class PdfService implements OnModuleInit, OnApplicationShutdown {
       }
 
       const puppeteer = require('puppeteer');
-      const executablePath = process.env.CHROME_EXECUTABLE_PATH || undefined;
+      const executablePath = process.env.CHROMIUM_PATH || undefined;
 
       this.logger.debug(
         `Launching Puppeteer with executable path: ${executablePath}`,
