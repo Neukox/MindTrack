@@ -2,6 +2,7 @@
 import React from "react";
 import MindLogo from "../../../assets/MindTracksemfund-blue.png"
 import Button from "../../../components/ui/Button"
+import { Link } from "react-router-dom";
 const footerLinks = {
 Produto: ["Recursos", "Preços", "Segurança"],
 Empresa: ["Sobre", "Blog", "Contato"],
@@ -14,7 +15,7 @@ links: string[];
 }
 
 const FooterLinkGroup: React.FC<FooterLinkGroupProps> = ({ title, links }) => (
-<div className="text-center md:text-left">
+<div className="text-left flex flex-col items-start">
     <h4 className="text-sm md:text-base font-semibold text-gray-900 mb-4">
     {title}
     </h4>
@@ -23,7 +24,7 @@ const FooterLinkGroup: React.FC<FooterLinkGroupProps> = ({ title, links }) => (
         <li key={link}>
         <a
             href={`#${link.toLowerCase().replace(/ /g, "-")}`}
-            className="text-sm text-gray-500 hover:text-gray-900 transition-colors duration-150"
+            className="block text-sm text-gray-500 hover:text-gray-900 transition-colors duration-150"
         >
             {link}
         </a>
@@ -52,12 +53,14 @@ return (
             Junte-se a alunos de Psicologia que estão transformando sua
             experiência acadêmica com reflexão e autoconhecimento.
         </p>
-
+       
+       <Link to="/cadastro">
         <Button
           variant="secondary"
         >
             Criar Conta Gratuita
         </Button>
+        </Link>
         </div>
     </section>
 
@@ -74,8 +77,8 @@ return (
             
             {/* Logo e descrição */}
             <div className="md:col-span-2 flex flex-col items-start text-left md:pr-6">
-              <div className="flex items-center gap-1 cursor-pointer mb-2" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}> {/* Ícone mais próximo do texto */}
-                <img src={MindLogo} alt="MindTrack Logo" className="-ml-3 h-10 w-10" /> 
+              <div className="flex items-center gap-1 cursor-pointer mb-0" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}> {/* Ícone mais próximo do texto */}
+                <img src={MindLogo} alt="MindTrack Logo" className="-ml-3 h-12 w-12" /> 
                 <span className=" text-base sm:text-lg font-semibold text-gray-900 -ml-2">MindTrack
                 </span>
             </div>
@@ -85,7 +88,8 @@ return (
             </div>
 
             {/* Colunas de links */}
-            <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
+            {/* Links organized into responsive columns; on small screens the grid will auto-fit columns */}
+            <div className="md:col-span-3 grid gap-6 md:gap-8 grid-cols-[repeat(auto-fit,minmax(140px,1fr))]">
             {Object.entries(footerLinks).map(([title, links]) => (
                 <FooterLinkGroup key={title} title={title} links={links} />
             ))}

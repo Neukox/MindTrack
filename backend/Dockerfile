@@ -55,12 +55,30 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
     && rm -rf /var/lib/apt/lists/*
 
+<<<<<<< HEAD
+=======
+# Ensure there is a canonical /usr/bin/chromium and export path
+RUN if [ -x /usr/bin/chromium ]; then \
+    echo "/usr/bin/chromium exists"; \
+    elif [ -x /usr/bin/chromium-browser ]; then \
+    ln -sf /usr/bin/chromium-browser /usr/bin/chromium; \
+    elif command -v chromium >/dev/null 2>&1; then \
+    ln -sf "$(command -v chromium)" /usr/bin/chromium; \
+    else \
+    echo "Warning: chromium binary not found"; \
+    fi
+
+>>>>>>> 38b153431743e953100376197c75f58a04d00112
 # Create app directory
 WORKDIR /app
 
 # Create non-root user
 RUN groupadd -r -g 1001 nodejs || (echo "groupadd failed" && exit 1) \
+<<<<<<< HEAD
  && useradd -r -u 1001 -g nodejs -m -d /home/nestjs -s /bin/bash nestjs || (echo "useradd failed" && exit 1)
+=======
+    && useradd -r -u 1001 -g nodejs -m -d /home/nestjs -s /bin/bash nestjs || (echo "useradd failed" && exit 1)
+>>>>>>> 38b153431743e953100376197c75f58a04d00112
 
 # Copy package files
 COPY package.json package-lock.json ./
