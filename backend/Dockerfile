@@ -88,6 +88,10 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 # Copy templates directory if it exists
 COPY templates ./templates
 
+# Cpoy entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
 # Change ownership to non-root user
 RUN chown -R 1001:1001 /app
 USER nestjs
@@ -102,6 +106,9 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
+
+# Use entrypoint script
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Start the application
 CMD ["node", "dist/main.js"]

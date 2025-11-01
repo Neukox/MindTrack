@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -6,7 +6,8 @@ services:
       context: ./docker/
       dockerfile: Dockerfile.postgres
     image: mindtrack-postgres:latest
-    restart: unless-stopped
+    profiles:
+      - db
     environment:
       POSTGRES_USER: "mindtrack"
       POSTGRES_PASSWORD: "change_me"
@@ -15,6 +16,60 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: "no"
+
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    image: mindtrack-backend:dev
+    profiles:
+      - backend
+    environment:
+      .env_file: ./backend/.env
+    volumes:
+      - ./backend/:/app/:delegated
+      - backend_node_modules:/app/node_modules
+      - backend_generated:/app/generated
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: "no"
+    entrypoint: ["sh", "/app/entrypoint.sh"]
+    command: ["node", "dist/main.js"]
+
+  frontend:
+    build:
+      context: ./Frontend/
+      dockerfile: Dockerfile
+    image: mindtrack-frontend:dev
+    profiles:
+      - frontend
+    environment:
+      .env_file: ./Frontend/.env
+    volumes:
+      - ./frontend/:/app/
+      - /app/node_modules
+    ports:
+      - "80:80"
+    restart: "no"
+    command: ["nginx", "-g", "daemon off;"]
+
 volumes:
   postgres_data:
     name: mindtrack_postgres_data
+  backend_node_modules:
+    name: mindtrack_backend_node_modules
+  backend_generated:
+    name: mindtrack_backend_generated
