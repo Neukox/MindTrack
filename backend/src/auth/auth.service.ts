@@ -202,32 +202,68 @@ export class AuthService {
   }
 
   async logout(userId: string, res: Response) {
-    res.clearCookie('refresh_token');
+    const isProd = this.configService.get<string>('NODE_ENV') === 'production';
+    const secureEnv = this.configService.get<any>('COOKIE_SECURE');
+    const sameSiteEnv = this.configService.get<string>('COOKIE_SAME_SITE');
+
+    // Parse COOKIE_SECURE when provided as string or boolean
+    const secure =
+      secureEnv === true ||
+      (typeof secureEnv === 'string' && secureEnv.toLowerCase() === 'true')
+        ? true
+        : secureEnv === false ||
+            (typeof secureEnv === 'string' &&
+              secureEnv.toLowerCase() === 'false')
+          ? false
+          : isProd;
+
+    const sameSite = sameSiteEnv || (isProd ? 'none' : 'lax');
+
+    const clearOptions: any = {
+      httpOnly: true,
+      secure,
+      sameSite: sameSite as 'lax' | 'strict' | 'none',
+      ...(isProd && {
+        domain: undefined,
+      }),
+    };
+
+    res.clearCookie('refresh_token', clearOptions);
     await this.userService.setRefreshToken(userId, null);
   }
 
   async setRefreshCookie(res: Response, refreshToken: string) {
     const isProd = this.configService.get<string>('NODE_ENV') === 'production';
-    const secureEnv = this.configService.get<boolean>('COOKIE_SECURE');
+    const secureEnv = this.configService.get<any>('COOKIE_SECURE');
     const sameSiteEnv = this.configService.get<string>('COOKIE_SAME_SITE');
 
-    // Em produção com cross-origin, precisamos de cookies com sameSite 'none' e secure true
-    let secure = secureEnv !== undefined ? secureEnv === true : isProd;
-    let sameSite = sameSiteEnv || (isProd ? 'none' : 'lax');
+    // Parse COOKIE_SECURE which may be provided as string ("true"/"false") or boolean
+    const secure =
+      secureEnv === true ||
+      (typeof secureEnv === 'string' && secureEnv.toLowerCase() === 'true')
+        ? true
+        : secureEnv === false ||
+            (typeof secureEnv === 'string' &&
+              secureEnv.toLowerCase() === 'false')
+          ? false
+          : isProd;
+
+    const sameSite = sameSiteEnv || (isProd ? 'none' : 'lax');
+
+    const cookieOptions: any = {
+      httpOnly: true,
+      secure,
+      sameSite: sameSite as 'lax' | 'strict' | 'none',
+      maxAge: this.configService.get<number>('JWT_REFRESH_EXPIRATION')!, // converter segundos para milissegundos
+      ...(isProd && {
+        domain: undefined,
+      }),
+    };
 
     this.logger.debug(
       `Setting refresh token cookie with secure=${secure} and sameSite=${sameSite} for environment=${isProd ? 'production' : 'development'}`,
     );
 
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure,
-      sameSite: sameSite as 'lax' | 'strict' | 'none',
-      maxAge: this.configService.get<number>('JWT_REFRESH_EXPIRATION')! * 1000, // converter segundos para milissegundos
-      // Adicionar domain para produção cross-origin
-      ...(isProd && {
-        domain: undefined, // Não definir domain para permitir cross-origin
-      }),
-    });
+    res.cookie('refresh_token', refreshToken, cookieOptions);
   }
 }
